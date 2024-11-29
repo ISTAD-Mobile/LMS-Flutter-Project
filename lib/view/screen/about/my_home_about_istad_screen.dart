@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 
 class HomeIstadScreen extends StatefulWidget {
@@ -21,7 +22,7 @@ class _HomePageState extends State<HomeIstadScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 20),
+              padding: const EdgeInsets.only(top: 20, right: 15, left: 15),
               child: Column(
                 children: [
                   _buildFeatureCard(
@@ -122,8 +123,8 @@ class _HomePageState extends State<HomeIstadScreen> {
                       'INSTITUTE is a noteworthy science and technology institute in Cambodia. INSTITUTE has routed Cambodian students to advanced science and technology, research, and develop digital skills and our graduates have been guaranteed excellent job opportunities with the Top IT company.'
                   ),
                   _buildInfoSection('VISION & MISSION', ''),
-                  _buildInfoSection('OUR VISION', 'Advanced IT Institute in Cambodia'),
-                  _buildInfoSection('OUR MISSION', ''),
+                  _buildInfoContent('OUR VISION', 'Advanced IT Institute in Cambodia'),
+                  _buildInfoContentMission('OUR MISSION', ''),
                   _buildMissionList('OUR MISSION',''),
                   _buildContactSection(),
                 ],
@@ -232,7 +233,63 @@ class _HomePageState extends State<HomeIstadScreen> {
   }
 
 
+  Widget _buildInfoContent(String title, String content) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          margin: const EdgeInsets.only(top: 20),
+          child: Row(
+            children: [
+              const Icon(Icons.diamond, color: AppColors.primaryColor),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+        ),
+        if (content.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(left: 32, top: 8, bottom: 16),
+            child: Text(content),
+          ),
+      ],
+    );
+  }
 
+  Widget _buildInfoContentMission(String title, String content) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          margin: const EdgeInsets.only(bottom: 15),
+          child: Row(
+            children: [
+              const Icon(Icons.diamond, color: AppColors.primaryColor),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+        ),
+        if (content.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(left: 32, top: 8, bottom: 16),
+            child: Text(content),
+          ),
+      ],
+    );
+  }
 
 
   Widget _buildInfoSection(String title, String content) {
@@ -241,13 +298,21 @@ class _HomePageState extends State<HomeIstadScreen> {
       children: [
         Row(
           children: [
-            const Icon(Icons.diamond, color: AppColors.primaryColor99),
+            SvgPicture.string(
+              '''<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 1200 1200">
+                  <path fill="currentColor" d="M600 0C268.629 0 0 268.629 0 600s268.629 600 600 600s600-268.629 600-600S931.371 0 600 0m3.955 209.912l94.556 295.239l309.889 6.958l-251.588 181.055l89.136 296.924l-249.976-183.325l-254.81 176.587l97.119-294.434l-246.68-187.793l310.034 1.392z" />
+                </svg>''',
+              height: 23,
+              width: 23,
+              color: AppColors.accentColor,
+            ),
+            // const Icon(Icons.diamond, color: AppColors.primaryColor99),
             const SizedBox(width: 8),
             Text(
               title,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 18,
+                fontSize: 22,
               ),
             ),
           ],
