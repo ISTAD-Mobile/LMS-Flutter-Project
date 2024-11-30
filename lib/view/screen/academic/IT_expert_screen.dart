@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/view/screen/about/my_home_about_istad_screen.dart';
 import '../../home.dart';
-import '../../widgets/appbar_and_bottom_navigation_widgets.dart';
+import '../../widgets/public_screen_widgets/appbar_and_bottom_navigation_widgets.dart';
 import '../lms/auth/first_log_in_screen.dart';
 import 'my_home_academic_screen.dart';
 

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/view/screen/academic/my_home_academic_screen.dart';
 import 'package:lms_mobile/view/screen/lms/auth/first_log_in_screen.dart';
-import 'package:lms_mobile/view/widgets/about_tapbar_navigation_widget.dart';
-import 'package:lms_mobile/view/widgets/academict_ype_and_scholarship.dart';
-import 'package:lms_mobile/view/widgets/appbar_and_bottom_navigation_widgets.dart';
-import 'package:lms_mobile/view/widgets/istad_activity.dart';
-import 'package:lms_mobile/view/widgets/video_background.dart';
+import 'package:lms_mobile/view/widgets/public_screen_widgets/about_tapbar_navigation_widget.dart';
+import 'package:lms_mobile/view/widgets/public_screen_widgets/home/academic_type_and_scholarship.dart';
+import 'package:lms_mobile/view/widgets/public_screen_widgets/appbar_and_bottom_navigation_widgets.dart';
+import 'package:lms_mobile/view/widgets/public_screen_widgets/home/course_section.dart';
+import 'package:lms_mobile/view/widgets/public_screen_widgets/home/istad_activity.dart';
+import 'package:lms_mobile/view/widgets/public_screen_widgets/home/short_course_card.dart';
+import 'package:lms_mobile/view/widgets/public_screen_widgets/home/video_background.dart';
+
+import '../data/color/color_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,11 +24,12 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Map<String, dynamic>> _pages = [
     {
       'title': 'Home',
-      'page': ListView( // Use ListView for scrollable content
+      'page': ListView(
         children: const [
           VideoBackground(),
           IstadActivity(),
           AcademicTypeAndScholarshipWidget(),
+          CourseSection(),
         ],
       ),
     },

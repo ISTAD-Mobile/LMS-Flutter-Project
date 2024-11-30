@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 
-import '../../data/color/color_screen.dart';
+import '../../../data/color/color_screen.dart';
 
 class MyAppLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false, // Remove the debug banner
+      debugShowCheckedModeBanner: false,
       title: 'Your App Title',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       home: AppLayout(
         title: 'Your App Title',
-        body: Container(), // Your main screen widget here
+        body: Container(),
         currentIndex: 0,
         onTabTapped: (int index) {},
       ),
@@ -38,6 +38,7 @@ class AppLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.defaultWhiteColor,
       appBar: currentIndex == 3 ? null : _buildAppBar(),
       body: body,
       bottomNavigationBar: currentIndex == 3 ? null : _buildBottomNavigationBar(),

@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../data/color/color_screen.dart';
+
+import '../../../../data/color/color_screen.dart';
 
 class AcademicTypeAndScholarshipWidget extends StatelessWidget {
   const AcademicTypeAndScholarshipWidget({super.key});
@@ -12,36 +14,42 @@ class AcademicTypeAndScholarshipWidget extends StatelessWidget {
         'text': 'Bachelor',
         'width': 60.0,
         'height': 60.0,
+        'spacing': 12.0,
       },
       {
         'image': 'https://cdn-icons-png.flaticon.com/128/10748/10748520.png',
         'text': 'Academic',
         'width': 65.0,
         'height': 65.0,
+        'spacing': 6.0,
       },
       {
         'image': 'https://cdn-icons-png.flaticon.com/128/613/613307.png',
         'text': 'Short Course',
         'width': 50.0,
         'height': 50.0,
+        'spacing': 14.0,
       },
       {
         'image': 'https://cdn-icons-png.flaticon.com/128/8262/8262226.png',
         'text': 'IT Expert',
         'width': 65.0,
         'height': 65.0,
+        'spacing': 2.0,
       },
       {
         'image': 'https://cdn-icons-png.flaticon.com/128/12005/12005037.png',
         'text': 'Foundation',
         'width': 70.0,
         'height': 70.0,
+        'spacing': 0.0,
       },
       {
         'image': 'https://cdn-icons-png.flaticon.com/128/7655/7655706.png',
         'text': 'Pre-University',
         'width': 50.0,
         'height': 50.0,
+        'spacing': 18.0,
       },
     ];
 
@@ -71,7 +79,7 @@ class AcademicTypeAndScholarshipWidget extends StatelessWidget {
                 height: 150,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: AppColors.defaultWhitColor,
+                    color: AppColors.defaultWhiteColor,
                     border: Border.all(
                       color: Colors.grey.shade400,
                       width: 0.5,
@@ -88,8 +96,8 @@ class AcademicTypeAndScholarshipWidget extends StatelessWidget {
                         ),
                         child: Image.network(
                           items[index]['image'],
-                          width: items[index]['width'], // Dynamic width
-                          height: items[index]['height'], // Dynamic height
+                          width: items[index]['width'],
+                          height: items[index]['height'],
                           fit: BoxFit.contain,
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) return child;
@@ -103,7 +111,7 @@ class AcademicTypeAndScholarshipWidget extends StatelessWidget {
                           },
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: items[index]['spacing']),
                       Text(
                         items[index]['text'],
                         style: const TextStyle(
