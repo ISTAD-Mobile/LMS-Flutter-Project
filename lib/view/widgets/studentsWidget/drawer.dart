@@ -61,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisSize: MainAxisSize.min, // Ensure height wraps content
           children: [
             AppBar(
-              backgroundColor: AppColors.defaultWhitColor,
+              backgroundColor: AppColors.defaultWhiteColor,
               automaticallyImplyLeading: false, // Removes default hamburger icon
               title: Row(
                 children: [
@@ -106,14 +106,14 @@ class _MyHomePageState extends State<MyHomePage> {
       body: const Center(
       ),
       drawer: Drawer(
-        backgroundColor: AppColors.defaultWhitColor,
+        backgroundColor: AppColors.defaultWhiteColor,
         child: Column(
           children: [
             Container(
               height: 115,
               padding: const EdgeInsets.fromLTRB(20, 45, 0, 0),
               decoration: const BoxDecoration(
-                color: AppColors.defaultWhitColor,
+                color: AppColors.defaultWhiteColor,
               ),
               child: const Row(
                 children: [

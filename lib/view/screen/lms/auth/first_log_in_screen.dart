@@ -280,7 +280,7 @@ class _SignInScreenState extends State<firstSignInScreen> {
                     : const Text(
                   'Sign In',
                   style: TextStyle(
-                    color: AppColors.defaultWhitColor,
+                    color: AppColors.defaultWhiteColor,
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
                   ),
