@@ -150,7 +150,6 @@ class _PreUniversityPageState extends State<PreUniversityPage> {
                   color: Color(0xFF253B95),
                 ),
               ),
-
               SizedBox(height: 8),
               _buildCourseList([
                 "Introduction",
