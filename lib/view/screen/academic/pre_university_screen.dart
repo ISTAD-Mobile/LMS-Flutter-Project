@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/view/screen/about/my_home_about_istad_screen.dart';
+import '../../../data/color/color_screen.dart';
 import '../../home.dart';
 import '../../widgets/public_screen_widgets/appbar_and_bottom_navigation_widgets.dart';
 import '../lms/auth/first_log_in_screen.dart';
@@ -31,9 +32,17 @@ class _PreUniversityPageState extends State<PreUniversityPage> {
 
   @override
   Widget build(BuildContext context) {
-    return AppLayout(
-      title: "Pre-University Scholarship",
-      currentIndex: currentIndex,
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back),
+        ),
+        centerTitle: true,
+        title: const Text("Pre-University",style: TextStyle(fontSize: 16),),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -49,16 +58,15 @@ class _PreUniversityPageState extends State<PreUniversityPage> {
                   height: 200,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 15),
               const Text(
                 "Closed",
                 style: TextStyle(
-                  color: Colors.red,
+                  color: AppColors.secondaryColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
                 ),
               ),
-              const SizedBox(height: 4),
               const Text(
                 "Pre-University Scholarship",
                 style: TextStyle(
@@ -106,7 +114,7 @@ class _PreUniversityPageState extends State<PreUniversityPage> {
                  Text(
                     "Morning: ",
                     style: TextStyle(
-                      color: Colors.black,
+                      color: AppColors.secondaryColor,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
@@ -122,7 +130,7 @@ class _PreUniversityPageState extends State<PreUniversityPage> {
                    Text(
                     "Hours: ",
                     style: TextStyle(
-                      color: Colors.black,
+                      color: AppColors.secondaryColor,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
@@ -168,7 +176,7 @@ class _PreUniversityPageState extends State<PreUniversityPage> {
                   Text(
                     "Afternoon: ",
                     style: TextStyle(
-                      color: Colors.black,
+                      color: AppColors.secondaryColor,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
@@ -184,7 +192,7 @@ class _PreUniversityPageState extends State<PreUniversityPage> {
                  Text(
                     "Hours: ",
                     style: TextStyle(
-                      color: Colors.black,
+                      color: AppColors.secondaryColor,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
@@ -205,7 +213,6 @@ class _PreUniversityPageState extends State<PreUniversityPage> {
           ),
         ),
       ),
-      onTabTapped: onTabTapped,
     );
   }
 
