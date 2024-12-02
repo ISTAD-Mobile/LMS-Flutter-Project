@@ -2,7 +2,11 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
+import 'package:lms_mobile/view/screen/register/register_step_1.dart';
+
+import '../../widgets/public_screen_widgets/appbar_register.dart';
 
 class HomeIstadScreen extends StatefulWidget {
   const HomeIstadScreen({super.key});
@@ -131,10 +135,12 @@ class _HomePageState extends State<HomeIstadScreen> {
               ),
             ),
 
+
           ],
         ),
       ),
     );
+
   }
 
   Widget _buildFeatureCard(
@@ -207,7 +213,13 @@ class _HomePageState extends State<HomeIstadScreen> {
                   alignment:
                   isReversed ? Alignment.centerLeft : Alignment.centerRight,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      // Navigate to the SecondPage
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => RegistrationForm()),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: buttonColor,
                       shape: RoundedRectangleBorder(
