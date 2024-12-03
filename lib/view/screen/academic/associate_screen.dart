@@ -8,7 +8,10 @@ void main() {
   ));
 }
 
+
 class AssociatePage extends StatelessWidget {
+
+  bool _isExpanded = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +23,7 @@ class AssociatePage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
         ),
         centerTitle: true,
-        title: const Text("Associate Program",style: TextStyle(fontSize: 16),),
+        title: const Text("Associate Program",style: TextStyle(fontSize: 16, fontFamily: 'RobotoEnglish'),),
       ),
       body: SingleChildScrollView(
         // padding: const EdgeInsets.all(16.0),
@@ -128,7 +131,7 @@ class AssociatePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: 16),
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
                     child: const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -165,7 +168,7 @@ class AssociatePage extends StatelessWidget {
                       ),
                     ),
                     padding: const EdgeInsets.all(16),
-                    margin: EdgeInsets.all(16),
+                    margin: const EdgeInsets.all(16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -196,7 +199,7 @@ class AssociatePage extends StatelessWidget {
 
                   const SizedBox(height: 20),
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: 16),
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
                     child: const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -221,14 +224,26 @@ class AssociatePage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 15),
+
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: 16),
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
                     decoration: const BoxDecoration(
                       border: Border(
                         bottom: BorderSide(color: Colors.grey, width: 1),
                       ),
                     ),
                     child: const ExpansionTile(
+                      collapsedShape: RoundedRectangleBorder(
+                        side: BorderSide.none,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide.none,
+                      ),
+                      // shape: RoundedRectangleBorder(
+                      //   side: const BorderSide(color: AppColors.primaryColor, width: 1),
+                      //   borderRadius: BorderRadius.circular(10),
+                      // ),
+
                       title: Text(
                         'Year 1',
                         style: TextStyle(
@@ -285,7 +300,7 @@ class AssociatePage extends StatelessWidget {
                         _CurriculumListTile(subject: '4. Academic Skill Development', credit: '3'),
                         _CurriculumListTile(subject: '5. Multimedia and Web Design', credit: '3'),
                         _CurriculumListTile(subject: '6. Networking Fundamental', credit: '3'),
-                        Divider(),
+                        // Divider(),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                           child: Row(
@@ -332,20 +347,26 @@ class AssociatePage extends StatelessWidget {
                         _CurriculumListTile(subject: '9. Database Management Systems', credit: '3'),
                         _CurriculumListTile(subject: '10. Intensive English Program II ( For IT Researching )', credit: '3'),
                         _CurriculumListTile(subject: '11. Mathematics ( Discrete Math )', credit: '3'),
-                        _CurriculumListTile(subject: '12. System Administration', credit: '3'),
-                        Divider(),
+                        _CurriculumListTile(subject: '12. System Administration', credit: '3' ),
+                        // Divider(),
                       ],
                     ),
                   ),
 
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: 16),
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
                     decoration: const BoxDecoration(
                       border: Border(
-                        bottom: BorderSide(color: Colors.grey, width: 1), // Add bottom border
+                        bottom: BorderSide(color: Colors.grey, width: 1),
                       ),
                     ),
                     child: const ExpansionTile(
+                      collapsedShape: RoundedRectangleBorder(
+                        side: BorderSide.none,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide.none,
+                      ),
                       title: Text(
                         'Year 2',
                         style: TextStyle(
@@ -402,7 +423,6 @@ class AssociatePage extends StatelessWidget {
                         _CurriculumListTile(subject: '16. Mathematics II (Business Statistics)', credit: '3'),
                         _CurriculumListTile(subject: '17. Web Development III (Full Stack Web Development)', credit: '4'),
                         _CurriculumListTile(subject: '18. UX and UI Design Professional', credit: '3'),
-                        Divider(),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                           child: Row(
@@ -445,15 +465,14 @@ class AssociatePage extends StatelessWidget {
                           ),
                         ),
                         _CurriculumListTile(subject: '19. Project Management', credit: '3'),
-                        _CurriculumListTile(subject: '20. Project Practicum ( Internship )', credit: '12'),
-                        Divider(),
+                        _CurriculumListTile(subject: '20. Project Practicum (Internship)', credit: '12'),
                       ],
                     ),
                   ),
 
                   const SizedBox(height: 25),
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: 16),
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
                     child: const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -479,6 +498,7 @@ class AssociatePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 15),
                   Container(
+                    margin: const EdgeInsets.only(bottom: 30),
                     color: AppColors.primaryColor,
                     width: MediaQuery.of(context).size.width,
                     child: Column(
@@ -537,7 +557,6 @@ class AssociatePage extends StatelessWidget {
                 ],
               ),
             )
-
           ],
         ),
       ),
@@ -554,7 +573,7 @@ const DataCellTextStyle = TextStyle(
 
 
 const DataTableHeaderStyle = TextStyle(
-  fontSize: 20,
+  fontSize: 19,
   fontWeight: FontWeight.bold,
   color: AppColors.defaultWhiteColor,
 );

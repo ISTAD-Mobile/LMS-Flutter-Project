@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../data/color/color_screen.dart';
+import '../../screen/register/register_step_1.dart';
 
 class MyAppLayout extends StatelessWidget {
   @override
@@ -69,7 +70,8 @@ class AppLayout extends StatelessWidget {
 
   ElevatedButton _buildAdmissionButton() {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+      },
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.secondaryColor,
         shape: RoundedRectangleBorder(
