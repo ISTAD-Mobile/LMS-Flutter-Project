@@ -95,44 +95,64 @@ class AssociatePage extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Padding(
-              padding: const EdgeInsets.all(16), // Adjust padding as needed
+              padding: const EdgeInsets.only(bottom: 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Program Overview
-                  const Text(
-                    'Program Overview',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold,color: AppColors.primaryColor),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'The primary purpose of developing this modern Information Technology (IT) curriculum is to bridge the gap between traditional academic education and the ...',
-                    style: TextStyle(fontSize: 16,color: AppColors.defaultGrayColor),
+                  Container(
+                    margin: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          child: const Text(
+                            'Program Overview',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primaryColor,
+                            ),
+                          ),
+                        ),
+                        const Text(
+                          'The primary purpose of developing this modern Information Technology (IT) curriculum is to bridge the gap between traditional academic education and the ...',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: AppColors.defaultGrayColor,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 20),
-                  const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'FUTURE',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.normal,
-                          color: AppColors.secondaryColor,
-                          height: 1,
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 16),
+                    child: const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'FUTURE',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.normal,
+                            color: AppColors.secondaryColor,
+                            height: 1,
+                          ),
                         ),
-                      ),
-                      Text(
-                        'CAREER',
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.primaryColor,
+                        Text(
+                          'CAREER',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.primaryColor,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 10),
                   Container(
                     decoration: BoxDecoration(
                       // color: Colors.transparent,
@@ -145,6 +165,7 @@ class AssociatePage extends StatelessWidget {
                       ),
                     ),
                     padding: const EdgeInsets.all(16),
+                    margin: EdgeInsets.all(16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -174,30 +195,34 @@ class AssociatePage extends StatelessWidget {
                   ),
 
                   const SizedBox(height: 20),
-                  const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'PROGRAM STRUCTURE',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.secondaryColor,
-                          height: 1,
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 16),
+                    child: const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'PROGRAM STRUCTURE',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.secondaryColor,
+                            height: 1,
+                          ),
                         ),
-                      ),
-                      Text(
-                        'CURRICULUM',
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.primaryColor,
+                        Text(
+                          'CURRICULUM',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.primaryColor,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 15),
                   Container(
+                    margin: EdgeInsets.symmetric(horizontal: 16),
                     decoration: const BoxDecoration(
                       border: Border(
                         bottom: BorderSide(color: Colors.grey, width: 1),
@@ -314,6 +339,7 @@ class AssociatePage extends StatelessWidget {
                   ),
 
                   Container(
+                    margin: EdgeInsets.symmetric(horizontal: 16),
                     decoration: const BoxDecoration(
                       border: Border(
                         bottom: BorderSide(color: Colors.grey, width: 1), // Add bottom border
@@ -425,79 +451,85 @@ class AssociatePage extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(height: 16),
-
-                  const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'ASSESSMENT',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.accentColor,
-                          // height: 1,
+                  const SizedBox(height: 25),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 16),
+                    child: const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'ASSESSMENT',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.accentColor,
+                            // height: 1,
+                          ),
                         ),
-                      ),
-                      Text(
-                        'EVALUATION & GRADUATION',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.primaryColor,
+                        Text(
+                          'EVALUATION & GRADUATION',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.primaryColor,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 15),
                   Container(
-                    color: AppColors.accentColor,
+                    color: AppColors.primaryColor,
+                    width: MediaQuery.of(context).size.width,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        DataTable(
-                          columns: const [
-                            DataColumn(label: Text('Score', style: TextStyle(fontSize: 20))),
-                            DataColumn(label: Text('GPA', style: TextStyle(fontSize: 20))),
-                            DataColumn(label: Text('Grade', style: TextStyle(fontSize: 20))),
-                          ],
-                          rows: const [
-                            DataRow(cells: [
-                              DataCell(Text('85-100')),
-                              DataCell(Text('4.0')),
-                              DataCell(Text('A')),
-                            ]),
-                            DataRow(cells: [
-                              DataCell(Text('80-84')),
-                              DataCell(Text('3.5')),
-                              DataCell(Text('B+')),
-                            ]),
-                            DataRow(cells: [
-                              DataCell(Text('70-79')),
-                              DataCell(Text('3.0')),
-                              DataCell(Text('B')),
-                            ]),
-                            DataRow(cells: [
-                              DataCell(Text('65-69')),
-                              DataCell(Text('2.5')),
-                              DataCell(Text('C+')),
-                            ]),
-                            DataRow(cells: [
-                              DataCell(Text('50-54')),
-                              DataCell(Text('2.0')),
-                              DataCell(Text('C')),
-                            ]),
-                            DataRow(cells: [
-                              DataCell(Text('45-49')),
-                              DataCell(Text('1.5')),
-                              DataCell(Text('D')),
-                            ]),
-                            DataRow(cells: [
-                              DataCell(Text('0-44')),
-                              DataCell(Text('0')),
-                              DataCell(Text('F')),
-                            ]),
-                          ],
+                        Center(
+                          child: DataTable(
+                            columns: const [
+                              DataColumn(label: Text('Score', style: DataTableHeaderStyle)),
+                              DataColumn(label: Text('GPA', style: DataTableHeaderStyle)),
+                              DataColumn(label: Text('Grade', style: DataTableHeaderStyle)),
+                            ],
+                            rows: const [
+                              DataRow(cells: [
+                                DataCell(Text('85-100', style: DataCellTextStyle)),
+                                DataCell(Text('4.0', style: DataCellTextStyle)),
+                                DataCell(Text('A', style: DataCellTextStyle)),
+                              ]),
+                              DataRow(cells: [
+                                DataCell(Text('80-84', style: DataCellTextStyle)),
+                                DataCell(Text('3.5', style: DataCellTextStyle)),
+                                DataCell(Text('B+', style: DataCellTextStyle)),
+                              ]),
+                              DataRow(cells: [
+                                DataCell(Text('70-79', style: DataCellTextStyle)),
+                                DataCell(Text('3.0', style: DataCellTextStyle)),
+                                DataCell(Text('B', style: DataCellTextStyle)),
+                              ]),
+                              DataRow(cells: [
+                                DataCell(Text('65-69', style: DataCellTextStyle)),
+                                DataCell(Text('2.5', style: DataCellTextStyle)),
+                                DataCell(Text('C+', style: DataCellTextStyle)),
+                              ]),
+                              DataRow(cells: [
+                                DataCell(Text('50-54', style: DataCellTextStyle)),
+                                DataCell(Text('2.0', style: DataCellTextStyle)),
+                                DataCell(Text('C', style: DataCellTextStyle)),
+                              ]),
+                              DataRow(cells: [
+                                DataCell(Text('45-49', style: DataCellTextStyle)),
+                                DataCell(Text('1.5', style: DataCellTextStyle)),
+                                DataCell(Text('D', style: DataCellTextStyle)),
+                              ]),
+                              DataRow(cells: [
+                                DataCell(Text('0-44', style: DataCellTextStyle)),
+                                DataCell(Text('0', style: DataCellTextStyle)),
+                                DataCell(Text('F', style: DataCellTextStyle)),
+                              ]),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -512,6 +544,20 @@ class AssociatePage extends StatelessWidget {
     );
   }
 }
+
+
+const DataCellTextStyle = TextStyle(
+  fontSize: 16,
+  color: AppColors.defaultWhiteColor,
+  fontWeight: FontWeight.normal,
+);
+
+
+const DataTableHeaderStyle = TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.bold,
+  color: AppColors.defaultWhiteColor,
+);
 
 
 class _CurriculumListTile extends StatelessWidget {
