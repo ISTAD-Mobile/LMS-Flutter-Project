@@ -115,7 +115,7 @@ class MyAcademicScreen extends StatelessWidget {
                   _HoverCard(
                     title: "Associate",
                     imagePath: 'assets/images/cap.png',
-                    page: const AssociatePage(),
+                    page: AssociatePage(),
                     // currentIndex: 1, // Set the appropriate index for the navigation bar
                     // onTabTapped: (int index) {
                     //   // Handle tab change
