@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lms_mobile/view/screen/lms/profile/settings/static_profile_setting_screen.dart';
 import 'dart:io';
 
-import '../../../../data/color/color_screen.dart';
+import '../../../../../data/color/color_screen.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({Key? key}) : super(key: key);
@@ -59,6 +60,23 @@ class _StudentSettingsState extends State<SettingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.defaultWhiteColor,
+      appBar: AppBar(
+        backgroundColor: AppColors.defaultWhiteColor, // Light gray background
+        elevation: 3,
+        shadowColor: Colors.black.withOpacity(0.1),
+        surfaceTintColor: Colors.transparent,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: AppColors.defaultGrayColor),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          padding: EdgeInsets.zero,
+        ),
+        title: const Text(
+          'Student Setting',
+          style: TextStyle(color: AppColors.primaryColor, fontSize: 18),
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20.0),
@@ -67,15 +85,6 @@ class _StudentSettingsState extends State<SettingScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'STUDENT SETTING',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1A237E),
-                  ),
-                ),
-                const SizedBox(height: 20),
                 // Profile Image
                 Center(
                   child: Stack(
@@ -94,7 +103,7 @@ class _StudentSettingsState extends State<SettingScreen> {
                           child: Container(
                             padding: const EdgeInsets.all(8),
                             decoration: const BoxDecoration(
-                              color: Color(0xFF1A237E),
+                              color: AppColors.primaryColor,
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(
@@ -168,40 +177,58 @@ class _StudentSettingsState extends State<SettingScreen> {
 
                 // Buttons
                 const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
+                Container(
+                  alignment: Alignment.centerRight,  // This aligns the whole row to the right
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,  // This makes the Row take minimum required space
+                    children: [
+                      OutlinedButton(
                         onPressed: () {
                           Navigator.pop(context);
                         },
                         style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 38,
+                            vertical: 12,
+                          ),
                           side: const BorderSide(color: AppColors.primaryColor),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
                         child: const Text(
                           'Cancel',
-                          style: TextStyle(color: AppColors.primaryColor),
+                          style: TextStyle(color: AppColors.primaryColor, fontSize: 16.0),
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: ElevatedButton(
+                      const SizedBox(width: 16),
+                      ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             // Handle save logic here
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 38,
+                            vertical: 12,
+                          ),
                           backgroundColor: AppColors.primaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
-                        child: const Text('Save',style: TextStyle(color: AppColors.defaultWhiteColor),),
+                        child: const Text(
+                          'Save',
+                          style: TextStyle(
+                            color: AppColors.defaultWhiteColor,
+                            fontSize: 16.0,
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+                )
               ],
             ),
           ),
@@ -220,22 +247,47 @@ class _StudentSettingsState extends State<SettingScreen> {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
-      child: TextFormField(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+        Row(
+        children: [
+        Text(
+        label,
+        style: const TextStyle(
+          color: Color(0xFF2B3990),
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      const Text(
+        ' *',
+        style: TextStyle(
+          color: Colors.red,
+        ),
+      ),
+      ],
+    ),
+    const SizedBox(height: 8),
+      TextFormField(
         controller: controller,
         keyboardType: keyboardType,
         focusNode: focusNode ?? FocusNode(),
         decoration: InputDecoration(
-          labelText: label,
-          border: const UnderlineInputBorder(),
-          focusedBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: AppColors.primaryColor),
+          filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.grey),
           ),
-          labelStyle: const TextStyle(
-            color: Colors.grey,
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.grey),
           ),
-          floatingLabelStyle: TextStyle(
-            color: focusNode?.hasFocus == true ? AppColors.primaryColor : AppColors.defaultGrayColor,
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Color(0xFF2B3990)),
           ),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
         ),
           onTap: () {
               setState(() {});
@@ -247,6 +299,8 @@ class _StudentSettingsState extends State<SettingScreen> {
           return null;
         },
       ),
+    ],
+    ),
     );
   }
 
