@@ -62,17 +62,6 @@ class _MyHomePageState extends State<StudentScreen> {
     final isSignOut = title == 'Sign Out';
 
     return ListTile(
-      // leading: Icon(icon, color: selected ? AppColors.primaryColor : AppColors.defaultGrayColor),
-      // title: Text(
-      //   title,
-      //   style: TextStyle(
-      //     color: selected ? AppColors.primaryColor : textColor ?? AppColors.defaultGrayColor,
-      //     fontSize: 18,
-      //     fontWeight: FontWeight.w400,
-      //   ),
-      // ),
-      // selected: selected,
-      // onTap: onTap,
       leading: Icon(
           icon,
           color: isSignOut
