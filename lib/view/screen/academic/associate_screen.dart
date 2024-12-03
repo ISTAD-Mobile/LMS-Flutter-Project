@@ -173,49 +173,258 @@ class AssociatePage extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(height: 16),
-
-                  // Program Structure
-                  const Text(
-                    'Program Structure',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 8),
-                  const ExpansionTile(
-                    title: Text('Year 1'),
+                  const SizedBox(height: 20),
+                  const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Semester 1
-                      ExpansionTile(
-                        title: const Text(
-                          'Semester 1',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                      Text(
+                        'PROGRAM STRUCTURE',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.secondaryColor,
+                          height: 1,
                         ),
-                        children: const [
-                          _CurriculumListTile(subject: '13. Application Security (Cybersecurity)', credit: '3'),
-                          _CurriculumListTile(subject: '14. Web Development II (Java, Spring Framework)', credit: '4'),
-                          _CurriculumListTile(subject: '15. Object Oriented Analysis and Design', credit: '3'),
-                          _CurriculumListTile(subject: '16. Mathematics II (Business Statistics)', credit: '3'),
-                          _CurriculumListTile(subject: '17. Web Development III (Full Stack Web Development)', credit: '4'),
-                          _CurriculumListTile(subject: '18. UX and UI Design Professional', credit: '3'),
-                        ],
                       ),
-                      // Semester 2
-                      ExpansionTile(
-                        title: const Text(
-                          'Semester 2',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                      Text(
+                        'CURRICULUM',
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primaryColor,
                         ),
-                        children: const [
-                          _CurriculumListTile(subject: '19. Project Management', credit: '3'),
-                          _CurriculumListTile(subject: '20. Project Practicum (Internship)', credit: '12'),
-                        ],
                       ),
                     ],
                   ),
-                  const ExpansionTile(
-                    title: Text('Year 2'),
-                    children: [Text('Curriculum details for Year 2')],
+                  const SizedBox(height: 15),
+                  Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(color: Colors.grey, width: 1),
+                      ),
+                    ),
+                    child: const ExpansionTile(
+                      title: Text(
+                        'Year 1',
+                        style: TextStyle(
+                          fontSize: 19,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Semester 1',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Table Header
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Subjects',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.primaryColor,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              Text(
+                                'Credit',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.primaryColor,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        _CurriculumListTile(subject: '1. Introduction to Information and Technology', credit: '3'),
+                        _CurriculumListTile(subject: '2. Programming Foundation', credit: '3'),
+                        _CurriculumListTile(subject: '3. Intensive English Program I', credit: '3'),
+                        _CurriculumListTile(subject: '4. Academic Skill Development', credit: '3'),
+                        _CurriculumListTile(subject: '5. Multimedia and Web Design', credit: '3'),
+                        _CurriculumListTile(subject: '6. Networking Fundamental', credit: '3'),
+                        Divider(),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Semester 2',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Table Header
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Subjects',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.primaryColor,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              Text(
+                                'Credit',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.primaryColor,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        _CurriculumListTile(subject: '7. Web Development I ( Web Design )', credit: '3'),
+                        _CurriculumListTile(subject: '8. Data Structure and Algorithm', credit: '3'),
+                        _CurriculumListTile(subject: '9. Database Management Systems', credit: '3'),
+                        _CurriculumListTile(subject: '10. Intensive English Program II ( For IT Researching )', credit: '3'),
+                        _CurriculumListTile(subject: '11. Mathematics ( Discrete Math )', credit: '3'),
+                        _CurriculumListTile(subject: '12. System Administration', credit: '3'),
+                        Divider(),
+                      ],
+                    ),
                   ),
+
+                  Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(color: Colors.grey, width: 1), // Add bottom border
+                      ),
+                    ),
+                    child: const ExpansionTile(
+                      title: Text(
+                        'Year 2',
+                        style: TextStyle(
+                          fontSize: 19,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Semester 1',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Table Header
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Subjects',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.primaryColor,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              Text(
+                                'Credit',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.primaryColor,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        _CurriculumListTile(subject: '13. Application Security (Cybersecurity)', credit: '3'),
+                        _CurriculumListTile(subject: '14. Web Development II (Java, Spring Framework)', credit: '4'),
+                        _CurriculumListTile(subject: '15. Object Oriented Analysis and Design', credit: '3'),
+                        _CurriculumListTile(subject: '16. Mathematics II (Business Statistics)', credit: '3'),
+                        _CurriculumListTile(subject: '17. Web Development III (Full Stack Web Development)', credit: '4'),
+                        _CurriculumListTile(subject: '18. UX and UI Design Professional', credit: '3'),
+                        Divider(),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Semester 2',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Table Header
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Subjects',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.primaryColor,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              Text(
+                                'Credit',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.primaryColor,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        _CurriculumListTile(subject: '19. Project Management', credit: '3'),
+                        _CurriculumListTile(subject: '20. Project Practicum ( Internship )', credit: '12'),
+                        Divider(),
+                      ],
+                    ),
+                  ),
+
                   const SizedBox(height: 16),
 
                   const Column(
@@ -320,7 +529,7 @@ class _CurriculumListTile extends StatelessWidget {
     return Column(
       children: [
         ListTile(
-          title: Text(subject),
+          title: Text(subject, style: const TextStyle(fontSize: 14),),
           trailing: Text(credit),
         ),
         const Divider(), // Horizontal line between subjects
