@@ -64,10 +64,9 @@ class AssociatePage extends StatelessWidget {
                           color: Colors.white,
                         ),
                       ),
-                      const SizedBox(height: 8), // Spacing between text
                       // Subtitle Text
                       const Text(
-                        'ISTAD aim to provide a 10 months training\n'
+                        'ISTAD aim to provide a 2 years training\n'
                             'to become a IT specialist.',
                         style: TextStyle(
                           fontSize: 15,
@@ -451,15 +450,16 @@ class AssociatePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 15),
                   Container(
-                    color: AppColors.accentColor,
+                    width: MediaQuery.of(context).size.width, // Full screen width
+                    color: AppColors.defaultWhiteColor,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         DataTable(
                           columns: const [
-                            DataColumn(label: Text('Score', style: TextStyle(fontSize: 20))),
-                            DataColumn(label: Text('GPA', style: TextStyle(fontSize: 20))),
-                            DataColumn(label: Text('Grade', style: TextStyle(fontSize: 20))),
+                            DataColumn(label: Text('Score', style: TextStyle(fontSize: 16))),
+                            DataColumn(label: Text('GPA', style: TextStyle(fontSize: 16))),
+                            DataColumn(label: Text('Grade', style: TextStyle(fontSize: 16))),
                           ],
                           rows: const [
                             DataRow(cells: [
