@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/view/screen/academic/pre_university_screen.dart';
-
 import '../homeScreen/course/course_screen.dart';
 import 'IT_expert_screen.dart';
 import 'associate_screen.dart';
@@ -17,9 +17,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const MyAcademicScreen(),
+      home: MyAcademicScreen(),
     );
   }
 }
@@ -37,127 +37,108 @@ class MyAcademicScreen extends StatelessWidget {
     ];
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Fullscreen Carousel Slider
-            AspectRatio(
-              aspectRatio: 16 / 9,
-              child: CarouselSlider(
-                items: carouselImages
-                    .map(
-                      (imagePath) => ClipRRect(
-                    borderRadius: BorderRadius.circular(0.0),
-                    child: Image.asset(
-                      imagePath,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: Colors.grey[300],
-                          child: const Center(
-                            child: Icon(
-                              Icons.error_outline,
-                              color: Colors.red,
-                              size: 50,
+      body: Container(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              AspectRatio(
+                aspectRatio: 16 / 9,
+                child: CarouselSlider(
+                  items: carouselImages
+                      .map(
+                        (imagePath) => ClipRRect(
+                      borderRadius: BorderRadius.circular(0.0),
+                      child: Image.asset(
+                        imagePath,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey[300],
+                            child: const Center(
+                              child: Icon(
+                                Icons.error_outline,
+                                color: Colors.red,
+                                size: 50,
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
+                    ),
+                  )
+                      .toList(),
+                  options: CarouselOptions(
+                    autoPlay: true,
+                    enlargeCenterPage: false,
+                    viewportFraction: 1.0,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "ប្រភេទវគ្គសិក្សានិងអាហារូបករណ៍",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF253B95),
+                      fontFamily: 'NotoSansKhmer',
                     ),
                   ),
-                )
-                    .toList(),
-                options: CarouselOptions(
-                  autoPlay: true,
-                  enlargeCenterPage: false,
-                  viewportFraction: 1.0,
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
-            // Text Below Carousel
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12.0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "ប្រភេទវគ្គសិក្សានិងអាហារូបករណ៍",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xFF253B95),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            // Category Buttons
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: GridView.count(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                crossAxisCount: 2,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                childAspectRatio: 3 / 2,
-                children: [
-                  _HoverCard(
-                    title: "Bachelor",
-                    imagePath: "assets/images/graduate-avatar.png",
-                    page: const BachelorPage(),
-                    // currentIndex: 1,
-                    // onTabTapped: (int index) {
-                    //   // Handle tab change
-                    // },
-                  ),
-                  _HoverCard(
-                    title: "Associate",
-                    imagePath: 'assets/images/cap.png',
-                    page: AssociatePage(),
-                    // currentIndex: 1, // Set the appropriate index for the navigation bar
-                    // onTabTapped: (int index) {
-                    //   // Handle tab change
-                    // },
-                  ),
-                  _HoverCard(
-                    title: "Short Course",
-                    imagePath: 'assets/images/reading.png',
-                    page: const ShortCoursePage(),
-                    // currentIndex: 1, // Set the appropriate index for the navigation bar
-                    // onTabTapped: (int index) {
-                    //   // Handle tab change
-                    // },
-                  ),
-                  _HoverCard(
-                    title: "IT Expert",
-                    imagePath: 'assets/images/expert-graduate.png',
-                    page: const ITExpertPage(),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: GridView.count(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
+                  childAspectRatio: 1.0,
+                  children: [
+                    const _HoverCard(
+                      title: "Bachelor",
+                      imagePath: "https://cdn-icons-png.flaticon.com/128/7941/7941552.png",
+                      page: BachelorPage(),
+                    ),
+                    _HoverCard(
+                      title: "Associate",
+                      imagePath: 'https://cdn-icons-png.flaticon.com/128/10748/10748520.png',
+                      page: AssociatePage(),
+                    ),
+                    const _HoverCard(
+                      title: "Short Course",
+                      imagePath: 'https://cdn-icons-png.flaticon.com/128/613/613307.png',
+                      page: ShortCoursePage(),
+                    ),
+                    const _HoverCard(
+                      title: "IT Expert",
+                      imagePath: 'https://cdn-icons-png.flaticon.com/128/8262/8262226.png',
+                      page: ITExpertPage(),
 
-                  ),
-                  _HoverCard(
-                    title: "Foundation",
-                    imagePath: 'assets/images/graduation.png',
-                    page: const FoundationPage(),
-                    // currentIndex: 1, // Set the appropriate index for the navigation bar
-                    // onTabTapped: (int index) {
-                    //   // Handle tab change
-                    // },
-                  ),
-                  _HoverCard(
-                    title: "Pre-University",
-                    imagePath: 'assets/images/scroll.png',
-                    page: const PreUniversityPage(),
-                    // currentIndex: 1, // Set the appropriate index for the navigation bar
-                    // onTabTapped: (int index) {
-                    //   // Handle tab change
-                    // },
-                  ),
-                ],
+                    ),
+                    const _HoverCard(
+                      title: "Foundation",
+                      imagePath: 'https://cdn-icons-png.flaticon.com/128/12005/12005037.png',
+                      page: FoundationPage(),
+                    ),
+                    const _HoverCard(
+                      title: "Pre-University",
+                      imagePath: 'https://cdn-icons-png.flaticon.com/128/7655/7655706.png',
+                      page: PreUniversityPage(),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 16),
+            ],
+          ),
         ),
       ),
     );
@@ -168,16 +149,12 @@ class _HoverCard extends StatefulWidget {
   final String title;
   final String imagePath;
   final Widget page;
-  // final int currentIndex;
-  // final ValueChanged<int> onTabTapped;
 
   const _HoverCard({
     Key? key,
     required this.title,
     required this.imagePath,
     required this.page,
-    // required this.currentIndex,
-    // required this.onTabTapped,
   }) : super(key: key);
 
   @override
@@ -190,11 +167,14 @@ class _HoverCardState extends State<_HoverCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
         side: BorderSide(
-          color: _isHovered ? const Color(0xFF253B95) : Colors.transparent,
-          width: 2,
+          color: _isHovered
+              ? const Color(0xFF253B95)
+              : Colors.grey[300]!,
+          width: 1,
         ),
       ),
       elevation: 0,
@@ -209,29 +189,34 @@ class _HoverCardState extends State<_HoverCard> {
             );
           },
           borderRadius: BorderRadius.circular(10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                widget.imagePath,
-                height: 40,
-                errorBuilder: (context, error, stackTrace) {
-                  return Icon(
-                    Icons.error_outline,
-                    color: Colors.red,
-                    size: 40,
-                  );
-                },
-              ),
-              const SizedBox(height: 8),
-              Text(
-                widget.title,
-                style: const TextStyle(
-                  color: Color(0xFF253B95),
-                  fontWeight: FontWeight.bold,
+          child: Container(
+            height: 500,
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.network(
+                  color: AppColors.primaryColor,
+                  widget.imagePath,
+                  height: 50,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(
+                      Icons.error_outline,
+                      color: Colors.red,
+                      size: 60,
+                    );
+                  },
                 ),
-              ),
-            ],
+                const SizedBox(height: 8),
+                Text(
+                  widget.title,
+                  style: const TextStyle(
+                    color: Color(0xFF253B95),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

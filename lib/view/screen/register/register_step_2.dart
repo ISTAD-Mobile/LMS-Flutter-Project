@@ -44,7 +44,7 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                 _buildTextField(
                   label: 'Father Name *',
                   controller: _nameKhController,
-                  hintText: 'លាង ណៃគីម',
+                  hintText: 'Dara Phan',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your name in Khmer';
@@ -55,7 +55,7 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                 _buildTextField(
                   label: 'Father Contact Number (Optional) *',
                   controller: _nameKhController,
-                  hintText: 'លាង ណៃគីម',
+                  hintText: '0965432135',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your name in Khmer';
@@ -66,7 +66,7 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                 _buildTextField(
                   label: 'Mother Name *',
                   controller: _nameEnController,
-                  hintText: 'Leang Naikim',
+                  hintText: 'Sokchea Kim',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your name in English';
@@ -77,7 +77,7 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                 _buildTextField(
                   label: 'Mother Contact Number (Optional) *',
                   controller: _nameEnController,
-                  hintText: 'Leang Naikim',
+                  hintText: '0965495043',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your name in English';
@@ -88,7 +88,7 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                 _buildTextField(
                   label: 'Name of Your High School *',
                   controller: _nameEnController,
-                  hintText: 'Leang Naikim',
+                  hintText: 'Bak Touk High School',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your name in English';
@@ -99,12 +99,33 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                 _buildDropdownField(
                   label: 'Province *',
                   value: _selectedPlaceOfBirth,
-                  hintText: 'Phnom Penh',
+                  hintText: 'Select a province',
                   items: [
                     'Select a province',
                     'Phnom Penh',
                     'Siem Reap',
-                    'Battambang'
+                    'Battambang',
+                    'Kampot',
+                    'Kandal',
+                    'Kep',
+                    'Koh Kong',
+                    'Banteay Meanchey',
+                    'Kampong Cham',
+                    'Kampong Speu',
+                    'Kampong Thom',
+                    'Kratie',
+                    'Mondulkiri',
+                    'Oddar Meanchey',
+                    'Peilin',
+                    'Preah Sihanouk',
+                    'Preah Vihear',
+                    'Prey Veng',
+                    'Pursat',
+                    'Rotanakiri',
+                    'Stung Treng',
+                    'Svay Rieng',
+                    'Takeo',
+                    'Tboung Khmum',
                   ],
                   onChanged: (value) {
                     setState(() {
@@ -122,12 +143,17 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                 _buildDropdownField(
                   label: 'Grade (Optional) *',
                   value: _selectedPlaceOfBirth,
-                  hintText: 'Phnom Penh',
+                  hintText: 'Select a Grade',
                   items: [
-                    'Select a province',
-                    'Phnom Penh',
-                    'Siem Reap',
-                    'Battambang'
+                    'Select a Grade',
+                    'Grade A',
+                    'Grade B',
+                    'Grade C',
+                    'Grade D',
+                    'Grade E',
+                    'Grade F',
+                    'Grade Auto',
+                    'Grade Not Yet Released',
                   ],
                   onChanged: (value) {
                     setState(() {
@@ -145,12 +171,33 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                 _buildDropdownField(
                   label: 'Current Address *',
                   value: _selectedPlaceOfBirth,
-                  hintText: 'Phnom Penh',
+                  hintText: 'Select a province',
                   items: [
                     'Select a province',
                     'Phnom Penh',
                     'Siem Reap',
-                    'Battambang'
+                    'Battambang',
+                    'Kampot',
+                    'Kandal',
+                    'Kep',
+                    'Koh Kong',
+                    'Banteay Meanchey',
+                    'Kampong Cham',
+                    'Kampong Speu',
+                    'Kampong Thom',
+                    'Kratie',
+                    'Mondulkiri',
+                    'Oddar Meanchey',
+                    'Peilin',
+                    'Preah Sihanouk',
+                    'Preah Vihear',
+                    'Prey Veng',
+                    'Pursat',
+                    'Rotanakiri',
+                    'Stung Treng',
+                    'Svay Rieng',
+                    'Takeo',
+                    'Tboung Khmum',
                   ],
                   onChanged: (value) {
                     setState(() {
@@ -169,7 +216,7 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                   label: 'Get to know ISTAD through: *',
                   controller: _contactNumberController,
                   keyboardType: TextInputType.phone,
-                  hintText: '092382489',
+                  hintText: 'Please specify how you knew about ISTAD',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your contact number';
@@ -181,7 +228,7 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                   label: 'Who guide you to enroll (Optional) *',
                   controller: _contactNumberController,
                   keyboardType: TextInputType.phone,
-                  hintText: '092382489',
+                  hintText: 'Teacher or Friend',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your contact number';
@@ -193,7 +240,7 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                   label: 'Relationship (Optional) *',
                   controller: _contactNumberController,
                   keyboardType: TextInputType.phone,
-                  hintText: '092382489',
+                  hintText: 'Uncle or Friends',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your contact number';
@@ -281,16 +328,16 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
             validator: validator,
             decoration: InputDecoration(
               hintText: hintText,
-              hintStyle: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w400),
+              hintStyle: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w400,fontFamily: 'NotoSansKhmer'),
               filled: true,
               fillColor: Colors.transparent,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: AppColors.primaryColor),
+                borderSide: const BorderSide(color: AppColors.defaultGrayColor),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: AppColors.primaryColor),
+                borderSide: const BorderSide(color: AppColors.defaultGrayColor),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -354,11 +401,11 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
               fillColor: Colors.transparent,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: AppColors.primaryColor!),
+                borderSide: BorderSide(color: AppColors.defaultBlackColor!),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: AppColors.primaryColor!),
+                borderSide: BorderSide(color: AppColors.defaultGrayColor!),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -436,11 +483,11 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
               suffixIcon: const Icon(Icons.calendar_today, color: Colors.grey),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: AppColors.primaryColor!),
+                borderSide: BorderSide(color: AppColors.defaultBlackColor!),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: AppColors.primaryColor!),
+                borderSide: BorderSide(color: AppColors.defaultGrayColor!),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import '../../../data/color/color_screen.dart';
-import '../../screen/register/register_step_1.dart';
 
 class MyAppLayout extends StatelessWidget {
   @override
@@ -132,7 +130,7 @@ class AppLayout extends StatelessWidget {
         iconSize: 24,
       ),
       _buildBottomNavItem(
-        'https://cdn-icons-png.flaticon.com/128/8913/8913919.png',
+        'https://cdn-icons-png.flaticon.com/256/17278/17278445.png',
         'Academic',
         iconSize: 30,
       ),
