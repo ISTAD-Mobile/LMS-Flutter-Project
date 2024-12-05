@@ -98,8 +98,8 @@ class MyAcademicScreen extends StatelessWidget {
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   crossAxisCount: 2,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
                   childAspectRatio: 1.0,
                   children: [
                     const _HoverCard(

@@ -93,7 +93,7 @@ class _VideoBackgroundState extends State<VideoBackground> {
                       debugPrint("Navigate to Activity and Event");
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const ActivitiesAndEventScreen(),
+                          builder: (context) => const ActivityAndEventPage(),
                         ),
                       );
                     },

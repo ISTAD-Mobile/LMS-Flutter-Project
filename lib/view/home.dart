@@ -6,10 +6,8 @@ import 'package:lms_mobile/view/widgets/public_screen_widgets/home/academic_type
 import 'package:lms_mobile/view/widgets/public_screen_widgets/appbar_and_bottom_navigation_widgets.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/course_section.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/istad_activity.dart';
-import 'package:lms_mobile/view/widgets/public_screen_widgets/home/short_course_card.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/video_background.dart';
 
-import '../data/color/color_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
