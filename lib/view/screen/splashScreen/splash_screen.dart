@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreenPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/images/logo_log_in.png', width: 250,height: 250),
+            Image.asset('assets/images/New Logo iSTAD-06.png', width: 150,height: 150),
           ],
         ),
       ),
