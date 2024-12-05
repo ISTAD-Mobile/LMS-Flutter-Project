@@ -20,8 +20,9 @@ class _StudentSettingsState extends State<SettingScreen> {
   // Form controllers
   final _khmerNameController = TextEditingController(text: "ញឹម ទេវី");
   final _englishNameController = TextEditingController(text: "Nhoem Tevy");
-  final _addressController = TextEditingController(text: "Kandel");
-  final _personalNumberController = TextEditingController(text: "+855483058935");
+  late var _addressController = TextEditingController(text: "Kandel");
+  final _personalNumberController = TextEditingController(
+      text: "+855483058935");
   final _familyNumberController = TextEditingController(text: "+855883058935");
 
   final khmerNameFocus = FocusNode();
@@ -61,12 +62,14 @@ class _StudentSettingsState extends State<SettingScreen> {
     return Scaffold(
       backgroundColor: AppColors.defaultWhiteColor,
       appBar: AppBar(
-        backgroundColor: AppColors.defaultWhiteColor, // Light gray background
+        backgroundColor: AppColors.defaultWhiteColor,
+        // Light gray background
         elevation: 3,
         shadowColor: Colors.black.withOpacity(0.1),
         surfaceTintColor: Colors.transparent,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: AppColors.defaultGrayColor),
+          icon: const Icon(
+              Icons.arrow_back_ios, color: AppColors.defaultGrayColor),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -93,7 +96,8 @@ class _StudentSettingsState extends State<SettingScreen> {
                         radius: 50,
                         backgroundImage: _image != null
                             ? FileImage(_image!)
-                            : const AssetImage('assets/images/tevy.png') as ImageProvider,
+                            : const AssetImage(
+                            'assets/images/tevy.png') as ImageProvider,
                       ),
                       Positioned(
                         bottom: 0,
@@ -178,9 +182,11 @@ class _StudentSettingsState extends State<SettingScreen> {
                 // Buttons
                 const SizedBox(height: 20),
                 Container(
-                  alignment: Alignment.centerRight,  // This aligns the whole row to the right
+                  alignment: Alignment.centerRight,
+                  // This aligns the whole row to the right
                   child: Row(
-                    mainAxisSize: MainAxisSize.min,  // This makes the Row take minimum required space
+                    mainAxisSize: MainAxisSize.min,
+                    // This makes the Row take minimum required space
                     children: [
                       OutlinedButton(
                         onPressed: () {
@@ -198,7 +204,8 @@ class _StudentSettingsState extends State<SettingScreen> {
                         ),
                         child: const Text(
                           'Cancel',
-                          style: TextStyle(color: AppColors.primaryColor, fontSize: 16.0),
+                          style: TextStyle(color: AppColors.primaryColor,
+                              fontSize: 16.0),
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -250,57 +257,58 @@ class _StudentSettingsState extends State<SettingScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-        Row(
-        children: [
-        Text(
-        label,
-        style: const TextStyle(
-          color: Color(0xFF2B3990),
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-      const Text(
-        ' *',
-        style: TextStyle(
-          color: Colors.red,
-        ),
-      ),
-      ],
-    ),
-    const SizedBox(height: 8),
-      TextFormField(
-        controller: controller,
-        keyboardType: keyboardType,
-        focusNode: focusNode ?? FocusNode(),
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: Colors.white,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Colors.grey),
+          Row(
+            children: [
+              Text(
+                label,
+                style: const TextStyle(
+                  color: Color(0xFF2B3990),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const Text(
+                ' *',
+                style: TextStyle(
+                  color: Colors.red,
+                ),
+              ),
+            ],
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Colors.grey),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color(0xFF2B3990)),
-          ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-        ),
-          onTap: () {
+          const SizedBox(height: 8),
+          TextFormField(
+            controller: controller,
+            keyboardType: keyboardType,
+            focusNode: focusNode ?? FocusNode(),
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.grey),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.grey),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Color(0xFF2B3990)),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 12, vertical: 16),
+            ),
+            onTap: () {
               setState(() {});
             },
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please enter $label';
-          }
-          return null;
-        },
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter $label';
+              }
+              return null;
+            },
+          ),
+        ],
       ),
-    ],
-    ),
     );
   }
 
@@ -310,23 +318,71 @@ class _StudentSettingsState extends State<SettingScreen> {
     required List<String> items,
     required void Function(String?) onChanged,
   }) {
-    final FocusNode focusNode = FocusNode();
-
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
-      child: DropdownButtonFormField<String>(
-        value: value,
-        decoration: InputDecoration(
-          labelText: label,
-          border: const UnderlineInputBorder(),
-        ),
-        items: items.map((String item) {
-          return DropdownMenuItem(
-            value: item,
-            child: Text(item),
-          );
-        }).toList(),
-        onChanged: onChanged,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                label,
+                style: const TextStyle(
+                  color: AppColors.primaryColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const Text(
+                ' *',
+                style: TextStyle(
+                  color: Colors.red,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          DropdownButtonFormField<String>(
+            value: value,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.grey),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.grey),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: AppColors.primaryColor),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 12, vertical: 16),
+            ),
+            icon: const Icon(Icons.keyboard_arrow_down),
+            dropdownColor: Colors.white,
+            style: const TextStyle(
+              color: Colors.black87,
+              fontSize: 14,
+            ),
+            menuMaxHeight: 300,
+            items: items.map((String item) {
+              return DropdownMenuItem(
+                value: item,
+                child: Text(
+                  item,
+                  style: const TextStyle(
+                    color: Colors.black87,
+                    fontSize: 16,
+                  ),
+                ),
+              );
+            }).toList(),
+            onChanged: onChanged,
+          ),
+        ],
       ),
     );
   }
@@ -339,30 +395,63 @@ class _StudentSettingsState extends State<SettingScreen> {
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
-      child: GestureDetector(
-        onTap: onTap,
-        child: AbsorbPointer(
-          child: TextFormField(
-            focusNode: focusNode ?? FocusNode(),
-            decoration: InputDecoration(
-              labelText: label,
-              border: const UnderlineInputBorder(),
-              focusedBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(color: AppColors.primaryColor),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Label
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                color: AppColors.primaryColor, // Replace with your AppColors.primaryColor
               ),
-              labelStyle: const TextStyle(
-                color: Colors.grey,
-              ),
-              floatingLabelStyle: TextStyle(
-                color: focusNode?.hasFocus == true ? AppColors.primaryColor : AppColors.defaultGrayColor,
-              ),
-            ),
-            controller: TextEditingController(
-              text: "${value.day}/${value.month}/${value.year}",
             ),
           ),
-        ),
+          // Date Picker Field
+          GestureDetector(
+            onTap: onTap,
+            child: AbsorbPointer(
+              child: TextFormField(
+                focusNode: focusNode ?? FocusNode(),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: const BorderSide(color: Colors.grey),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: const BorderSide(color: Colors.grey),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: const BorderSide(color: AppColors.primaryColor),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 16,
+                  ),
+                  suffixIcon: const Icon(
+                    Icons.date_range,
+                    color: Colors.grey,
+                  ),
+                  hintText: "${value.day}/${value.month}/${value.year}",
+                  hintStyle: const TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
+                controller: TextEditingController(
+                  text: "${value.day}/${value.month}/${value.year}",
+                ),
+                readOnly: true,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
+
+
 }

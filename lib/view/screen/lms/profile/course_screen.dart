@@ -268,13 +268,25 @@ class CourseCard extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const CircleAvatar(
-                  radius: 30,
-                  backgroundImage: NetworkImage('https://placeholder.co/60x60'),
+                 const Stack(
+                   clipBehavior: Clip.none,
+                  children: [
+                     CircleAvatar(
+                      radius: 20,
+                      backgroundImage: AssetImage('assets/images/tevy.png'),
+                    ),
+                     Positioned(
+                      left: 25,
+                      child: CircleAvatar(
+                        radius: 20,
+                        backgroundImage: AssetImage('assets/images/tevy.png'),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 16),
+                  const SizedBox(width: 50),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
