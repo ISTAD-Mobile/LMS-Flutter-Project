@@ -7,6 +7,7 @@ import 'package:lms_mobile/view/widgets/public_screen_widgets/appbar_and_bottom_
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/bachelor_program.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/course_section.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/istad_activity.dart';
+import 'package:lms_mobile/view/widgets/public_screen_widgets/home/it_news/it_news_section.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/project_archeivement.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/video_background.dart';
 
@@ -30,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const IstadActivity(),
           const AcademicTypeAndScholarshipWidget(),
           const CourseSection(),
+          ItNewsSection(),
           ProjectArcheivementHome(),
           BachelorProgramHome(),
         ],
