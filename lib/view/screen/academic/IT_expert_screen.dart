@@ -43,7 +43,7 @@ class _ITExpertPageState extends State<ITExpertPage> {
             icon: const Icon(Icons.arrow_back),
         ),
         centerTitle: true,
-        title: const Text("IT Expert",style: TextStyle(fontSize: 16),),
+        title: const Text("IT Expert",style: TextStyle(fontSize: 16,color: AppColors.primaryColor),),
       ),
       body: SingleChildScrollView(
         child: Padding(

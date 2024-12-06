@@ -22,7 +22,7 @@ class AssociatePage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
         ),
         centerTitle: true,
-        title: const Text("Associate Program",style: TextStyle(fontSize: 16, fontFamily: 'RobotoEnglish'),),
+        title: const Text("Associate Program",style: TextStyle(fontSize: 16, fontFamily: 'RobotoEnglish',color: AppColors.primaryColor),),
       ),
       body: SingleChildScrollView(
         child: Container(

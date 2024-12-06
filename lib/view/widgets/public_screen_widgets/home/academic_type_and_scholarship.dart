@@ -1,10 +1,57 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../data/color/color_screen.dart';
+import 'package:lms_mobile/data/color/color_screen.dart';
+import 'package:lms_mobile/view/screen/academic/IT_expert_screen.dart';
+import 'package:lms_mobile/view/screen/academic/associate_screen.dart';
+import 'package:lms_mobile/view/screen/academic/bachelor_screen.dart';
+import 'package:lms_mobile/view/screen/academic/foundation_screen.dart';
+import 'package:lms_mobile/view/screen/academic/pre_university_screen.dart';
+import 'package:lms_mobile/view/screen/homeScreen/course/course_screen.dart';
 
 class AcademicTypeAndScholarshipWidget extends StatelessWidget {
   const AcademicTypeAndScholarshipWidget({super.key});
+
+  void navigateToScreen(BuildContext context, String academicType) {
+    switch (academicType) {
+      case 'Bachelor':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const BachelorPage()),
+        );
+        break;
+      case 'Associate':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AssociatePage()),
+        );
+        break;
+      case 'Short Course':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const CourseVerticalListPage()),
+        );
+        break;
+      case 'IT Expert':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const ITExpertPage()),
+        );
+        break;
+      case 'Foundation':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const FoundationPage()),
+        );
+        break;
+      case 'Pre-University':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const PreUniversityPage()),
+        );
+        break;
+      default:
+        print('Unknown academic type');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +77,7 @@ class AcademicTypeAndScholarshipWidget extends StatelessWidget {
         'height': 45.0,
         'spacing': 14.0,
       },
-      {
+    {
         'image': 'https://cdn-icons-png.flaticon.com/128/8262/8262226.png',
         'text': 'IT Expert',
         'width': 55.0,
@@ -77,30 +124,30 @@ class AcademicTypeAndScholarshipWidget extends StatelessWidget {
             spacing: 15,
             runSpacing: 15,
             children: List.generate(items.length, (index) {
-              return SizedBox(
-                width: MediaQuery.of(context).size.width / 2 - 25,
-                height: 150,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.defaultWhiteColor,
-                    border: Border.all(
-                      color: Colors.grey.shade400,
-                      width: 0.5,
+              return GestureDetector(
+                onTap: () {
+                  navigateToScreen(context, items[index]['text']);
+                },
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width / 2 - 25,
+                  height: 150,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(
+                        color: Colors.grey.shade400,
+                        width: 0.5,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ColorFiltered(
-                        colorFilter: const ColorFilter.mode(
-                          AppColors.primaryColor,
-                          BlendMode.srcIn,
-                        ),
-                        child: Image.network(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.network(
                           items[index]['image'],
                           width: items[index]['width'],
                           height: items[index]['height'],
+                          color: AppColors.primaryColor,
                           fit: BoxFit.contain,
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) return child;
@@ -113,17 +160,17 @@ class AcademicTypeAndScholarshipWidget extends StatelessWidget {
                             );
                           },
                         ),
-                      ),
-                      SizedBox(height: items[index]['spacing']),
-                      Text(
-                        items[index]['text'],
-                        style: const TextStyle(
-                          color: AppColors.primaryColor,
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
+                        SizedBox(height: items[index]['spacing']),
+                        Text(
+                          items[index]['text'],
+                          style: const TextStyle(
+                            color: AppColors.primaryColor,
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               );

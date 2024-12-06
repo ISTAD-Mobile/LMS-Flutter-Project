@@ -24,10 +24,10 @@ class Project {
   });
 }
 
-class ProjectGeneration {
+class ProjectGenerationOne {
   final List<Project> projects;
 
-  ProjectGeneration({
+  ProjectGenerationOne({
     required this.projects,
   });
 }
@@ -46,14 +46,22 @@ class ProjectCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 370,
+      height: 350,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.grey.shade300,
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Card(
-        elevation: 4,
+        elevation: 0,
+        color: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -74,7 +82,7 @@ class ProjectCard extends StatelessWidget {
               Text(
                 project.title,
                 style: const TextStyle(
-                  fontSize: 20,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -89,7 +97,7 @@ class ProjectCard extends StatelessWidget {
                           svgIcon,
                           width: 20,
                           height: 20,
-                          color: AppColors.defaultGrayColor,
+                          color: Colors.grey.shade500,
                         ),
                       ),
                       SizedBox(width: 5),
@@ -116,7 +124,6 @@ class ProjectCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              // List of features
               ...project.features.map((feature) => Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Row(

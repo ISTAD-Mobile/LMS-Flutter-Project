@@ -46,14 +46,22 @@ class ProjectCardGenTwo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 375,
+      height: 350,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.grey.shade300,
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Card(
-        elevation: 4,
+        elevation: 0,
+        color: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -75,7 +83,7 @@ class ProjectCardGenTwo extends StatelessWidget {
               Text(
                 projectGenTwo.title,
                 style: const TextStyle(
-                  fontSize: 20,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -90,7 +98,7 @@ class ProjectCardGenTwo extends StatelessWidget {
                         svgIcon,
                         width: 20,
                         height: 20,
-                        color: AppColors.defaultGrayColor,
+                        color: Colors.grey.shade500,
                       ),
                       const SizedBox(width: 5),
                       Text(

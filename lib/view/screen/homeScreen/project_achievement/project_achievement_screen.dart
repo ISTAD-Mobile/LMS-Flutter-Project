@@ -20,8 +20,8 @@ class ProjectListScreenHome extends StatelessWidget {
 
 class ProjectListScreen extends StatelessWidget {
   // Sample data
-  final List<ProjectGeneration> generations = [
-    ProjectGeneration(
+  final List<ProjectGenerationOne> generations = [
+    ProjectGenerationOne(
       projects: [
         Project(
           title: 'Developers Cambodia',
@@ -244,15 +244,9 @@ class ProjectListScreen extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back_ios),
         ),
-        title: const Padding(
-          padding: EdgeInsets.only(left: 0.0),
-          child: Text(
-            "Back",
-            style: TextStyle(fontSize: 18, fontFamily: 'RobotoEnglish'),
-          ),
-        ),
+        title: const Text("Back",style: TextStyle(fontSize: 16,color: AppColors.primaryColor),),
       ),
       body: Container(
         decoration: BoxDecoration(

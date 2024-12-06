@@ -118,6 +118,7 @@ class AppLayout extends StatelessWidget {
       unselectedLabelStyle: const TextStyle(
         fontSize: 14,
       ),
+      backgroundColor: AppColors.defaultWhiteColor,
       items: _bottomNavItems(),
     );
   }

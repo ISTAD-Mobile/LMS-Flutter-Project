@@ -22,7 +22,7 @@ class BachelorPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
         ),
         centerTitle: true,
-        title: const Text("Bachelor Program",style: TextStyle(fontSize: 16),),
+        title: const Text("Bachelor Program",style: TextStyle(fontSize: 16,color: AppColors.primaryColor),),
       ),
       body: SingleChildScrollView(
         // padding: const EdgeInsets.all(16.0),

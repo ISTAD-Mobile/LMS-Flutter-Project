@@ -42,7 +42,7 @@ class _ITExpertPageState extends State<FoundationPage> {
           icon: const Icon(Icons.arrow_back),
         ),
         centerTitle: true,
-        title: const Text("Foundation",style: TextStyle(fontSize: 16),),
+        title: const Text("Foundation",style: TextStyle(fontSize: 16,color: AppColors.primaryColor),),
       ),
       body: SingleChildScrollView(
         child: Padding(

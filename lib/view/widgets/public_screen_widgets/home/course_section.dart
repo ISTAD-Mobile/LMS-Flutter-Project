@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
+import 'package:lms_mobile/view/screen/homeScreen/course/course_screen.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/short_course_card.dart';
 
 class CourseSection extends StatelessWidget {
@@ -24,26 +26,34 @@ class CourseSection extends StatelessWidget {
                   color: AppColors.primaryColor,
                 ),
               ),
-              const Text(
-                'see more',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.secondaryColor,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CourseVerticalListPage(),
+                    ),
+                  );
+                },
+                child: const Text(
+                  'See More',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryColor,
+                  ),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 16),
           SizedBox(
-            height: 150,
+            height: 170,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: courses.length,
               itemBuilder: (context, index) {
-                return Container(
-                  child: ShortCourseCard(course: courses[index]),
-                );
+                return ShortCourseCard(course: courses[index]);
               },
             ),
           ),
