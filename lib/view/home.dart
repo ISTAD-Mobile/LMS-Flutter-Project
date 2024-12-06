@@ -6,6 +6,7 @@ import 'package:lms_mobile/view/widgets/public_screen_widgets/home/academic_type
 import 'package:lms_mobile/view/widgets/public_screen_widgets/appbar_and_bottom_navigation_widgets.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/course_section.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/istad_activity.dart';
+import 'package:lms_mobile/view/widgets/public_screen_widgets/home/it_news/it_news_section.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/video_background.dart';
 
 
@@ -28,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
           IstadActivity(),
           AcademicTypeAndScholarshipWidget(),
           CourseSection(),
+          ItNewsSection(),
         ],
       ),
     },
