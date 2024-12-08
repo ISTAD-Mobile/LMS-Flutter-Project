@@ -1,12 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'It_news_card.dart';
 import 'it_news_detail.dart';
 
 class ItNewsSection extends StatelessWidget {
   const ItNewsSection({Key? key}) : super(key: key);
+
+  void _launchURL() async {
+    const url = 'https://www.facebook.com/istad.co?mibextid=ZbWKwL';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,38 +25,40 @@ class ItNewsSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Useful Content'.toUpperCase(),
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primaryColor,
-                ),
-              ),
-              const Text(
-                'see more',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primaryColor,
-                ),
-              ),
-            ],
+        Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Useful Content'.toUpperCase(),
+            style: const TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+              color: AppColors.primaryColor,
+            ),
           ),
+          GestureDetector(
+            onTap: _launchURL,
+            child: const Text(
+              'See more',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: AppColors.primaryColor,
+                // decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
+        ],
+      ),
           const SizedBox(height: 16),
           SizedBox(
-            height: 320, // Adjusted height for the list
+            height: 330,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: news.length, // Use the `news` list
+              itemCount: news.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
-                    // Navigate to the detail screen when tapped
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -55,8 +67,8 @@ class ItNewsSection extends StatelessWidget {
                     );
                   },
                   child: Container(
-                    margin: const EdgeInsets.only(right: 16), // Optional spacing between cards
-                    child: ItNewsCard(news: news[index]), // Pass data to the card
+                    margin: const EdgeInsets.only(right: 16),
+                    child: ItNewsCard(news: news[index]),
                   ),
                 );
               },

@@ -208,7 +208,7 @@ class ShortCourseCard extends StatelessWidget {
                       Row(
                         children: [
                           Image.network(
-                            'https://cdn-icons-png.flaticon.com/128/660/660376.png',
+                            'https://cdn-icons-png.flaticon.com/256/17009/17009106.png',
                             width: 16,
                             height: 16,
                             color: AppColors.primaryColor,
