@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../data/color/color_screen.dart';
+
 void main() => runApp(StudentAdmissionApp());
 
 class StudentAdmissionApp extends StatelessWidget {
@@ -87,18 +89,20 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
                     width: 180,
                     height: 180,
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
+                      border: Border.all(color: AppColors.primaryColor),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: _selectedImage == null
                         ? const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.cloud_upload, color: Colors.grey, size: 20),
-                        SizedBox(height: 8),
+                        Icon(Icons.cloud_download_outlined, color: AppColors.primaryColor, size: 40),
+                        SizedBox(height: 5),
+                        Text('Avatar',style: TextStyle(color: AppColors.defaultBlackColor),),
+                        SizedBox(height: 10),
                         Text(
                           "Please upload a photo",
-                          style: TextStyle(color: Colors.grey),
+                          style: TextStyle(color: AppColors.defaultBlackColor),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -117,15 +121,15 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
                   children: [
                     const Text(
                       "Sample Photo",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(height: 20),
                     Container(
                       width: 100,
-                      height: 100,
+                      height: 135,
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(8),
+                        // borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Icon(Icons.person, size: 50, color: Colors.grey),
                     ),
