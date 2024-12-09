@@ -126,7 +126,7 @@ class AppLayout extends StatelessWidget {
   List<BottomNavigationBarItem> _bottomNavItems() {
     return [
       _buildBottomNavItem(
-        'https://cdn-icons-png.flaticon.com/128/1828/1828864.png',
+        'https://cdn-icons-png.flaticon.com/128/69/69524.png',
         'Home',
         iconSize: 24,
       ),

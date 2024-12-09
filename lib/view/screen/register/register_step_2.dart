@@ -258,12 +258,12 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Processing Data')),
                           );
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => RegisterStep3(),
-                            ),
-                          );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) => RegisterStep3(),
+                          //   ),
+                          // );
                         }
                       },
                       child: const Text(
