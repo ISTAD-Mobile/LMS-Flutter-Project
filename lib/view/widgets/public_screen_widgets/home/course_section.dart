@@ -1,60 +1,57 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:lms_mobile/data/color/color_screen.dart';
-import 'package:lms_mobile/view/screen/homeScreen/course/course_screen.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/short_course_card.dart';
 
+import '../../../../data/color/color_screen.dart';
+
 class CourseSection extends StatelessWidget {
-  const CourseSection({Key? key}) : super(key: key);
+  const CourseSection({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 14),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header Row
+          // Title and "See More" Text
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Short Course'.toUpperCase(),
                 style: const TextStyle(
-                  fontSize: 17,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: AppColors.primaryColor,
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const CourseVerticalListPage(),
-                    ),
-                  );
-                },
-                child: const Text(
-                  'See More',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.primaryColor,
-                  ),
+              const Text(
+                'see more',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primaryColor,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          SizedBox(
-            height: 170,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: courses.length,
-              itemBuilder: (context, index) {
-                return ShortCourseCard(course: courses[index]);
-              },
+          const SizedBox(height: 10),
+          // Horizontal scrolling list of ShortCourseCard
+          const SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                ShortCourseCard(),
+                ShortCourseCard(),
+                ShortCourseCard(),
+                ShortCourseCard(),
+                ShortCourseCard(),
+                ShortCourseCard(),
+                ShortCourseCard(),
+                ShortCourseCard(),
+                ShortCourseCard(),
+                ShortCourseCard(),
+              ],
             ),
           ),
         ],
