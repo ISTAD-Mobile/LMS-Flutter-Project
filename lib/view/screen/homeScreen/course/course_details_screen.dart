@@ -1,20 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: CourseDetailsPage(),
-    );
-  }
-}
-
+import '../../enrollments/enroll_screen.dart';
 
 class CourseDetailsPage extends StatelessWidget {
   final List<CourseSection> sections = [
@@ -190,7 +177,7 @@ class CourseDetailsPage extends StatelessWidget {
               const SizedBox(height: 16),
               _buildPriceSection(),
               const SizedBox(height: 16),
-              _buildResetButton(),
+              _buildResetButton(context),
               const SizedBox(height: 16),
               ...sections.map((section) => _buildExpansionTile(section))
                   .toList(),
@@ -311,11 +298,15 @@ class CourseDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildResetButton() {
+  Widget _buildResetButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (BuildContext context) => EnrollScreen()),
+          );
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primaryColor,
           padding: const EdgeInsets.symmetric(vertical: 12),
@@ -338,8 +329,8 @@ class CourseDetailsPage extends StatelessWidget {
     return StatefulBuilder(
       builder: (context, setState) {
         return Container(
-          margin: EdgeInsets.only(bottom: 10),
-          decoration: BoxDecoration(
+          margin: const EdgeInsets.only(bottom: 10),
+          decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(
                 color: AppColors.primaryColor,
