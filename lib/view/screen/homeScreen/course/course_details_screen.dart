@@ -347,61 +347,64 @@ class CourseDetailsPage extends StatelessWidget {
               ),
             ),
           ),
-          child: ExpansionTile(
-            title: Text(
-              section.title,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primaryColor,
-              ),
-            ),
-            // backgroundColor: Colors.blue,
-            collapsedBackgroundColor: Colors.white,
-            iconColor: AppColors.primaryColor,
-            collapsedIconColor: Colors.blue[900],
-            tilePadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-            childrenPadding: EdgeInsets.all(0),
-            expandedAlignment: Alignment.topLeft,
-            maintainState: true,
-            onExpansionChanged: (expanded) {
-              setState(() {});
-            },
-            trailing: Icon(Icons.arrow_drop_down),
-            leading: Icon(Icons.menu_book_outlined, color: Colors.blue[900]),
-            initiallyExpanded: false,
-            children: [
-              Container(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: section.topics.map((topic) =>
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 8),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(top: 6),
-                              child: Icon(Icons.circle, size: 6,
-                                  color: Colors.grey[600]),
-                            ),
-                            SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                topic,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black87,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )).toList(),
+          child: Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              title: Text(
+                section.title,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primaryColor,
                 ),
               ),
-            ],
+              // backgroundColor: Colors.blue,
+              collapsedBackgroundColor: Colors.white,
+              iconColor: AppColors.primaryColor,
+              collapsedIconColor: Colors.blue[900],
+              tilePadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+              childrenPadding: EdgeInsets.all(0),
+              expandedAlignment: Alignment.topLeft,
+              maintainState: true,
+              onExpansionChanged: (expanded) {
+                setState(() {});
+              },
+              trailing: Icon(Icons.arrow_drop_down),
+              leading: Icon(Icons.menu_book_outlined, color: Colors.blue[900]),
+              initiallyExpanded: false,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: section.topics.map((topic) =>
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(top: 6),
+                                child: Icon(Icons.circle, size: 6,
+                                    color: Colors.grey[600]),
+                              ),
+                              SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  topic,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )).toList(),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },

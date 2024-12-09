@@ -11,6 +11,8 @@ import 'package:lms_mobile/view/widgets/public_screen_widgets/home/it_news/it_ne
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/project_archeivement_section.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/video_background.dart';
 
+import 'widgets/public_screen_widgets/home/courosel_student_cart.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -34,6 +36,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ItNewsSection(),
           ProjectArcheivementHome(),
           BachelorProgramHome(),
+          Container(
+            height: 430,
+            child: TestimonialPage(),
+          ),
         ],
       ),
     },
