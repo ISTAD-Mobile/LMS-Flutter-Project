@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../../data/color/color_screen.dart';
 
 class MyAppLayout extends StatelessWidget {
@@ -69,7 +68,8 @@ class AppLayout extends StatelessWidget {
 
   ElevatedButton _buildAdmissionButton() {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+      },
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.secondaryColor,
         shape: RoundedRectangleBorder(
@@ -118,6 +118,7 @@ class AppLayout extends StatelessWidget {
       unselectedLabelStyle: const TextStyle(
         fontSize: 14,
       ),
+      backgroundColor: AppColors.defaultWhiteColor,
       items: _bottomNavItems(),
     );
   }
@@ -125,12 +126,12 @@ class AppLayout extends StatelessWidget {
   List<BottomNavigationBarItem> _bottomNavItems() {
     return [
       _buildBottomNavItem(
-        'https://cdn-icons-png.flaticon.com/128/1828/1828864.png',
+        'https://cdn-icons-png.flaticon.com/128/69/69524.png',
         'Home',
         iconSize: 24,
       ),
       _buildBottomNavItem(
-        'https://cdn-icons-png.flaticon.com/128/8913/8913919.png',
+        'https://cdn-icons-png.flaticon.com/256/17278/17278445.png',
         'Academic',
         iconSize: 30,
       ),

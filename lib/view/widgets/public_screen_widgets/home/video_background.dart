@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lms_mobile/view/screen/homeScreen/activities_and_event/activities_and_event_screen.dart';
 import 'package:video_player/video_player.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 
@@ -90,6 +91,11 @@ class _VideoBackgroundState extends State<VideoBackground> {
                   child: ElevatedButton(
                     onPressed: () {
                       debugPrint("Navigate to Activity and Event");
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const ActivityAndEventPage(),
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryColor,

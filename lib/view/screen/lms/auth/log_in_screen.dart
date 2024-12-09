@@ -137,15 +137,6 @@ class _SignInScreenState extends State<confirmSignInScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: 20),
-              const Text(
-                'Sign In',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primaryColor,
-                ),
-              ),
               const SizedBox(height: 40),
               Image.asset(
                 'assets/images/logo_log_in.png',

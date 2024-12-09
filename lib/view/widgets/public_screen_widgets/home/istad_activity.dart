@@ -16,7 +16,7 @@ class IstadActivity extends StatelessWidget {
             children: [
               SizedBox(
                 width: 6,
-                height: 50,
+                height:55,
                 child: Container(
                   color: AppColors.secondaryColor,
                 ),
@@ -47,12 +47,9 @@ class IstadActivity extends StatelessWidget {
           ),
           const SizedBox(height: 10),
 
-          // Description
           const Text(
-            'Showcase activity at ISTAD like admission interview, entrance exam, '
-                'special lectures, monthly party, study activity, review, exam, short course, '
-                'pre-university, foundation, and expert course.',
-            textAlign: TextAlign.justify,
+            'Showcase activity at ISTAD like admission interview, entrance exam,special lectures, monthly party, study activity, review, exam, short course, pre-university, foundation, and expert course.',
+            // textAlign: TextAlign.justify,
             style: TextStyle(
               fontSize: 16,
               color: AppColors.primaryColor,
@@ -60,7 +57,6 @@ class IstadActivity extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          // image section
           Column(
             children: [
               Row(
@@ -87,10 +83,8 @@ class IstadActivity extends StatelessWidget {
           const SizedBox(
             height: 6,
           ),
-          // image for available course
           Image.network(
               'https://www.cstad.edu.kh/_next/image?url=https%3A%2F%2Flms-api.istad.co%2Fapi%2Fv1%2Fmedias%2Fview%2F5992e761-c2a9-45ab-bedd-e5ddb5fe6645.png&w=3840&q=75'),
-          // Academic type and Scholarship
         ],
       ),
     );

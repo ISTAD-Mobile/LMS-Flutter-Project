@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/view/screen/lms/profile/course_screen.dart';
-import 'package:lms_mobile/view/screen/lms/profile/profile_setting_screen.dart';
 import '../../../data/color/color_screen.dart';
 import '../../home.dart';
 import '../../screen/lms/profile/acheivement_screen.dart';
 import '../../screen/lms/profile/profile_view_screen.dart';
+import '../../screen/lms/profile/settings/static_profile_setting_screen.dart';
 
 void main() => runApp(const MyApp());
 
@@ -40,7 +40,7 @@ class _MyHomePageState extends State<StudentScreen> {
     {'title': 'Course', 'widget': const CourseScreen()},
     {'title': 'Profile', 'widget': const ProfileScreen()},
     {'title': 'Achievement', 'widget': const AcheivementScreen()},
-    {'title': 'Setting', 'widget': const SettingScreen()},
+    {'title': 'Setting', 'widget': const StaticProfileViewScreen()},
   ];
 
   void _onItemTapped(int index) {
@@ -62,17 +62,6 @@ class _MyHomePageState extends State<StudentScreen> {
     final isSignOut = title == 'Sign Out';
 
     return ListTile(
-      // leading: Icon(icon, color: selected ? AppColors.primaryColor : AppColors.defaultGrayColor),
-      // title: Text(
-      //   title,
-      //   style: TextStyle(
-      //     color: selected ? AppColors.primaryColor : textColor ?? AppColors.defaultGrayColor,
-      //     fontSize: 18,
-      //     fontWeight: FontWeight.w400,
-      //   ),
-      // ),
-      // selected: selected,
-      // onTap: onTap,
       leading: Icon(
           icon,
           color: isSignOut
@@ -97,11 +86,15 @@ class _MyHomePageState extends State<StudentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
+      backgroundColor: AppColors.defaultWhiteColor,
       key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: AppColors.defaultWhiteColor,
         automaticallyImplyLeading: false,
+        elevation: 2, // This adds a subtle shadow
+        scrolledUnderElevation: 2, // This maintains the shadow when scrolling
+        surfaceTintColor: Colors.transparent, // This prevents color change on scroll
+        shadowColor: Colors.black.withOpacity(0.1), // This controls shadow color
         title: Row(
           children: [
             GestureDetector(
@@ -123,11 +116,6 @@ class _MyHomePageState extends State<StudentScreen> {
                 height: 35,
                 fit: BoxFit.contain,
               ),
-            ),
-            const Divider(
-              height: 1,
-              thickness: 1,
-              color: Colors.black12, // Replace with your desired color
             ),
           ],
         ),

@@ -64,7 +64,7 @@ class ShortCourseCard extends StatelessWidget {
                   ),
                   Container(
                     padding:
-                        const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+                    const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
                     decoration: BoxDecoration(
                       color: AppColors.secondaryColor,
                       borderRadius: BorderRadius.circular(16),
