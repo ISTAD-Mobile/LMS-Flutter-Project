@@ -12,17 +12,17 @@ final List<ActivityModel> activity = [
   ActivityModel(
     title: 'Closing Ceremony',
     description: 'ISTAD always prepares the closing\nceremony at the end of the basic course\nand advanced course of ITE generation.',
-    imageUrl: 'assets/images/activity_and_event1.png',
+    imageUrl: 'assets/images/activity_and_event_closing.png',
   ),
   ActivityModel(
     title: 'Entrance Exam',
     description: 'Your ultimate resource for preparing\nand excelling in entrance exams.',
-    imageUrl: 'assets/images/activity_and_event1.png',
+    imageUrl: 'assets/images/activity_and_event_entrance.png',
   ),
   ActivityModel(
     title: 'Interview',
     description: 'Achieve interview success with our\nextensive collection of resources. ',
-    imageUrl: 'assets/images/activity_and_event1.png',
+    imageUrl: 'assets/images/activity_and_event_interview.png',
   ),
   ActivityModel(
     title: 'Orientation Day',
@@ -32,12 +32,12 @@ final List<ActivityModel> activity = [
   ActivityModel(
     title: 'Workshop',
     description: 'Immerse yourself in an enriching\nworkshop experience. Gain practical\nskills, hands-on learning, and valuable\ninsights from industry experts.',
-    imageUrl: 'assets/images/activity_and_event1.png',
+    imageUrl: 'assets/images/activity_and_event_workshop.png',
   ),
   ActivityModel(
     title: 'Special Lecture',
     description: 'Join our distinguished special lecture\nseries featuring renowned speakers\nand thought leaders.',
-    imageUrl: 'assets/images/activity_and_event1.png',
+    imageUrl: 'assets/images/activity_and_event_special_lecture.png',
   ),
 ];
 
@@ -49,7 +49,6 @@ class ActivityAndEventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 5,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),

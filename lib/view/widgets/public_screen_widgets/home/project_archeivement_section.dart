@@ -68,8 +68,6 @@ class ProjectArcheivementHome extends StatelessWidget {
     ),
   ];
 
-
-
   @override
   Widget build(BuildContext context) {
     return Padding(

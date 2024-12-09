@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lms_mobile/view/home.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/project_archeivement_gen1.dart';
 
 import '../../../../data/color/color_screen.dart';
@@ -242,11 +243,22 @@ class ProjectListScreen extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            } else {
+              // Navigate to a specific screen if no screen to pop
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen()),
+              );
+            }
           },
           icon: const Icon(Icons.arrow_back_ios),
         ),
-        title: const Text("Back",style: TextStyle(fontSize: 16,color: AppColors.primaryColor),),
+        title: const Text(
+          "Back",
+          style: TextStyle(fontSize: 16, color: AppColors.primaryColor),
+        ),
       ),
       body: Container(
         decoration: BoxDecoration(

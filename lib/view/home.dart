@@ -4,9 +4,14 @@ import 'package:lms_mobile/view/screen/lms/auth/first_log_in_screen.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/about_tapbar_navigation_widget.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/academic_type_and_scholarship.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/appbar_and_bottom_navigation_widgets.dart';
+import 'package:lms_mobile/view/widgets/public_screen_widgets/home/bachelor_program.dart';
+import 'package:lms_mobile/view/widgets/public_screen_widgets/home/courosel_student_cart.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/course_section.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/istad_activity.dart';
+import 'package:lms_mobile/view/widgets/public_screen_widgets/home/it_news/it_news_section.dart';
+import 'package:lms_mobile/view/widgets/public_screen_widgets/home/project_archeivement_section.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/video_background.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,15 +27,18 @@ class _HomeScreenState extends State<HomeScreen> {
     {
       'title': 'Home',
       'page': ListView(
-        children: const [
-          // Video Background
-          VideoBackground(),
-          //ISTAD activity
-          IstadActivity(),
-          // Academic and Scholarships
-          AcademicTypeAndScholarshipWidget(),
-          // Short Courses section
-          CourseSection(),
+        children: [
+          const VideoBackground(),
+          const IstadActivity(),
+          const AcademicTypeAndScholarshipWidget(),
+          const CourseSection(),
+          ItNewsSection(),
+          ProjectArcheivementHome(),
+          BachelorProgramHome(),
+          Container(
+            height: 430,
+            child: TestimonialPage(),
+          ),
         ],
       ),
     },
