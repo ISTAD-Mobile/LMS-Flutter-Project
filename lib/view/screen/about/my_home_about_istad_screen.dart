@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
-import 'package:lms_mobile/view/screen/register/register_step_1.dart';
 
 import '../../widgets/public_screen_widgets/appbar_register.dart';
 
