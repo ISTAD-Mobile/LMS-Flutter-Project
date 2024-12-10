@@ -11,6 +11,9 @@ import 'package:lms_mobile/view/widgets/public_screen_widgets/home/istad_activit
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/it_news/it_news_section.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/project_archeivement_section.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/video_background.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../data/color/color_screen.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -66,7 +69,41 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return AppLayout(
       title: _pages[_selectedIndex]['title'] as String,
-      body: _pages[_selectedIndex]['page'] as Widget,
+      body: Stack(
+        children: [
+          _pages[_selectedIndex]['page'] as Widget,
+          if (_selectedIndex == 0)
+            Positioned(
+              bottom: 16,
+              right: 16,
+              child: FloatingActionButton(
+                backgroundColor: AppColors.primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: ClipOval(
+                  child: Image.network(
+                    'https://cdn-icons-png.flaticon.com/256/2840/2840156.png',
+                    width: 30,
+                    height: 30,
+                    color: AppColors.defaultWhiteColor,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                onPressed: () async {
+                  const telegramUrl = "https://t.me/istadkh";
+                  if (await canLaunch(telegramUrl)) {
+                    await launch(telegramUrl);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Could not open Telegram')),
+                    );
+                  }
+                },
+              ),
+            ),
+        ],
+      ),
       currentIndex: _selectedIndex,
       onTabTapped: _onItemTapped,
     );

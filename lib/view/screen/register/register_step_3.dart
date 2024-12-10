@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lms_mobile/view/screen/register/register_step_2.dart';
 
 import '../../../data/color/color_screen.dart';
 
@@ -61,12 +62,17 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Student Admission"),
-        centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {},
+          icon: Icon(Icons.arrow_back_ios, color: AppColors.defaultGrayColor),
+          onPressed: () {
+            Navigator.popUntil(context, (route) => route.isFirst);
+          },
         ),
+        title: Text(
+          'Student Admission',
+          style: TextStyle(color: AppColors.primaryColor, fontSize: 16),
+        ),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -121,17 +127,23 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
                   children: [
                     const Text(
                       "Sample Photo",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(height: 20),
                     Container(
-                      width: 100,
+                      width: 110,
                       height: 135,
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        // borderRadius: BorderRadius.circular(8),
+                        // border: Border.all(color: Colors.grey),
+                        color: Colors.grey.shade200,
                       ),
-                      child: const Icon(Icons.person, size: 50, color: Colors.grey),
+                      child: Image.asset(
+                        'assets/images/sample_image.png',
+                        fit: BoxFit.contain,
+                        color: AppColors.defaultGrayColor,
+                        width: 20,
+                        height: 20,
+                      ),
                     ),
                   ],
                 ),
@@ -142,19 +154,37 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => RegisterStep2()),
+                    );
+                  },
+
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey[300],
+                    backgroundColor: Colors.grey.shade100,
+                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      side: BorderSide(color: Colors.grey.shade300, width: 1),
+                    ),
                   ),
-                  child: const Text("Previous", style: TextStyle(color: Colors.black)),
+                  child: const Text(
+                    "Previous",
+                    style: TextStyle(color: AppColors.defaultGrayColor),
+                  ),
                 ),
                 const SizedBox(width: 20,),
                 ElevatedButton(
                   onPressed: _submit,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: AppColors.primaryColor,
+                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
-                  child: const Text("Submit"),
+                  child: const Text("Submit", style: TextStyle(color: AppColors.defaultWhiteColor)),
                 ),
               ],
             ),

@@ -24,6 +24,19 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios, color: AppColors.defaultGrayColor),
+          onPressed: () {
+            Navigator.popUntil(context, (route) => route.isFirst);
+          },
+        ),
+        title: Text(
+          'Student Admission',
+          style: TextStyle(color: AppColors.primaryColor, fontSize: 16),
+        ),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -40,7 +53,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 16),
                 _buildTextField(
                   label: 'Name (KH) *',
                   controller: _nameKhController,
@@ -164,8 +177,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                     return null;
                   },
                 ),
-
-                const SizedBox(height: 24),
+                const SizedBox(height: 10),
                 Align(
                   alignment: Alignment.centerRight,
                   child: SizedBox(
@@ -192,12 +204,13 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
+                          // side: BorderSide(color: Colors.grey.shade300, width: 1),
                         ),
                       ),
                     ),
                   ),
                 ),
-
+                const SizedBox(height: 10),
               ],
             ),
           ),
@@ -243,6 +256,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
             controller: controller,
             keyboardType: keyboardType,
             validator: validator,
+            cursorColor: AppColors.primaryColor,
             decoration: InputDecoration(
               hintText: hintText,
               hintStyle: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w400,fontFamily: 'NotoSansKhmer'),
@@ -250,15 +264,21 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
               fillColor: Colors.transparent,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: AppColors.defaultGrayColor),
+                borderSide: BorderSide(
+                  color: Colors.grey.shade400,
+                  // width: 2,
+                ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: AppColors.defaultGrayColor),
+                borderSide: BorderSide(
+                  color: Colors.grey.shade400,
+                  // width: 2,
+                ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: AppColors.primaryColor),
+                borderSide: const BorderSide(color: AppColors.primaryColor,width: 2),
               ),
               contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
             ),
@@ -318,15 +338,21 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
               fillColor: Colors.transparent,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: AppColors.defaultGrayColor!),
+                borderSide: BorderSide(
+                  color: Colors.grey.shade400,
+                  // width: 2,
+                ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: AppColors.defaultGrayColor!),
+                borderSide: BorderSide(
+                  color: Colors.grey.shade400,
+                  // width: 2,
+                ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: AppColors.primaryColor!),
+                borderSide: BorderSide(color: AppColors.primaryColor,width: 2),
               ),
               contentPadding: const EdgeInsets.symmetric(
                   horizontal: 12, vertical: 16),
@@ -401,15 +427,21 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
               suffixIcon: const Icon(Icons.calendar_today, color: Colors.grey),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: AppColors.defaultGrayColor!),
+                borderSide: BorderSide(
+                  color: Colors.grey.shade400,
+                  // width: 2,
+                ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: AppColors.defaultGrayColor!),
+                borderSide: BorderSide(
+                  color: Colors.grey.shade400,
+                  // width: 2,
+                ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: AppColors.primaryColor!),
+                borderSide: BorderSide(color: AppColors.primaryColor,width: 2),
               ),
               contentPadding: const EdgeInsets.symmetric(
                   horizontal: 12, vertical: 16),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lms_mobile/view/screen/register/register_step_1.dart';
 import '../../../data/color/color_screen.dart';
 
 class MyAppLayout extends StatelessWidget {
@@ -38,13 +39,13 @@ class AppLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.defaultWhiteColor,
-      appBar: currentIndex == 3 ? null : _buildAppBar(),
+      appBar: currentIndex == 3 ? null : _buildAppBar(context),
       body: body,
       bottomNavigationBar: currentIndex == 3 ? null : _buildBottomNavigationBar(),
     );
   }
 
-  AppBar _buildAppBar() {
+  AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       backgroundColor: AppColors.primaryColor,
       automaticallyImplyLeading: false,
@@ -53,22 +54,28 @@ class AppLayout extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Image.network(
-              'https://www.cstad.edu.kh/_next/image?url=%2Fschool-logo%2Flogo-white-version.png&w=256&q=75',
-              height: 30,
+            child: Image.asset(
+              'assets/images/istad-logo-white.png',
+              height: 37,
               width: 100,
               fit: BoxFit.cover,
             ),
           ),
-          _buildAdmissionButton(),
+          _buildAdmissionButton(context),
         ],
       ),
     );
   }
 
-  ElevatedButton _buildAdmissionButton() {
+  ElevatedButton _buildAdmissionButton(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const RegisterStep1(),
+          ),
+        );
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.secondaryColor,
