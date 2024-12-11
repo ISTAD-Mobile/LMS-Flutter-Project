@@ -14,7 +14,9 @@ class AssociatePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.defaultWhiteColor,
       appBar: AppBar(
+        backgroundColor: AppColors.defaultWhiteColor,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -26,7 +28,7 @@ class AssociatePage extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: AppColors.backgroundColor,
           ),
           child: Column(

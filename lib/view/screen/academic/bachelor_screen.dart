@@ -14,7 +14,9 @@ class BachelorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.defaultWhiteColor,
       appBar: AppBar(
+        backgroundColor: AppColors.defaultWhiteColor,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
