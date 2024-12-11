@@ -108,7 +108,7 @@ class _MyHomePageState extends State<StudentScreen> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()),
+                  MaterialPageRoute(builder: (context) => HomeScreen()),
                 );
               },
               child: Image.asset(
@@ -195,7 +195,7 @@ class _MyHomePageState extends State<StudentScreen> {
                     onTap: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => const HomeScreen()),
+                        MaterialPageRoute(builder: (context) =>  HomeScreen()),
                       );
                     },
                   ),

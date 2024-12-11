@@ -17,7 +17,7 @@ class _PreUniversityPageState extends State<PreUniversityPage> {
 
   // List of screens for each tab
   final List<Widget> screens = [
-    const HomeScreen(),
+     HomeScreen(),
     const MyAcademicScreen(),
     const HomeIstadScreen(),
     const firstSignInScreen(),

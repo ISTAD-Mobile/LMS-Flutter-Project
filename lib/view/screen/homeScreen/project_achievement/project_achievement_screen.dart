@@ -27,7 +27,7 @@ class ProjectListScreen extends StatelessWidget {
         Project(
           title: 'Developers Cambodia',
           description: 'Developers community for Cambodian that developers...',
-          image: '🤖',
+            image: Image.asset('assets/images/project_developer_cambodia.png',width: 60,height: 60,),
           features: ['E-Learning', 'Global Forum', 'Sharing Community'],
           iconBgColor: Colors.blue,
           label: '1st | Advanced',
@@ -37,7 +37,7 @@ class ProjectListScreen extends StatelessWidget {
         Project(
           title: 'Live Hacking Demo',
           description: 'A tool to do the pentesting purpose on a website such...',
-          image: '💡',
+            image: Image.asset('assets/images/project_live-demo.png',width: 60,height: 60,),
           iconBgColor: Colors.blue,
           label: '1st | Advanced',
           features: [
@@ -51,7 +51,7 @@ class ProjectListScreen extends StatelessWidget {
         Project(
           title: 'K-QuickSight',
           description: 'Catalyze your data journey with our powerful tools for...',
-          image: '🌱',
+            image: Image.asset('assets/images/project_k-quicksignt.jpg',width: 60,height: 60,),
           iconBgColor: Colors.green,
           label: '1st | Advanced',
           features: [
@@ -65,7 +65,7 @@ class ProjectListScreen extends StatelessWidget {
         Project(
             title: 'AutomateX',
             description: 'DevOps platform for deploying database and...',
-            image: '🌱',
+            image: Image.asset('assets/images/project_automiclogo.png',width: 60,height: 60,),
             iconBgColor: Colors.green,
             label: '1st | Advanced',
             features: [
@@ -79,7 +79,7 @@ class ProjectListScreen extends StatelessWidget {
         Project(
             title: 'iSTADemy',
             description: 'Unlock your coding potential at iSTADemy Learn...',
-            image: '🌱',
+            image: Image.asset('assets/images/project_istaddemy.png',width: 60,height: 60,),
             iconBgColor: Colors.green,
             label: '1st | Basic',
             features: [
@@ -93,7 +93,7 @@ class ProjectListScreen extends StatelessWidget {
         Project(
             title: 'PhotoSTAD',
             description: 'Brand your pictures with the free watermark and...',
-            image: '🌱',
+            image: Image.asset('assets/images/project_photoStad.png',width: 60,height: 60,),
             iconBgColor: Colors.green,
             label: '1st | Basic',
             features: [
@@ -107,7 +107,7 @@ class ProjectListScreen extends StatelessWidget {
         Project(
             title: 'SurveyBox',
             description: 'It offers a variety of features, including a wide range of...',
-            image: '🌱',
+            image: Image.asset('assets/images/project_surveybox.png',width: 60,height: 60,),
             iconBgColor: Colors.green,
             label: '1st | Basic',
             features: [
@@ -121,7 +121,7 @@ class ProjectListScreen extends StatelessWidget {
         Project(
             title: 'CamGiving',
             description: 'Donority is here to build a safe future for the next...',
-            image: '🌱',
+            image: Image.asset('assets/images/project_camgiving.jpg',width: 60,height: 60,),
             iconBgColor: Colors.green,
             label: '1st | Basic',
             features: [
@@ -135,7 +135,7 @@ class ProjectListScreen extends StatelessWidget {
         Project(
             title: 'Brachhna',
             description: 'Brachhna is a website created to educate students...',
-            image: '🌱',
+            image: Image.asset('assets/images/project_brachhna.png',width: 60,height: 60,),
             iconBgColor: Colors.green,
             label: '1st | Basic',
             features: [
@@ -156,7 +156,7 @@ class ProjectListScreen extends StatelessWidget {
         ProjectGenTwo(
           title: 'iFinder',
           description: 'There are many general web search engines that are...',
-          image: '🤖',
+          image: Image.asset('assets/images/project_ifinder.png',width: 60,height: 60,),
           features: ['Web Search Engines', 'File Search Tools', 'Quickly search'],
           iconBgColor: Colors.blue,
           label: '2nd | Basic',
@@ -166,7 +166,7 @@ class ProjectListScreen extends StatelessWidget {
         ProjectGenTwo(
           title: 'DealKh',
           description: 'Dive deep into the world of ecommerce with this...',
-          image: '💡',
+          image: Image.asset('assets/images/project_dealKH.png',width: 60,height: 60,),
           iconBgColor: Colors.blue,
           label: '2nd | Basic',
           features: [
@@ -180,7 +180,7 @@ class ProjectListScreen extends StatelessWidget {
         ProjectGenTwo(
           title: 'ALUMINI',
           description: 'This space is dedicated to fostering a vibrant...',
-          image: '🌱',
+          image: Image.asset('assets/images/project_alumni.png',width: 60,height: 60,),
           iconBgColor: Colors.green,
           label: '2nd | Basic',
           features: [
@@ -194,7 +194,7 @@ class ProjectListScreen extends StatelessWidget {
         ProjectGenTwo(
           title: 'iDATA',
           description: 'There are many resources available online to help you...',
-          image: '🌱',
+          image: Image.asset('assets/images/project_idata.png',width: 60,height: 60,),
           iconBgColor: Colors.green,
           label: '2nd | Basic',
           features: [
@@ -208,7 +208,7 @@ class ProjectListScreen extends StatelessWidget {
         ProjectGenTwo(
           title: 'GradesBot',
           description: 'Our mission at GradesBot is to innovate education...',
-          image: '🌱',
+          image: Image.asset('assets/images/project_gradebot.jpg',width: 60,height: 60,),
           iconBgColor: Colors.green,
           label: '2nd | Basic',
           features: [
@@ -222,7 +222,7 @@ class ProjectListScreen extends StatelessWidget {
         ProjectGenTwo(
           title: 'iSTAD LMS',
           description: 'ISTAD Learning Management System is an advanced web...',
-          image: '🌱',
+          image: Image.asset('assets/images/project_lms_istad.png',width: 60,height: 60,),
           iconBgColor: Colors.green,
           label: '2nd | Basic',
           features: [
