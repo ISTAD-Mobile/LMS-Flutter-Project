@@ -26,7 +26,7 @@ class _EnrollScreen extends State<EnrollScreen> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.popUntil(context, (route) => route.isFirst);
+            Navigator.pop(context);
           },
         ),
         title: const Text(
