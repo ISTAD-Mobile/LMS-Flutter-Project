@@ -15,7 +15,7 @@ class ProjectArcheivementHome extends StatelessWidget {
         Project(
             title: 'Developers Cambodia',
             description: 'Developers community for Cambodian that developers...',
-            image: '🤖',
+            image: Image.asset('assets/images/project_developer_cambodia.png',width: 60,height: 60,),
             features: ['E-Learning', 'Global Forum', 'Sharing Community'],
             iconBgColor: Colors.blue,
             label: '1st | Advanced',
@@ -25,7 +25,7 @@ class ProjectArcheivementHome extends StatelessWidget {
         Project(
             title: 'Live Hacking Demo',
             description: 'A tool to do the pentesting purpose on a website such...',
-            image: '💡',
+            image: Image.asset('assets/images/project_live-demo.png',width: 60,height: 60,),
             iconBgColor: Colors.blue,
             label: '1st | Advanced',
             features: [
@@ -39,7 +39,7 @@ class ProjectArcheivementHome extends StatelessWidget {
         Project(
           title: 'DealKh',
           description: 'Dive deep into the world of ecommerce with this...',
-          image: '💡',
+          image: Image.asset('assets/images/project_dealKH.png',width: 60,height: 60,),
           iconBgColor: Colors.blue,
           label: '2nd | Basic',
           features: [
@@ -53,7 +53,7 @@ class ProjectArcheivementHome extends StatelessWidget {
         Project(
           title: 'ALUMINI',
           description: 'This space is dedicated to fostering a vibrant...',
-          image: '🌱',
+          image: Image.asset('assets/images/project_alumni.png',width: 60,height: 60,),
           iconBgColor: Colors.green,
           label: '2nd | Basic',
           features: [

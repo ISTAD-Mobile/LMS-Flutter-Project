@@ -5,7 +5,7 @@ import 'package:lms_mobile/data/color/color_screen.dart';
 class ProjectGenTwo {
   final String title;
   final String description;
-  final String image;
+  final Widget image;
   final List<String> features;
   final Color iconBgColor;
   final String label;
@@ -71,9 +71,9 @@ class ProjectCardGenTwo extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(60),
                     ),
-                    child: Text(
-                      projectGenTwo.image,
-                      style: const TextStyle(fontSize: 40),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(60),
+                      child: projectGenTwo.image,
                     ),
                   ),
                   const SizedBox(width: 8),
