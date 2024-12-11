@@ -5,6 +5,7 @@ class MyAppLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      color: AppColors.defaultWhiteColor,
       debugShowCheckedModeBanner: false,
       title: 'Your App Title',
       theme: ThemeData(
@@ -12,7 +13,9 @@ class MyAppLayout extends StatelessWidget {
       ),
       home: AppLayout(
         title: 'Your App Title',
-        body: Container(),
+        body: Container(
+          color: AppColors.defaultWhiteColor,
+        ),
         currentIndex: 0,
         onTabTapped: (int index) {},
       ),
