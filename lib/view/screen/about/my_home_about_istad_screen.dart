@@ -32,7 +32,7 @@ class _HomePageState extends State<HomeIstadScreen> {
                     'Vision',
                     'Advanced IT Institute in Cambodia',
                     'Learn More',
-                    'assets/images/about_istad_img.png',
+                    'https://lms-api.istad.co/api/v1/medias/view/5e7b60be-4d4c-4c0b-b0ac-5968830b4e4b.jpg',
                     false, // Not reversed
                     titleColor: Colors.white,
                     subtitleColor: Colors.white,
@@ -168,7 +168,7 @@ class _HomePageState extends State<HomeIstadScreen> {
           Positioned.fill(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(borderRadius),
-              child: Image.asset(
+              child: Image.network(
                 backgroundImage,
                 fit: BoxFit.cover,
               ),
