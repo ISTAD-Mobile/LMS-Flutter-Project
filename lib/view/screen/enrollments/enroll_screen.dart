@@ -19,7 +19,7 @@ class _EnrollScreen extends State<EnrollScreen> {
   final List<Widget> _steps = [
     const EnrollStep1(),
     const EnrollStep2(),
-    EnrollStep3(),
+    // EnrollStep3(),
   ];
 
 

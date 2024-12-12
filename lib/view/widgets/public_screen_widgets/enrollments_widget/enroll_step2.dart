@@ -8,6 +8,7 @@ class EnrollStep2 extends StatefulWidget {
   const EnrollStep2({super.key});
 
   @override
+  @override
   _CourseEnrollForm createState() => _CourseEnrollForm();
 }
 
@@ -195,7 +196,8 @@ class _CourseEnrollForm extends State<EnrollStep2> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => EnrollStep3(),
+                              // builder: (context) => EnrollStep3(),
+                              builder: (context) => Text('Step 3')
                             ),
                           );
                         }
