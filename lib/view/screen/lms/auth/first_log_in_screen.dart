@@ -114,7 +114,9 @@ class _SignInScreenState extends State<firstSignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.defaultWhiteColor,
       appBar: AppBar(
+        backgroundColor: AppColors.defaultWhiteColor,
         // backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(

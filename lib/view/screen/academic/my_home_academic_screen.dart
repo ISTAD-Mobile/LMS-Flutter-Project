@@ -37,108 +37,107 @@ class MyAcademicScreen extends StatelessWidget {
     ];
 
     return Scaffold(
-      body: Container(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              AspectRatio(
-                aspectRatio: 16 / 9,
-                child: CarouselSlider(
-                  items: carouselImages
-                      .map(
-                        (imagePath) => ClipRRect(
-                      borderRadius: BorderRadius.circular(0.0),
-                      child: Image.asset(
-                        imagePath,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey[300],
-                            child: const Center(
-                              child: Icon(
-                                Icons.error_outline,
-                                color: Colors.red,
-                                size: 50,
-                              ),
+      backgroundColor: AppColors.defaultWhiteColor,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            AspectRatio(
+              aspectRatio: 16 / 9,
+              child: CarouselSlider(
+                items: carouselImages
+                    .map(
+                      (imagePath) => ClipRRect(
+                    borderRadius: BorderRadius.circular(0.0),
+                    child: Image.asset(
+                      imagePath,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.grey[300],
+                          child: const Center(
+                            child: Icon(
+                              Icons.error_outline,
+                              color: Colors.red,
+                              size: 50,
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     ),
-                  )
-                      .toList(),
-                  options: CarouselOptions(
-                    autoPlay: true,
-                    enlargeCenterPage: false,
-                    viewportFraction: 1.0,
+                  ),
+                )
+                    .toList(),
+                options: CarouselOptions(
+                  autoPlay: true,
+                  enlargeCenterPage: false,
+                  viewportFraction: 1.0,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "ប្រភេទវគ្គសិក្សានិងអាហារូបករណ៍",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF253B95),
+                    fontFamily: 'NotoSansKhmer',
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "ប្រភេទវគ្គសិក្សានិងអាហារូបករណ៍",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF253B95),
-                      fontFamily: 'NotoSansKhmer',
-                    ),
+            ),
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: GridView.count(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                crossAxisCount: 2,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+                childAspectRatio: 1.8,
+                children: [
+                  const _HoverCard(
+                    title: "Bachelor",
+                    imagePath: "https://cdn-icons-png.flaticon.com/128/7941/7941552.png",
+                    page: BachelorPage(),
                   ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                child: GridView.count(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  childAspectRatio: 1.8,
-                  children: [
-                    const _HoverCard(
-                      title: "Bachelor",
-                      imagePath: "https://cdn-icons-png.flaticon.com/128/7941/7941552.png",
-                      page: BachelorPage(),
-                    ),
-                    _HoverCard(
-                      title: "Associate",
-                      imagePath: 'https://cdn-icons-png.flaticon.com/128/10748/10748520.png',
-                      page: AssociatePage(),
-                    ),
-                    const _HoverCard(
-                      title: "Short Course",
-                      imagePath: 'https://cdn-icons-png.flaticon.com/128/613/613307.png',
-                      page: CourseVerticalListPage(),
-                    ),
-                    const _HoverCard(
-                      title: "IT Expert",
-                      imagePath: 'https://cdn-icons-png.flaticon.com/128/8262/8262226.png',
-                      page: ITExpertPage(),
+                  _HoverCard(
+                    title: "Associate",
+                    imagePath: 'https://cdn-icons-png.flaticon.com/128/10748/10748520.png',
+                    page: AssociatePage(),
+                  ),
+                  const _HoverCard(
+                    title: "Short Course",
+                    imagePath: 'https://cdn-icons-png.flaticon.com/128/613/613307.png',
+                    page: CourseVerticalListPage(),
+                  ),
+                  const _HoverCard(
+                    title: "IT Expert",
+                    imagePath: 'https://cdn-icons-png.flaticon.com/128/8262/8262226.png',
+                    page: ITExpertPage(),
 
-                    ),
-                    const _HoverCard(
-                      title: "Foundation",
-                      imagePath: 'https://cdn-icons-png.flaticon.com/128/12005/12005037.png',
-                      page: FoundationPage(),
-                    ),
-                    const _HoverCard(
-                      title: "Pre-University",
-                      imagePath: 'https://cdn-icons-png.flaticon.com/128/7655/7655706.png',
-                      page: PreUniversityPage(),
-                    ),
-                  ],
-                ),
+                  ),
+                  const _HoverCard(
+                    title: "Foundation",
+                    imagePath: 'https://cdn-icons-png.flaticon.com/128/12005/12005037.png',
+                    page: FoundationPage(),
+                  ),
+                  const _HoverCard(
+                    title: "Pre-University",
+                    imagePath: 'https://cdn-icons-png.flaticon.com/128/7655/7655706.png',
+                    page: PreUniversityPage(),
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
-            ],
-          ),
+            ),
+            const SizedBox(height: 16),
+          ],
         ),
       ),
     );

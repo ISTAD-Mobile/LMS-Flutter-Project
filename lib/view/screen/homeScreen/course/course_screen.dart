@@ -138,8 +138,8 @@ class CourseCard extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
                         ),
-                        children: [
-                          const TextSpan(
+                        children: const [
+                          TextSpan(
                             text: '\n ',
                             style: TextStyle(
                               color: Colors.transparent,
@@ -176,7 +176,7 @@ class CourseCard extends StatelessWidget {
                             const SizedBox(width: 8),
                             Text(
                               coursePage.duration,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: AppColors.defaultGrayColor,
                                 fontSize: 13,
                               ),
@@ -195,7 +195,7 @@ class CourseCard extends StatelessWidget {
                             const SizedBox(width: 6),
                             Text(
                               coursePage.level,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: AppColors.defaultGrayColor,
                                 fontSize: 13,
                               ),
@@ -241,7 +241,9 @@ class CourseVerticalListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.defaultWhiteColor,
       appBar: AppBar(
+        backgroundColor: AppColors.defaultWhiteColor,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back_ios),

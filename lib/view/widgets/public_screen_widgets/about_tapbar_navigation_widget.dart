@@ -29,6 +29,7 @@ class _TabNavigationScreenState extends State<AboutTapbarNavigation> with Single
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.defaultWhiteColor,
       body: Column(
         children: [
           Container(
