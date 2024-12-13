@@ -14,17 +14,9 @@ class RegisterStep2 extends StatefulWidget {
 
 class _StudentAdmissionFormState extends State<RegisterStep2> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _fatherNameController = TextEditingController();
-  final TextEditingController _fatherContactController = TextEditingController();
-  final TextEditingController _motherNameController = TextEditingController();
-  final TextEditingController _motherContactController = TextEditingController();
-  final TextEditingController _nameOfHightSchoolController = TextEditingController();
-  final TextEditingController _getToKnowIstadController = TextEditingController();
-  final TextEditingController _whoGuideYouController = TextEditingController();
-  final TextEditingController _relationshipController = TextEditingController();
-  String? _selectedProvince;
-  String? _selectedCurrentAddress;
   String? _selectedGrade;
+  String?  _selectedClassStudent;
+  String? _selectedDiplomaSession;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +46,7 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Additional Information',
+                  'Educational Information',
                   style: TextStyle(
                     color: Colors.indigo[900],
                     fontSize: 24,
@@ -62,101 +54,49 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                _buildTextField(
-                  label: 'Father Name *',
-                  controller: _fatherNameController,
-                  hintText: 'Dara Phan',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your name in Khmer';
-                    }
-                    return null;
+                _buildDropdownField(
+                  label: 'Class Student *',
+                  value: _selectedClassStudent,
+                  hintText: 'Science Class',
+                  items: [
+                    'Science Class',
+                    'Social Science Class',
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedClassStudent = value;
+                    });
                   },
-                ),
-                _buildTextField(
-                  label: 'Father Contact Number (Optional) *',
-                  controller: _fatherContactController,
-                  hintText: '0965432135',
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your name in Khmer';
-                    }
-                    return null;
-                  },
-                ),
-                _buildTextField(
-                  label: 'Mother Name *',
-                  controller: _motherNameController,
-                  hintText: 'Sokchea Kim',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your name in English';
-                    }
-                    return null;
-                  },
-                ),
-                _buildTextField(
-                  label: 'Mother Contact Number (Optional) *',
-                  controller: _motherContactController,
-                  hintText: '0965495043',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your name in English';
-                    }
-                    return null;
-                  },
-                ),
-                _buildTextField(
-                  label: 'Name of Your High School *',
-                  controller: _nameOfHightSchoolController,
-                  hintText: 'Bak Touk High School',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your name in English';
+                    if (value == null || value.isEmpty ||
+                        value == 'Select class student') {
+                      return 'Please select your class student';
                     }
                     return null;
                   },
                 ),
                 _buildDropdownField(
-                  label: 'Province *',
-                  value: _selectedProvince,
-                  hintText: 'Select a province',
+                  label: 'Diploma Session *',
+                  value: _selectedDiplomaSession,
+                  hintText: 'Select a Diploma Session',
                   items: [
-                    'Select a province',
-                    'Phnom Penh',
-                    'Siem Reap',
-                    'Battambang',
-                    'Kampot',
-                    'Kandal',
-                    'Kep',
-                    'Koh Kong',
-                    'Banteay Meanchey',
-                    'Kampong Cham',
-                    'Kampong Speu',
-                    'Kampong Thom',
-                    'Kratie',
-                    'Mondulkiri',
-                    'Oddar Meanchey',
-                    'Peilin',
-                    'Preah Sihanouk',
-                    'Preah Vihear',
-                    'Prey Veng',
-                    'Pursat',
-                    'Rotanakiri',
-                    'Stung Treng',
-                    'Svay Rieng',
-                    'Takeo',
-                    'Tboung Khmum',
+                    'Select a Diploma Session',
+                    '2024',
+                    '2023',
+                    '2022',
+                    '2021',
+                    '2020',
+                    'other',
                   ],
                   onChanged: (value) {
                     setState(() {
-                      _selectedProvince = value;
+                      _selectedDiplomaSession = value;
                     });
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty ||
-                        value == 'Select a province') {
-                      return 'Please select your place of birth';
+                        value == 'Select your Diploma Session') {
+                      return 'Please select your Diploma Session';
                     }
                     return null;
                   },
@@ -183,89 +123,13 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty ||
-                        value == 'Select a province') {
-                      return 'Please select your place of birth';
+                        value == 'Select your grade') {
+                      return 'Please select your grade';
                     }
                     return null;
                   },
                 ),
-                _buildDropdownField(
-                  label: 'Current Address *',
-                  value: _selectedCurrentAddress,
-                  hintText: 'Select a province',
-                  items: [
-                    'Select a province',
-                    'Phnom Penh',
-                    'Siem Reap',
-                    'Battambang',
-                    'Kampot',
-                    'Kandal',
-                    'Kep',
-                    'Koh Kong',
-                    'Banteay Meanchey',
-                    'Kampong Cham',
-                    'Kampong Speu',
-                    'Kampong Thom',
-                    'Kratie',
-                    'Mondulkiri',
-                    'Oddar Meanchey',
-                    'Peilin',
-                    'Preah Sihanouk',
-                    'Preah Vihear',
-                    'Prey Veng',
-                    'Pursat',
-                    'Rotanakiri',
-                    'Stung Treng',
-                    'Svay Rieng',
-                    'Takeo',
-                    'Tboung Khmum',
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedCurrentAddress = value;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty ||
-                        value == 'Select a province') {
-                      return 'Please select your place of birth';
-                    }
-                    return null;
-                  },
-                ),
-                _buildTextField(
-                  label: 'Get to know ISTAD through: *',
-                  controller: _getToKnowIstadController,
-                  hintText: 'Please specify how you knew about ISTAD',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your contact number';
-                    }
-                    return null;
-                  },
-                ),
-                _buildTextField(
-                  label: 'Who guide you to enroll (Optional) *',
-                  controller: _whoGuideYouController,
-                  hintText: 'Teacher or Friend',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your contact number';
-                    }
-                    return null;
-                  },
-                ),
-                _buildTextField(
-                  label: 'Relationship (Optional) *',
-                  controller: _relationshipController,
-                  hintText: 'Uncle or Friends',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your contact number';
-                    }
-                    return null;
-                  },
-                ),
+
                 const SizedBox(height: 10),
                 Align(
                   alignment: Alignment.centerRight,

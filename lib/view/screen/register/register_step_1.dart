@@ -17,9 +17,15 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
   final TextEditingController _nameEnController = TextEditingController();
   final TextEditingController _dateOfBirthController = TextEditingController();
   final TextEditingController _contactNumberController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _nameOfHightSchoolController = TextEditingController();
+  final TextEditingController _guardianContactNumberController = TextEditingController();
   String? _selectedGender;
   String? _selectedPlaceOfBirth;
   String? _selectedShift;
+  String? _selectedCurrentAddress;
+  String? _selectedGuardianRelationship;
+  String? _getToKnowIstadController;
 
   @override
   Widget build(BuildContext context) {
@@ -156,6 +162,145 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your contact number';
+                    }
+                    return null;
+                  },
+                ),
+                _buildTextField(
+                  label: 'Email *',
+                  controller: _emailController,
+                  keyboardType: TextInputType.text,
+                  hintText: 'nounsovannthon@gmail.com',
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email address';
+                    }
+                    return null;
+                  },
+                ),
+                _buildTextField(
+                  label: 'Name of Your High School *',
+                  controller: _nameOfHightSchoolController,
+                  hintText: 'Bak Touk High School',
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your name in English';
+                    }
+                    return null;
+                  },
+                ),
+                _buildDropdownField(
+                  label: 'Current Address *',
+                  value: _selectedCurrentAddress,
+                  hintText: 'Select a province',
+                  items: [
+                    'Select a province',
+                    'Phnom Penh',
+                    'Siem Reap',
+                    'Battambang',
+                    'Kampot',
+                    'Kandal',
+                    'Kep',
+                    'Koh Kong',
+                    'Banteay Meanchey',
+                    'Kampong Cham',
+                    'Kampong Speu',
+                    'Kampong Thom',
+                    'Kratie',
+                    'Mondulkiri',
+                    'Oddar Meanchey',
+                    'Peilin',
+                    'Preah Sihanouk',
+                    'Preah Vihear',
+                    'Prey Veng',
+                    'Pursat',
+                    'Rotanakiri',
+                    'Stung Treng',
+                    'Svay Rieng',
+                    'Takeo',
+                    'Tboung Khmum',
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedCurrentAddress = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty ||
+                        value == 'Select a province') {
+                      return 'Please select your current address';
+                    }
+                    return null;
+                  },
+                ),
+                _buildTextField(
+                  label: 'Guardian Contact *',
+                  controller: _guardianContactNumberController,
+                  keyboardType: TextInputType.phone,
+                  hintText: '092382489',
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your guardian contact number';
+                    }
+                    return null;
+                  },
+                ),
+                _buildDropdownField(
+                  label: 'Guardian Relationship *',
+                  value: _selectedGuardianRelationship,
+                  hintText: 'Select Guardian Relationship',
+                  items: [
+                    'Select Guardian Relationship',
+                    'Mother',
+                    'Father',
+                    'Grandmother',
+                    'Grandfather',
+                    'Aunt',
+                    'Uncle',
+                    'Elder Sister',
+                    'Elder Brother',
+                    'Legal Guardian',
+                    'Cousin',
+                    'Sibling',
+                    'Other',
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedGuardianRelationship = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty ||
+                        value == 'Select Guardian relationship') {
+                      return 'Please select guardian relationship';
+                    }
+                    return null;
+                  },
+                ),
+                _buildDropdownField(
+                  label: 'Get to know ISTAD through: *',
+                  value: _getToKnowIstadController,
+                  hintText: 'Select how you know about ISTAD',
+                  items: [
+                    'Select how you know about ISTAD',
+                    'Ministry, Provincial Department',
+                    'Teacher',
+                    'Senior Student',
+                    'Social Media (Facebook) ',
+                    'Friend',
+                    'Website',
+                    'Parents or Relatives',
+                    'Other',
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _getToKnowIstadController = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty ||
+                        value == 'Select how you know about ISTAD') {
+                      return 'Please select how you know about ISTAD';
                     }
                     return null;
                   },
