@@ -1,129 +1,264 @@
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
+import 'package:lms_mobile/model/course.dart';
+import 'package:lms_mobile/view/screen/homeScreen/course/course_details_screen.dart';
+
+// class Course {
+//   final String title;
+//   final String description;
+//   final String imageUrl;
+//   final String duration;
+//   final String level;
+//   final String scholarship;
+//
+//   Course({
+//     required this.title,
+//     required this.description,
+//     required this.imageUrl,
+//     required this.duration,
+//     required this.level,
+//     required this.scholarship,
+//   });
+// }
+// //
+// // final List<Course> courses = [
+// //   Course(
+// //     title: 'Flutter Mobile Development',
+// //     description: 'Develop multi-platform apps using Flutter.',
+// //     imageUrl: 'https://api.istad.co/media/image/899bac49-e47c-406c-abb2-30ad0b498f88.png',
+// //     duration: '80 Hours',
+// //     level: 'Medium',
+// //     scholarship: '20% Scholarship',
+// //   ),
+// //   Course(
+// //     title: 'IOS DEVELOPMENT',
+// //     description: 'Build native apps with React Native.',
+// //     imageUrl: 'https://api.istad.co/media/image/899bac49-e47c-406c-abb2-30ad0b498f88.png',
+// //     duration: '60 Hours',
+// //     level: 'Medium',
+// //     scholarship: '20% Scholarship',
+// //   ),
+// //   Course(
+// //     title: 'SQL & DATA MODELING WITH...',
+// //     description: 'Build native apps with React Native.',
+// //     imageUrl: 'https://api.istad.co/media/image/899bac49-e47c-406c-abb2-30ad0b498f88.png',
+// //     duration: '60 Hours',
+// //     level: 'Medium',
+// //     scholarship: '20% Scholarship',
+// //   ),
+// //   Course(
+// //     title: 'Web Design',
+// //     description: 'Build native apps with React Native.',
+// //     imageUrl: 'https://api.istad.co/media/image/899bac49-e47c-406c-abb2-30ad0b498f88.png',
+// //     duration: '60 Hours',
+// //     level: 'Medium',
+// //     scholarship: '20% Scholarship',
+// //   ),
+// //   Course(
+// //     title: 'DevOps Engineering',
+// //     description: 'Build native apps with React Native.',
+// //     imageUrl: 'https://api.istad.co/media/image/899bac49-e47c-406c-abb2-30ad0b498f88.png',
+// //     duration: '60 Hours',
+// //     level: 'Medium',
+// //     scholarship: '20% Scholarship',
+// //   ),
+// //   Course(
+// //     title: 'C++ Programming',
+// //     description: 'Build native apps with React Native.',
+// //     imageUrl: 'https://api.istad.co/media/image/899bac49-e47c-406c-abb2-30ad0b498f88.png',
+// //     duration: '60 Hours',
+// //     level: 'Medium',
+// //     scholarship: '20% Scholarship',
+// //   ),
+// //   Course(
+// //     title: 'Docker',
+// //     description: 'Build native apps with React Native.',
+// //     imageUrl: 'https://api.istad.co/media/image/899bac49-e47c-406c-abb2-30ad0b498f88.png',
+// //     duration: '60 Hours',
+// //     level: 'Medium',
+// //     scholarship: '20% Scholarship',
+// //   ),
+// //   Course(
+// //     title: 'Data Analytics',
+// //     description: 'Build native apps with React Native.',
+// //     imageUrl: 'https://api.istad.co/media/image/899bac49-e47c-406c-abb2-30ad0b498f88.png',
+// //     duration: '60 Hours',
+// //     level: 'Medium',
+// //     scholarship: '20% Scholarship',
+// //   ),
+// // ];
+
+
+
+
+
+
+// class HorizontalCourseList extends StatelessWidget {
+//   final List<Course> courses;
+//
+//   const HorizontalCourseList({Key? key, required this.courses}) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       height: 250,
+//       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+//       child: ListView.builder(
+//         scrollDirection: Axis.horizontal,
+//         itemCount: courses.length,
+//         itemBuilder: (context, index) {
+//           final course = courses[index];
+//           return ShortCourseCard(course: course);
+//         },
+//       ),
+//     );
+//   }
+// }
+
 
 class ShortCourseCard extends StatelessWidget {
-  const ShortCourseCard({super.key});
+  final Course course;
+
+  ShortCourseCard(this.course);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-      decoration: BoxDecoration(
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CourseDetailsPage(),
+          ),
+        );
+      },
+      child: Container(
+        width: 325,
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        margin: const EdgeInsets.only(right: 16),
+        decoration: BoxDecoration(
           color: AppColors.defaultWhiteColor,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             width: 0.5,
             color: Colors.grey.shade400,
-          )),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Image.network(
-            'https://api.istad.co/media/image/899bac49-e47c-406c-abb2-30ad0b498f88.png',
-            width: 120,
-            height: 120,
-            fit: BoxFit.cover,
           ),
-          // Title
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Flutter mobile development'.toUpperCase(),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(
-                  height: 4,
-                ),
-                // Sub title
-                const Text(
-                  'Flutter course is designed to develop multi-platform like iOS and Android App, Web, Desktop apps like MacOS, Windows and Linux using one code base. We also include with UI / UX design concept. Moreover, integrate with third-party libraries and other mobile functionality to make your app more professional.',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: AppColors.defaultGrayColor,
-                  ),
-                ),
-                // Scholarship discount
-                const SizedBox(
-                  height: 6,
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 2, horizontal: 8),
-                  decoration: BoxDecoration(
-                    color: AppColors.secondaryColor,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: const Text(
-                    '20% Scholarships',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: AppColors.defaultWhiteColor,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                )
-              ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Image.network(
+                course.thumbnailUri,
+                width: 85,
+                height: 85,
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          // Time and level
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.network(
-                    'https://cdn-icons-png.flaticon.com/128/3240/3240587.png',
-                    width: 16,
-                    height: 16,
-                    color: AppColors.primaryColor,
+                  Text.rich(
+                    TextSpan(
+                      text: course.title.toUpperCase(),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: '\n ',
+                          style: TextStyle(
+                            color: Colors.transparent,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(
-                    width: 8,
-                  ),
+                  const SizedBox(height: 4),
                   Text(
-                    '80 Hours',
+                    course.description,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      color: AppColors.defaultGrayColor,
                       fontSize: 14,
+                      color: AppColors.defaultGrayColor,
                     ),
-                  )
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Image.network(
+                            'https://cdn-icons-png.flaticon.com/128/3240/3240587.png',
+                            width: 16,
+                            height: 16,
+                            color: AppColors.primaryColor,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            course.totalHour.toString(),
+                            style: TextStyle(
+                              color: AppColors.defaultGrayColor,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(width: 16),
+                      Row(
+                        children: [
+                          Image.network(
+                            'https://cdn-icons-png.flaticon.com/256/17009/17009106.png',
+                            width: 16,
+                            height: 16,
+                            color: AppColors.primaryColor,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            course.level,
+                            style: TextStyle(
+                              color: AppColors.defaultGrayColor,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10,),
+                  Container(
+                    width: 200,
+                    padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 25),
+                    decoration: BoxDecoration(
+                      color: AppColors.secondaryColor,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Center(
+                      child: Text(
+                        course.fee.toString(),
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: AppColors.defaultWhiteColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
-              SizedBox(
-                height: 8,
-              ),
-              Row(
-                children: [
-                  Image.network(
-                    'https://cdn-icons-png.flaticon.com/128/660/660376.png',
-                    width: 16,
-                    height: 16,
-                    color: AppColors.primaryColor,
-                  ),
-                  const SizedBox(
-                    width: 6,
-                  ),
-                  const Text(
-                    'Medium',
-                    style: TextStyle(
-                      color: AppColors.defaultGrayColor,
-                      fontSize: 14,
-                    ),
-                  )
-                ],
-              ),
-            ],
-          ),
-        ],
+            ),
+            // Time and Level
+          ],
+        ),
       ),
     );
   }

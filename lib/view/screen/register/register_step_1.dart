@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/view/screen/register/register_step_2.dart';
 
-import '../../widgets/public_screen_widgets/appbar_register.dart';
 
 class RegisterStep1 extends StatefulWidget {
   const RegisterStep1({Key? key}) : super(key: key);
@@ -25,6 +24,19 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios, color: AppColors.defaultGrayColor),
+          onPressed: () {
+            Navigator.popUntil(context, (route) => route.isFirst);
+          },
+        ),
+        title: Text(
+          'Student Admission',
+          style: TextStyle(color: AppColors.primaryColor, fontSize: 16),
+        ),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -41,7 +53,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 16),
                 _buildTextField(
                   label: 'Name (KH) *',
                   controller: _nameKhController,
@@ -100,7 +112,28 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                     'Select a province',
                     'Phnom Penh',
                     'Siem Reap',
-                    'Battambang'
+                    'Battambang',
+                    'Kampot',
+                    'Kandal',
+                    'Kep',
+                    'Koh Kong',
+                    'Banteay Meanchey',
+                    'Kampong Cham',
+                    'Kampong Speu',
+                    'Kampong Thom',
+                    'Kratie',
+                    'Mondulkiri',
+                    'Oddar Meanchey',
+                    'Peilin',
+                    'Preah Sihanouk',
+                    'Preah Vihear',
+                    'Prey Veng',
+                    'Pursat',
+                    'Rotanakiri',
+                    'Stung Treng',
+                    'Svay Rieng',
+                    'Takeo',
+                    'Tboung Khmum',
                   ],
                   onChanged: (value) {
                     setState(() {
@@ -144,7 +177,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 10),
                 Align(
                   alignment: Alignment.centerRight,
                   child: SizedBox(
@@ -157,7 +190,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => RegisterStep2(),
+                              builder: (context) => const RegisterStep2(),
                             ),
                           );
                         }
@@ -171,12 +204,13 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
+                          // side: BorderSide(color: Colors.grey.shade300, width: 1),
                         ),
                       ),
                     ),
                   ),
-                )
-
+                ),
+                const SizedBox(height: 10),
               ],
             ),
           ),
@@ -200,14 +234,14 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
           RichText(
             text: TextSpan(
               text: label.endsWith('*') ? label.substring(0, label.length - 1) : label,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 color: AppColors.primaryColor,
                 fontWeight: FontWeight.bold,
               ),
               children: [
                 if (label.endsWith('*'))
-                  TextSpan(
+                  const TextSpan(
                     text: ' *',
                     style: TextStyle(
                       color: Colors.red,
@@ -217,29 +251,36 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
               ],
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           TextFormField(
             controller: controller,
             keyboardType: keyboardType,
             validator: validator,
+            cursorColor: AppColors.primaryColor,
             decoration: InputDecoration(
               hintText: hintText,
-              hintStyle: TextStyle(color: Colors.grey, fontWeight: FontWeight.w400),
+              hintStyle: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w400,fontFamily: 'NotoSansKhmer'),
               filled: true,
               fillColor: Colors.transparent,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: AppColors.primaryColor),
+                borderSide: BorderSide(
+                  color: Colors.grey.shade400,
+                  // width: 2,
+                ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: AppColors.primaryColor),
+                borderSide: BorderSide(
+                  color: Colors.grey.shade400,
+                  // width: 2,
+                ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: AppColors.primaryColor),
+                borderSide: const BorderSide(color: AppColors.primaryColor,width: 2),
               ),
-              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
             ),
           ),
         ],
@@ -264,14 +305,14 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
           RichText(
             text: TextSpan(
               text: label.endsWith('*') ? label.substring(0, label.length - 1) : label,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 color: AppColors.primaryColor,
                 fontWeight: FontWeight.bold,
               ),
               children: [
                 if (label.endsWith('*'))
-                  TextSpan(
+                  const TextSpan(
                     text: ' *',
                     style: TextStyle(
                       color: Colors.red,
@@ -297,20 +338,26 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
               fillColor: Colors.transparent,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: AppColors.primaryColor!),
+                borderSide: BorderSide(
+                  color: Colors.grey.shade400,
+                  // width: 2,
+                ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: AppColors.primaryColor!),
+                borderSide: BorderSide(
+                  color: Colors.grey.shade400,
+                  // width: 2,
+                ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: AppColors.primaryColor!),
+                borderSide: BorderSide(color: AppColors.primaryColor,width: 2),
               ),
               contentPadding: const EdgeInsets.symmetric(
                   horizontal: 12, vertical: 16),
             ),
-            hint: hintText != null ? Text(hintText, style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w400),) : null,
+            hint: hintText != null ? Text(hintText, style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w400),) : null,
           ),
         ],
       ),
@@ -332,14 +379,14 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
           RichText(
             text: TextSpan(
               text: label.endsWith('*') ? label.substring(0, label.length - 1) : label,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 color: AppColors.primaryColor,
                 fontWeight: FontWeight.bold,
               ),
               children: [
                 if (label.endsWith('*'))
-                  TextSpan(
+                  const TextSpan(
                     text: ' *',
                     style: TextStyle(
                       color: Colors.red,
@@ -380,15 +427,21 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
               suffixIcon: const Icon(Icons.calendar_today, color: Colors.grey),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: AppColors.primaryColor!),
+                borderSide: BorderSide(
+                  color: Colors.grey.shade400,
+                  // width: 2,
+                ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: AppColors.primaryColor!),
+                borderSide: BorderSide(
+                  color: Colors.grey.shade400,
+                  // width: 2,
+                ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: AppColors.primaryColor!),
+                borderSide: BorderSide(color: AppColors.primaryColor,width: 2),
               ),
               contentPadding: const EdgeInsets.symmetric(
                   horizontal: 12, vertical: 16),
@@ -399,3 +452,173 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
     );
   }
 }
+
+
+//
+// import 'package:flutter/material.dart';
+// import 'package:lms_mobile/data/color/color_screen.dart';
+// import 'package:lms_mobile/view/screen/register/register_step_2.dart';
+//
+//
+// class RegisterStep1 extends StatefulWidget {
+//   const RegisterStep1({Key? key}) : super(key: key);
+//
+//   @override
+//   _StudentAdmissionFormState createState() => _StudentAdmissionFormState();
+// }
+//
+// class _StudentAdmissionFormState extends State<RegisterStep1> {
+//   final _formKey = GlobalKey<FormState>();
+//   String? _selectedProvince;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       // backgroundColor: AppColors.backgroundColor,
+//       body: SingleChildScrollView(
+//         child: Padding(
+//           padding: const EdgeInsets.all(16.0),
+//           child: Form(
+//             key: _formKey,
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Text(
+//                   'Personal Information',
+//                   style: TextStyle(
+//                     color: Colors.indigo[900],
+//                     fontSize: 24,
+//                     fontWeight: FontWeight.bold,
+//                   ),
+//                 ),
+//                 const SizedBox(height: 24),
+//                 // Phone Number Field
+//                 TextFormField(
+//                   decoration: InputDecoration(
+//                     labelText: 'Name (KH)',
+//                     border: OutlineInputBorder(),
+//                   ),
+//                   keyboardType: TextInputType.phone,
+//                   validator: (value) {
+//                     if (value == null || value.isEmpty) {
+//                       return 'Please enter your phone number';
+//                     }
+//                     return null;
+//                   },
+//                 ),
+//                 const SizedBox(height: 15),
+//                 TextFormField(
+//                   decoration: InputDecoration(
+//                     labelText: 'Name (EN)',
+//                     border: OutlineInputBorder(),
+//                   ),
+//                   keyboardType: TextInputType.phone,
+//                   validator: (value) {
+//                     if (value == null || value.isEmpty) {
+//                       return 'Please enter your phone number';
+//                     }
+//                     return null;
+//                   },
+//                 ),
+//
+//                 const SizedBox(height: 15),
+//
+//                 InputDecorator(
+//                   decoration: InputDecoration(
+//                     labelText: 'Province',
+//                     labelStyle: TextStyle(
+//                       color: Colors.grey[600],  // Lighter gray for the label
+//                       fontWeight: FontWeight.w500, // Lighter font weight for a sleeker look
+//                     ),
+//                     border: OutlineInputBorder(
+//                       borderRadius: BorderRadius.circular(6.0),  // Reduced border radius for a sleeker look
+//                     ),
+//                     focusedBorder: OutlineInputBorder(
+//                       borderRadius: BorderRadius.circular(6.0),
+//                       borderSide: BorderSide(color: Colors.grey, width: 1.5), // Slightly thinner border for a more compact look
+//                     ),
+//                     contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),  // Reduced vertical padding to make the input more compact
+//                   ),
+//                   child: DropdownButtonHideUnderline(
+//                     child: DropdownButton<String>(
+//                       hint: Text('Select Province'),
+//                       value: _selectedProvince,
+//                       isExpanded: true,
+//                       onChanged: (String? newValue) {
+//                         setState(() {
+//                           _selectedProvince = newValue!;
+//                         });
+//                       },
+//                       items: [
+//                         'Kompong Cham',
+//                         'Koh Kong',
+//                         'Kep',
+//                         'Kandal',
+//                         'Battambang',
+//                         'Banteay Meanchey'
+//                       ].map<DropdownMenuItem<String>>((String value) {
+//                         return DropdownMenuItem<String>(
+//                           value: value,
+//                           child: Container(
+//                             padding: const EdgeInsets.symmetric(vertical: 6.0),
+//                             child: Text(value),
+//                           ),
+//                         );
+//                       }).toList(),
+//                       dropdownColor: Colors.white,
+//                       iconSize: 26,  // Slightly smaller icon size for a more compact dropdown
+//                       icon: Icon(
+//                         Icons.arrow_drop_down,
+//                         color: Colors.grey[600],  // Matching the label color for a more cohesive design
+//                       ),
+//                       style: TextStyle(fontSize: 16, color: Colors.black),
+//                     ),
+//                   ),
+//                 ),
+//
+//
+//
+//                 const SizedBox(height: 24),
+//                 Align(
+//                   alignment: Alignment.centerRight,
+//                   child: SizedBox(
+//                     child: ElevatedButton(
+//                       onPressed: () {
+//                         if (_formKey.currentState!.validate()) {
+//                           ScaffoldMessenger.of(context).showSnackBar(
+//                             const SnackBar(content: Text('Processing Data')),
+//                           );
+//                           Navigator.push(
+//                             context,
+//                             MaterialPageRoute(
+//                               builder: (context) => const RegisterStep2(),
+//                             ),
+//                           );
+//                         }
+//                       },
+//                       child: const Text(
+//                         'Next',
+//                         style: TextStyle(fontSize: 16, color: AppColors
+//                             .defaultWhiteColor),
+//                       ),
+//                       style: ElevatedButton.styleFrom(
+//                         backgroundColor: AppColors.primaryColor,
+//                         padding: const EdgeInsets.symmetric(
+//                             vertical: 10, horizontal: 25),
+//                         shape: RoundedRectangleBorder(
+//                           borderRadius: BorderRadius.circular(8),
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+

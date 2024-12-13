@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lms_mobile/data/color/color_screen.dart';
+
 
 class TestimonialPage extends StatefulWidget {
   const TestimonialPage({Key? key}) : super(key: key);
@@ -104,29 +106,25 @@ class _TestimonialPageState extends State<TestimonialPage> {
 
   @override
   Widget build(BuildContext context) {
-    const Color primaryColor = Color(0xFF253B95);
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 20),
-
-          // Title Text
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
+            padding: const EdgeInsets.only(right: 16,left: 16,bottom: 16),
             child: const Text(
               'HEAR FROM OUR STUDENT',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w500,
-                color: primaryColor,
+                color: AppColors.primaryColor,
                 height: 1.5,
               ),
             ),
           ),
-
-          // Testimonial Carousel
           SizedBox(
             height: 300,
             child: PageView.builder(
@@ -144,11 +142,10 @@ class _TestimonialPageState extends State<TestimonialPage> {
                   child: Transform.scale(
                     scale: index == _currentPage ? 1.0 : 0.95,
                     child: Card(
-                      elevation: 5,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                         side: const BorderSide(
-                          color: Color(0x1A535763), // Updated border color
+                          color: Color(0x1A535763),
                           width: 1,
                         ),
                       ),
@@ -199,8 +196,6 @@ class _TestimonialPageState extends State<TestimonialPage> {
               },
             ),
           ),
-
-          // Page Indicator Dots
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -212,14 +207,13 @@ class _TestimonialPageState extends State<TestimonialPage> {
                 width: _currentPage == index ? 12 : 8,
                 height: 8,
                 decoration: BoxDecoration(
-                  color: _currentPage == index ? primaryColor : Colors.grey.shade300,
+                  color: _currentPage == index ? AppColors.primaryColor : Colors.grey.shade300,
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
             ),
           ),
-
-          const SizedBox(height: 20),
+          // const SizedBox(height: 20),
         ],
       ),
     );

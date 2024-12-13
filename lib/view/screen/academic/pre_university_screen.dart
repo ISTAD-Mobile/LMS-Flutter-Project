@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lms_mobile/view/screen/about/my_home_about_istad_screen.dart';
 import '../../../data/color/color_screen.dart';
 import '../../home.dart';
-import '../../widgets/public_screen_widgets/appbar_and_bottom_navigation_widgets.dart';
 import '../lms/auth/first_log_in_screen.dart';
 import 'my_home_academic_screen.dart';
 
@@ -18,7 +17,7 @@ class _PreUniversityPageState extends State<PreUniversityPage> {
 
   // List of screens for each tab
   final List<Widget> screens = [
-    const HomeScreen(),
+     HomeScreen(),
     const MyAcademicScreen(),
     const HomeIstadScreen(),
     const firstSignInScreen(),
@@ -41,7 +40,7 @@ class _PreUniversityPageState extends State<PreUniversityPage> {
           icon: const Icon(Icons.arrow_back),
         ),
         centerTitle: true,
-        title: const Text("Pre-University",style: TextStyle(fontSize: 16),),
+        title: const Text("Pre-University",style: TextStyle(fontSize: 16,color: AppColors.primaryColor),),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -58,7 +57,7 @@ class _PreUniversityPageState extends State<PreUniversityPage> {
                   height: 200,
                 ),
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 25),
               const Text(
                 "Closed",
                 style: TextStyle(
@@ -95,7 +94,7 @@ class _PreUniversityPageState extends State<PreUniversityPage> {
                   color: Color(0xFF253B95),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 15),
               _buildCourseList([
                 "Introduction",
                 "HTML - HyperText Markup Language",
@@ -149,7 +148,6 @@ class _PreUniversityPageState extends State<PreUniversityPage> {
               ),
               const SizedBox(height: 16),
 
-              // C++ Programming Section
               const Text(
                 "C++ Programming",
                 style: TextStyle(
@@ -158,7 +156,7 @@ class _PreUniversityPageState extends State<PreUniversityPage> {
                   color: Color(0xFF253B95),
                 ),
               ),
-              SizedBox(height: 8),
+              SizedBox(height: 15),
               _buildCourseList([
                 "Introduction",
                 "Basic Syntax",
@@ -222,7 +220,7 @@ class _PreUniversityPageState extends State<PreUniversityPage> {
       children: courses
           .map(
             (course) => Padding(
-          padding: const EdgeInsets.only(left: 24.0), // Adjust left padding here
+          padding: const EdgeInsets.only(left: 10.0,bottom: 10.0),
           child: Row(
             children: [
               const Icon(
@@ -230,7 +228,7 @@ class _PreUniversityPageState extends State<PreUniversityPage> {
                 color: Color(0xFFEAB305),
                 size: 18,
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 10),
               Text(
                 course,
                 style: const TextStyle(

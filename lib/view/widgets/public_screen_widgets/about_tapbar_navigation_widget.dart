@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:lms_mobile/data/color/color_screen.dart';
 import '../../screen/about/about_my_director_screen.dart';
 import '../../screen/about/about_our_team_screen.dart';
 import '../../screen/about/my_home_about_istad_screen.dart';
-import '../../screen/academic/my_home_academic_screen.dart';
+
+
 
 class AboutTapbarNavigation extends StatefulWidget {
   @override
@@ -29,17 +31,30 @@ class _TabNavigationScreenState extends State<AboutTapbarNavigation> with Single
     return Scaffold(
       body: Column(
         children: [
-          TabBar(
-            controller: _tabController,
-            indicator: null,
-            isScrollable: false,
-            padding: EdgeInsets.zero,
-            // indicator: BoxDecoration(),
-            tabs: const [
-              Tab(text: 'About ISTAD'),
-              Tab(text: 'My Director'),
-              Tab(text: 'Our Team'),
-            ],
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            // padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: AppColors.defaultWhiteColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: TabBar(
+              controller: _tabController,
+              indicator: BoxDecoration(
+                color: AppColors.primaryColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              indicatorPadding: EdgeInsets.zero,
+              labelColor: Colors.white,
+              indicatorSize: TabBarIndicatorSize.tab,
+              dividerColor: Colors.transparent,
+              indicatorColor:Colors.blue,
+              tabs: const [
+                Tab(text: 'About ISTAD'),
+                Tab(text: 'My Director'),
+                Tab(text: 'Our Team'),
+              ],
+            ),
           ),
 
           Expanded(
@@ -57,6 +72,9 @@ class _TabNavigationScreenState extends State<AboutTapbarNavigation> with Single
     );
   }
 }
+
+
+
 
 
 

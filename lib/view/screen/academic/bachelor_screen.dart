@@ -14,7 +14,9 @@ class BachelorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.defaultWhiteColor,
       appBar: AppBar(
+        backgroundColor: AppColors.defaultWhiteColor,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -22,7 +24,7 @@ class BachelorPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
         ),
         centerTitle: true,
-        title: const Text("Bachelor Program",style: TextStyle(fontSize: 16),),
+        title: const Text("Bachelor Program",style: TextStyle(fontSize: 16,color: AppColors.primaryColor),),
       ),
       body: SingleChildScrollView(
         // padding: const EdgeInsets.all(16.0),
@@ -76,11 +78,10 @@ class BachelorPage extends StatelessWidget {
                           color: Colors.white,
                         ),
                       ),
-                      const SizedBox(height: 16), // Spacing before button
-                      // Enroll Button
+                      const SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: () {
-                          // Handle button press
+
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primaryColor.withOpacity(0.6),
@@ -96,8 +97,8 @@ class BachelorPage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.all(16), // Adjust padding as needed
+            Container(
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -112,26 +113,33 @@ class BachelorPage extends StatelessWidget {
                     style: TextStyle(fontSize: 16,color: AppColors.defaultGrayColor),
                   ),
                   const SizedBox(height: 20),
-                  const Column(
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'FUTURE',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.normal,
-                          color: AppColors.secondaryColor,
-                          height: 1,
+                      RichText(
+                        text: const TextSpan(
+                          style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.normal,
+                            color: AppColors.secondaryColor,
+                            height: 1,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: 'FUTURE',
+                            ),
+                            TextSpan(
+                              text: ' CAREER',
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.primaryColor,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      Text(
-                        'CAREER',
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.primaryColor,
-                        ),
-                      ),
+                      )
+
                     ],
                   ),
                   const SizedBox(height: 15),
@@ -147,35 +155,65 @@ class BachelorPage extends StatelessWidget {
                       ),
                     ),
                     padding: const EdgeInsets.all(16),
+                    // child: Column(
+                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                    //   children: [
+                    //     const Text(
+                    //       "អាជីពការងារដែលនិស្សិតអាចទទួលបានក្រោយបញ្ចប់ការសិក្សា៖",
+                    //       style: TextStyle(fontSize: 16, color: AppColors.defaultGrayColor),
+                    //     ),
+                    //     const SizedBox(height: 10),
+                    //     ...[
+                    //       '• UI and UX Designer',
+                    //       '• Web Developer',
+                    //       '• Software Developer',
+                    //       '• IT Technician',
+                    //       '• Frontend Developer',
+                    //       '• Backend Developer',
+                    //       '• Full Stack Developer',
+                    //       '• Penetration Tester',
+                    //       '• Security Analyst',
+                    //       '• Application Security Engineer',
+                    //       '• System Administrator',
+                    //     ].map((career) => Text(
+                    //       career,
+                    //       style: const TextStyle(fontSize: 16, color: AppColors.defaultGrayColor),
+                    //     )),
+                    //   ],
+                    // ),
+
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
                           "អាជីពការងារដែលនិស្សិតអាចទទួលបានក្រោយបញ្ចប់ការសិក្សា៖",
-                          style: TextStyle(fontSize: 16, color: AppColors.defaultGrayColor),
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF253B95),
+                            fontFamily: 'NotoSansKhmer',
+                          ),
                         ),
-                        const SizedBox(height: 10),
-                        ...[
-                          '• UI and UX Designer',
-                          '• Web Developer',
-                          '• Software Developer',
-                          '• IT Technician',
-                          '• Frontend Developer',
-                          '• Backend Developer',
-                          '• Full Stack Developer',
-                          '• Penetration Tester',
-                          '• Security Analyst',
-                          '• Application Security Engineer',
-                          '• System Administrator',
-                        ].map((career) => Text(
-                          career,
-                          style: const TextStyle(fontSize: 16, color: AppColors.defaultGrayColor),
-                        )),
+                        const SizedBox(height: 15),
+                        _buildCourseList([
+                          "UI and UX Designer",
+                          "Web Designer",
+                          "Web Developer",
+                          "Software Developer",
+                          "IT Technician",
+                          "Frontend Developer",
+                          "Backend Developer",
+                          "Full Stack Developer",
+                          "Penetration Tester",
+                          "Security Analyst",
+                          "Application Security Engineer",
+                          "System Administrator",
+                        ]),
                       ],
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 30),
                   const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -202,460 +240,478 @@ class BachelorPage extends StatelessWidget {
                   //Year1 accordion
                   Container(
                     decoration: const BoxDecoration(
+                      color: AppColors.defaultWhiteColor,
                       border: Border(
                         bottom: BorderSide(color: Colors.grey, width: 1),
                       ),
                     ),
-                    child: const ExpansionTile(
-                      title: Text(
-                        'Year 1',
-                        style: TextStyle(
-                          fontSize: 19,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.primaryColor,
+                    child: Theme(
+                      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                      child: const ExpansionTile(
+                        title: Text(
+                          'Year 1',
+                          style: TextStyle(
+                            fontSize: 19,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.primaryColor,
+                          ),
                         ),
+                        iconColor: AppColors.primaryColor,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Semester 1',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          // Table Header
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Subjects',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.primaryColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Text(
+                                  'Credit',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.primaryColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          _CurriculumListTile(subject: '1. Introduction to Information and Technology', credit: '3'),
+                          _CurriculumListTile(subject: '2. Programming Foundation', credit: '3'),
+                          _CurriculumListTile(subject: '3. Intensive English Program I', credit: '3'),
+                          _CurriculumListTile(subject: '4. Academic Skill Development', credit: '3'),
+                          _CurriculumListTile(subject: '5. Multimedia and Web Design', credit: '3'),
+                          _CurriculumListTile(subject: '6. Networking Fundamental', credit: '3'),
+                          // Divider(),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Semester 2',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          // Table Header
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Subjects',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.primaryColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Text(
+                                  'Credit',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.primaryColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          _CurriculumListTile(subject: '7. Web Development I ( Web Design )', credit: '3'),
+                          _CurriculumListTile(subject: '8. Data Structure and Algorithm', credit: '3'),
+                          _CurriculumListTile(subject: '9. Database Management Systems', credit: '3'),
+                          _CurriculumListTile(subject: '10. Intensive English Program II ( For IT Researching )', credit: '3'),
+                          _CurriculumListTile(subject: '11. Mathematics ( Discrete Math )', credit: '3'),
+                          _CurriculumListTile(subject: '12. System Administration', credit: '3'),
+                          // Divider(),
+                        ],
                       ),
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Semester 1',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        // Table Header
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Subjects',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primaryColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Text(
-                                'Credit',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primaryColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        _CurriculumListTile(subject: '1. Introduction to Information and Technology', credit: '3'),
-                        _CurriculumListTile(subject: '2. Programming Foundation', credit: '3'),
-                        _CurriculumListTile(subject: '3. Intensive English Program I', credit: '3'),
-                        _CurriculumListTile(subject: '4. Academic Skill Development', credit: '3'),
-                        _CurriculumListTile(subject: '5. Multimedia and Web Design', credit: '3'),
-                        _CurriculumListTile(subject: '6. Networking Fundamental', credit: '3'),
-                        Divider(),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Semester 2',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        // Table Header
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Subjects',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primaryColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Text(
-                                'Credit',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primaryColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        _CurriculumListTile(subject: '7. Web Development I ( Web Design )', credit: '3'),
-                        _CurriculumListTile(subject: '8. Data Structure and Algorithm', credit: '3'),
-                        _CurriculumListTile(subject: '9. Database Management Systems', credit: '3'),
-                        _CurriculumListTile(subject: '10. Intensive English Program II ( For IT Researching )', credit: '3'),
-                        _CurriculumListTile(subject: '11. Mathematics ( Discrete Math )', credit: '3'),
-                        _CurriculumListTile(subject: '12. System Administration', credit: '3'),
-                        Divider(),
-                      ],
                     ),
                   ),
-                  //Year2 accordion
+                  const SizedBox(height: 20,),
                   Container(
                     decoration: const BoxDecoration(
+                      color: AppColors.defaultWhiteColor,
                       border: Border(
                         bottom: BorderSide(color: Colors.grey, width: 1), // Add bottom border
                       ),
                     ),
-                    child: const ExpansionTile(
-                      title: Text(
-                        'Year 2',
-                        style: TextStyle(
-                          fontSize: 19,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.primaryColor,
+                    child: Theme(
+                      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                      child: const ExpansionTile(
+                        title: Text(
+                          'Year 2',
+                          style: TextStyle(
+                            fontSize: 19,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.primaryColor,
+                          ),
                         ),
+                        iconColor: AppColors.primaryColor,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Semester 1',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          // Table Header
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Subjects',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.primaryColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Text(
+                                  'Credit',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.primaryColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          _CurriculumListTile(subject: '13. Application Security (Cybersecurity)', credit: '3'),
+                          _CurriculumListTile(subject: '14. Web Development II (Java, Spring Framework)', credit: '4'),
+                          _CurriculumListTile(subject: '15. Object Oriented Analysis and Design', credit: '3'),
+                          _CurriculumListTile(subject: '16. Mathematics II (Business Statistics)', credit: '3'),
+                          _CurriculumListTile(subject: '17. Web Development III (Full Stack Web Development)', credit: '4'),
+                          _CurriculumListTile(subject: '18. UX and UI Design Professional', credit: '3'),
+                          // Divider(),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Semester 2',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          // Table Header
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Subjects',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.primaryColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Text(
+                                  'Credit',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.primaryColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          _CurriculumListTile(subject: '19. Project Management', credit: '3'),
+                          _CurriculumListTile(subject: '20. Project Practicum ( Internship )', credit: '12'),
+                          // Divider(),
+                        ],
                       ),
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Semester 1',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        // Table Header
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Subjects',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primaryColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Text(
-                                'Credit',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primaryColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        _CurriculumListTile(subject: '13. Application Security (Cybersecurity)', credit: '3'),
-                        _CurriculumListTile(subject: '14. Web Development II (Java, Spring Framework)', credit: '4'),
-                        _CurriculumListTile(subject: '15. Object Oriented Analysis and Design', credit: '3'),
-                        _CurriculumListTile(subject: '16. Mathematics II (Business Statistics)', credit: '3'),
-                        _CurriculumListTile(subject: '17. Web Development III (Full Stack Web Development)', credit: '4'),
-                        _CurriculumListTile(subject: '18. UX and UI Design Professional', credit: '3'),
-                        Divider(),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Semester 2',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        // Table Header
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Subjects',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primaryColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Text(
-                                'Credit',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primaryColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        _CurriculumListTile(subject: '19. Project Management', credit: '3'),
-                        _CurriculumListTile(subject: '20. Project Practicum ( Internship )', credit: '12'),
-                        Divider(),
-                      ],
                     ),
                   ),
-                  //Year3 accordion
+                  const SizedBox(height: 20,),
                   Container(
                     decoration: const BoxDecoration(
+                      color: AppColors.defaultWhiteColor,
                       border: Border(
                         bottom: BorderSide(color: Colors.grey, width: 1),
                       ),
                     ),
-                    child: const ExpansionTile(
-                      title: Text(
-                        'Year 3',
-                        style: TextStyle(
-                          fontSize: 19,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.primaryColor,
+                    child: Theme(
+                      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                      child: const ExpansionTile(
+                        title: Text(
+                          'Year 3',
+                          style: TextStyle(
+                            fontSize: 19,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.primaryColor,
+                          ),
                         ),
+                        iconColor: AppColors.primaryColor,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Semester 1',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          // Table Header
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Subjects',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.primaryColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Text(
+                                  'Credit',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.primaryColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          _CurriculumListTile(subject: '21. Database Administration (DBA)', credit: '3'),
+                          _CurriculumListTile(subject: '22. Ethical Hacking ( Cybersecurity )', credit: '4'),
+                          _CurriculumListTile(subject: '23. Data Analytics', credit: '4'),
+                          _CurriculumListTile(subject: '24. Python for Data Analytics', credit: '3'),
+                          _CurriculumListTile(subject: '25. Application Development I ( .NET Framework )', credit: '3'),
+                          // Divider(),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Semester 2',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          // Table Header
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Subjects',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.primaryColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Text(
+                                  'Credit',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.primaryColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          _CurriculumListTile(subject: '26. Mobile Development I', credit: '3'),
+                          _CurriculumListTile(subject: '27.  Mobile Development II', credit: '3'),
+                          _CurriculumListTile(subject: '28. Linux System Administration', credit: '3'),
+                          _CurriculumListTile(subject: '29. DevOps Engineering ( For IT Researching )', credit: '3'),
+                          _CurriculumListTile(subject: '30. Application Development II ( .NET Framework )', credit: '3'),
+                          _CurriculumListTile(subject: '31. Soft Skill ( Career Preparation, Teamwork, Interpersonal )', credit: '2'),
+                          // Divider(),
+                        ],
                       ),
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Semester 1',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        // Table Header
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Subjects',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primaryColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Text(
-                                'Credit',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primaryColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        _CurriculumListTile(subject: '21. Database Administration (DBA)', credit: '3'),
-                        _CurriculumListTile(subject: '22. Ethical Hacking ( Cybersecurity )', credit: '4'),
-                        _CurriculumListTile(subject: '23. Data Analytics', credit: '4'),
-                        _CurriculumListTile(subject: '24. Python for Data Analytics', credit: '3'),
-                        _CurriculumListTile(subject: '25. Application Development I ( .NET Framework )', credit: '3'),
-                        Divider(),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Semester 2',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        // Table Header
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Subjects',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primaryColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Text(
-                                'Credit',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primaryColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        _CurriculumListTile(subject: '26. Mobile Development I', credit: '3'),
-                        _CurriculumListTile(subject: '27.  Mobile Development II', credit: '3'),
-                        _CurriculumListTile(subject: '28. Linux System Administration', credit: '3'),
-                        _CurriculumListTile(subject: '29. DevOps Engineering ( For IT Researching )', credit: '3'),
-                        _CurriculumListTile(subject: '30. Application Development II ( .NET Framework )', credit: '3'),
-                        _CurriculumListTile(subject: '31. Soft Skill ( Career Preparation, Teamwork, Interpersonal )', credit: '2'),
-                        Divider(),
-                      ],
                     ),
                   ),
-                  //Year4 accordion
+                  const SizedBox(height: 20,),
                   Container(
                     decoration: const BoxDecoration(
+                      color: AppColors.defaultWhiteColor,
                       border: Border(
-                        bottom: BorderSide(color: Colors.grey, width: 1), // Add bottom border
+                        bottom: BorderSide(color: Colors.grey, width: 1),
                       ),
                     ),
-                    child: const ExpansionTile(
-                      title: Text(
-                        'Year 4',
-                        style: TextStyle(
-                          fontSize: 19,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.primaryColor,
+                    child: Theme(
+                      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                      child: const ExpansionTile(
+                        title: Text(
+                          'Year 4',
+                          style: TextStyle(
+                            fontSize: 19,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.primaryColor,
+                          ),
                         ),
+                        iconColor: AppColors.primaryColor,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Semester 1',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          // Table Header
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Subjects',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.primaryColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Text(
+                                  'Credit',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.primaryColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          _CurriculumListTile(subject: '32. Fundamental of Machine Learning', credit: '3'),
+                          _CurriculumListTile(subject: '33. Fundamental of Artificial Intelligence', credit: '3'),
+                          _CurriculumListTile(subject: '34. Software Engineering', credit: '3'),
+                          _CurriculumListTile(subject: '35. Microservices Architecture ( Spring Framework )', credit: '3'),
+                          _CurriculumListTile(subject: '36. Application Integration with AI', credit: '3'),
+                          _CurriculumListTile(subject: '37. Research Methodology ( How to write thesis statement )', credit: '3'),
+                          // Divider(),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Semester 2',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          // Table Header
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Subjects',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.primaryColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Text(
+                                  'Credit',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.primaryColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          _CurriculumListTile(subject: '38. Internship ( Project Practicum II )', credit: '12'),
+                          // Divider(),
+                        ],
                       ),
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Semester 1',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        // Table Header
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Subjects',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primaryColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Text(
-                                'Credit',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primaryColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        _CurriculumListTile(subject: '32. Fundamental of Machine Learning', credit: '3'),
-                        _CurriculumListTile(subject: '33. Fundamental of Artificial Intelligence', credit: '3'),
-                        _CurriculumListTile(subject: '34. Software Engineering', credit: '3'),
-                        _CurriculumListTile(subject: '35. Microservices Architecture ( Spring Framework )', credit: '3'),
-                        _CurriculumListTile(subject: '36. Application Integration with AI', credit: '3'),
-                        _CurriculumListTile(subject: '37. Research Methodology ( How to write thesis statement )', credit: '3'),
-                        Divider(),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Semester 2',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        // Table Header
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Subjects',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primaryColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Text(
-                                'Credit',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primaryColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        _CurriculumListTile(subject: '38. Internship ( Project Practicum II )', credit: '12'),
-                        Divider(),
-                      ],
                     ),
                   ),
-
-                  const SizedBox(height: 16),
-
+                  const SizedBox(height: 20),
                   const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -678,61 +734,60 @@ class BachelorPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  //assessment curriculumn column
-                  const SizedBox(height: 15),
-                  Container(
-                    width: MediaQuery.of(context).size.width, // Full screen width
-                    color: AppColors.defaultWhiteColor,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        DataTable(
-                          columns: const [
-                            DataColumn(label: Text('Score', style: TextStyle(fontSize: 16))),
-                            DataColumn(label: Text('GPA', style: TextStyle(fontSize: 16))),
-                            DataColumn(label: Text('Grade', style: TextStyle(fontSize: 16))),
-                          ],
-                          rows: const [
-                            DataRow(cells: [
-                              DataCell(Text('85-100')),
-                              DataCell(Text('4.0')),
-                              DataCell(Text('A')),
-                            ]),
-                            DataRow(cells: [
-                              DataCell(Text('80-84')),
-                              DataCell(Text('3.5')),
-                              DataCell(Text('B+')),
-                            ]),
-                            DataRow(cells: [
-                              DataCell(Text('70-79')),
-                              DataCell(Text('3.0')),
-                              DataCell(Text('B')),
-                            ]),
-                            DataRow(cells: [
-                              DataCell(Text('65-69')),
-                              DataCell(Text('2.5')),
-                              DataCell(Text('C+')),
-                            ]),
-                            DataRow(cells: [
-                              DataCell(Text('50-54')),
-                              DataCell(Text('2.0')),
-                              DataCell(Text('C')),
-                            ]),
-                            DataRow(cells: [
-                              DataCell(Text('45-49')),
-                              DataCell(Text('1.5')),
-                              DataCell(Text('D')),
-                            ]),
-                            DataRow(cells: [
-                              DataCell(Text('0-44')),
-                              DataCell(Text('0')),
-                              DataCell(Text('F')),
-                            ]),
-                          ],
-                        ),
-                      ],
-                    ),
-                  )
+                ],
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(bottom: 16),
+              color: AppColors.defaultWhiteColor,
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  DataTable(
+                    columns: const [
+                      DataColumn(label: Text('Score', style: DataTableHeaderStyle)),
+                      DataColumn(label: Text('GPA', style: DataTableHeaderStyle)),
+                      DataColumn(label: Text('Grade', style: DataTableHeaderStyle)),
+                    ],
+                    rows: const [
+                      DataRow(cells: [
+                        DataCell(Text('85-100', style: DataCellTextStyle)),
+                        DataCell(Text('4.0', style: DataCellTextStyle)),
+                        DataCell(Text('A', style: DataCellTextStyle)),
+                      ]),
+                      DataRow(cells: [
+                        DataCell(Text('80-84', style: DataCellTextStyle)),
+                        DataCell(Text('3.5', style: DataCellTextStyle)),
+                        DataCell(Text('B+', style: DataCellTextStyle)),
+                      ]),
+                      DataRow(cells: [
+                        DataCell(Text('70-79', style: DataCellTextStyle)),
+                        DataCell(Text('3.0', style: DataCellTextStyle)),
+                        DataCell(Text('B', style: DataCellTextStyle)),
+                      ]),
+                      DataRow(cells: [
+                        DataCell(Text('65-69', style: DataCellTextStyle)),
+                        DataCell(Text('2.5', style: DataCellTextStyle)),
+                        DataCell(Text('C+', style: DataCellTextStyle)),
+                      ]),
+                      DataRow(cells: [
+                        DataCell(Text('50-54', style: DataCellTextStyle)),
+                        DataCell(Text('2.0', style: DataCellTextStyle)),
+                        DataCell(Text('C', style: DataCellTextStyle)),
+                      ]),
+                      DataRow(cells: [
+                        DataCell(Text('45-49', style: DataCellTextStyle)),
+                        DataCell(Text('1.5', style: DataCellTextStyle)),
+                        DataCell(Text('D', style: DataCellTextStyle)),
+                      ]),
+                      DataRow(cells: [
+                        DataCell(Text('0-44', style: DataCellTextStyle)),
+                        DataCell(Text('0', style: DataCellTextStyle)),
+                        DataCell(Text('F', style: DataCellTextStyle)),
+                      ]),
+                    ],
+                  ),
                 ],
               ),
             )
@@ -763,8 +818,51 @@ class _CurriculumListTile extends StatelessWidget {
           title: Text(subject, style: const TextStyle(fontSize: 14),),
           trailing: Text(credit),
         ),
-        const Divider(), // Horizontal line between subjects
+        const Divider(),
       ],
     );
   }
+}
+
+const DataCellTextStyle = TextStyle(
+  fontSize: 16,
+  color: AppColors.defaultGrayColor,
+  fontWeight: FontWeight.normal,
+);
+
+
+const DataTableHeaderStyle = TextStyle(
+  fontSize: 19,
+  fontWeight: FontWeight.bold,
+  color: AppColors.defaultGrayColor,
+);
+
+
+Widget _buildCourseList(List<String> courses) {
+  return Column(
+    children: courses
+        .map(
+          (course) => Padding(
+        padding: const EdgeInsets.only(left: 10.0,bottom: 10.0),
+        child: Row(
+          children: [
+            const Icon(
+              Icons.star,
+              color: Color(0xFFEAB305),
+              size: 18,
+            ),
+            const SizedBox(width: 10),
+            Text(
+              course,
+              style: const TextStyle(
+                fontSize: 14,
+                color: Color(0xFF535763),
+              ),
+            ),
+          ],
+        ),
+      ),
+    )
+        .toList(),
+  );
 }

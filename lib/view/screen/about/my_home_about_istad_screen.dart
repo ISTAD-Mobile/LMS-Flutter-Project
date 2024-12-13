@@ -2,10 +2,11 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/view/screen/register/register_step_1.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-import '../../widgets/public_screen_widgets/appbar_register.dart';
 
 class HomeIstadScreen extends StatefulWidget {
   const HomeIstadScreen({super.key});
@@ -32,14 +33,25 @@ class _HomePageState extends State<HomeIstadScreen> {
                     'Vision',
                     'Advanced IT Institute in Cambodia',
                     'Learn More',
-                    'https://lms-api.istad.co/api/v1/medias/view/5e7b60be-4d4c-4c0b-b0ac-5968830b4e4b.jpg',
-                    false, // Not reversed
+                    'assets/images/about_istad_img.png',
+                    false,
                     titleColor: Colors.white,
                     subtitleColor: Colors.white,
                     buttonColor: AppColors.primaryColor99,
                     buttonTextColor: Colors.white,
                     cardHeight: 170,
                     borderRadius: 10.0,
+                    onButtonPressed: () async {
+                      const facebookUrl = 'https://www.facebook.com/istad.co?mibextid=ZbWKwL';
+                      if (await canLaunch(facebookUrl)) {
+                        await launch(facebookUrl);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text(
+                              'Could not open Facebook')),
+                        );
+                      }
+                    },
                   ),
                   const SizedBox(height: 16),
                   _buildFeatureCard(
@@ -55,6 +67,13 @@ class _HomePageState extends State<HomeIstadScreen> {
                     cardHeight: 170,
                     fontSize: 22.0,
                     borderRadius: 10.0,
+                    onButtonPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const RegisterStep1()),
+                      );
+                    },
                   ),
                   const SizedBox(height: 16),
                   _buildFeatureCard(
@@ -68,6 +87,13 @@ class _HomePageState extends State<HomeIstadScreen> {
                     buttonTextColor: Colors.white,
                     borderRadius: 10.0,
                     cardHeight: 180,
+                    onButtonPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const RegisterStep1()),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -112,9 +138,12 @@ class _HomePageState extends State<HomeIstadScreen> {
                         const Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("WHY SHOULD YOU CHOOSE US ?", style: TextStyle(fontSize: 15 ,fontWeight: FontWeight.w600),),
-                            Text("ISTAD" ,style: TextStyle(fontSize: 23 ,fontWeight: FontWeight.w600)),
-                            Text("Institute",style: TextStyle(fontSize: 18 ,fontWeight: FontWeight.w600)),
+                            Text("WHY SHOULD YOU CHOOSE US ?", style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.w600),),
+                            Text("ISTAD", style: TextStyle(
+                                fontSize: 23, fontWeight: FontWeight.w600)),
+                            Text("Institute", style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w600)),
                           ],
                         ),
                       ],
@@ -126,24 +155,32 @@ class _HomePageState extends State<HomeIstadScreen> {
                       'INSTITUTE is a noteworthy science and technology institute in Cambodia. INSTITUTE has routed Cambodian students to advanced science and technology, research, and develop digital skills and our graduates have been guaranteed excellent job opportunities with the Top IT company.'
                   ),
                   _buildInfoSection('VISION & MISSION', ''),
-                  _buildInfoContent('OUR VISION', 'Advanced IT Institute in Cambodia'),
+                  _buildInfoContent(
+                      'OUR VISION', 'Advanced IT Institute in Cambodia'),
                   _buildInfoContentMission('OUR MISSION', ''),
-                  _buildMissionList('OUR MISSION',''),
+                  _buildMissionList('OUR MISSION', ''),
                   _buildContactSection(),
+                  SizedBox(height: 20,),
+                  const Center(
+                    child: MapWidget(
+                      center: LatLng(11.578277484937441, 104.90179990955635),
+                      markerTitle: 'Science and Technology Advanced Development Co., Ltd.',
+                      markerSnippet:
+                      'No. 24, St. 562, Sangkat Boeung Kak I, Khan Toul Kork, Phnom Penh, Cambodia',
+                      mapHeight: 200.0,
+                      mapWidth: double.infinity,
+                    ),
+                  ),
                 ],
               ),
             ),
-
-
           ],
         ),
       ),
     );
-
   }
 
-  Widget _buildFeatureCard(
-      String title,
+  Widget _buildFeatureCard(String title,
       String subtitle,
       String buttonText,
       String backgroundImage,
@@ -155,6 +192,7 @@ class _HomePageState extends State<HomeIstadScreen> {
         double borderRadius = 10.0,
         double cardHeight = 180.0,
         double fontSize = 20.0,
+        required VoidCallback onButtonPressed,
       }) {
     return Container(
       width: double.infinity,
@@ -168,7 +206,7 @@ class _HomePageState extends State<HomeIstadScreen> {
           Positioned.fill(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(borderRadius),
-              child: Image.network(
+              child: Image.asset(
                 backgroundImage,
                 fit: BoxFit.cover,
               ),
@@ -212,13 +250,7 @@ class _HomePageState extends State<HomeIstadScreen> {
                   alignment:
                   isReversed ? Alignment.centerLeft : Alignment.centerRight,
                   child: ElevatedButton(
-                    onPressed: () {
-                      // Navigate to the SecondPage
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => RegistrationForm()),
-                      );
-                    },
+                    onPressed: onButtonPressed,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: buttonColor,
                       shape: RoundedRectangleBorder(
@@ -343,7 +375,8 @@ class _HomePageState extends State<HomeIstadScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('• Provide the latest methodology with high-quality training and mentoring'),
+          Text(
+              '• Provide the latest methodology with high-quality training and mentoring'),
           Text('• Build up the capacity and career of IT experts in Cambodia'),
           Text('• Consult and connect ISTAD trainees to top IT careers'),
         ],
@@ -353,38 +386,153 @@ class _HomePageState extends State<HomeIstadScreen> {
 
   Widget _buildContactSection() {
     return Padding(
-      padding: const EdgeInsets.only(top: 20.0),  // Add top margin to the entire contact section
+      padding: const EdgeInsets.only(top: 20.0),
+      // Add top margin to the entire contact section
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
             'If you have any questions, please feel free to contact us.',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: AppColors.primaryColor99),
+            style: TextStyle(fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: AppColors.primaryColor99),
           ),
           const SizedBox(height: 16),
-          _buildContactItem(Icons.location_on, 'No. 12, St. 323, Sangkat Boeung Kak II, Khan Toul Kork, Phnom Penh, Cambodia'),
-          _buildContactItem(Icons.facebook, 'Facebook'),
-          _buildContactItem(Icons.telegram, 'Telegram'),
-          _buildContactItem(Icons.email, 'info.istad@gmail.com'),
-          _buildContactItem(Icons.video_collection, 'YouTube'),
-          _buildContactItem(Icons.phone, '(+855) 95 990 910 | (+855) 93 990 910'),
-          _buildContactItem(Icons.wordpress, 'www.istad.edu.kh'),
+          _buildContactItem(
+            Icon(Icons.location_on, size: 28, color: AppColors.primaryColor99),
+            'No. 12, St. 323, Sangkat Boeung Kak II, Khan Toul Kork, Phnom Penh, Cambodia',
+          ),
+          _buildContactItem(
+            Icon(Icons.facebook, size: 28, color: AppColors.primaryColor99),
+            'Facebook',
+          ),
+          _buildContactItem(
+            Icon(Icons.telegram, size: 28, color: AppColors.primaryColor99),
+            'Telegram',
+          ),
+          _buildContactItem(
+            Icon(Icons.email, size: 28, color: AppColors.primaryColor99),
+            'info.istad@gmail.com',
+          ),
+          _buildContactItem(
+            Icon(Icons.video_collection, size: 28,
+                color: AppColors.primaryColor99),
+            'YouTube',
+          ),
+          _buildContactItem(
+            Icon(Icons.phone, size: 28, color: AppColors.primaryColor99),
+            '(+855) 95 990 910 | (+855) 93 990 910',
+          ),
+          _buildContactItem(
+            Image.network(
+              'https://cdn-icons-png.flaticon.com/256/7192/7192499.png',
+              width: 24,
+              height: 24,
+                color: AppColors.primaryColor99
+            ),
+            ' www.istad.edu.kh',
+          ),
         ],
       ),
     );
   }
 
 
-
-  Widget _buildContactItem(IconData icon, String text) {
+  Widget _buildContactItem(Widget icon, String text) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         children: [
-          Icon(icon, size: 28, color: AppColors.primaryColor99),
+          icon,
           const SizedBox(width: 8),
-          Expanded(child: Text(text,style: const TextStyle(color: AppColors.primaryColor99,fontWeight: FontWeight.w500),)),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(
+                color: AppColors.primaryColor99,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
         ],
+      ),
+    );
+  }
+}
+
+
+class MapWidget extends StatefulWidget {
+  final LatLng center;
+  final String markerTitle;
+  final String markerSnippet;
+  final double mapHeight;
+  final double mapWidth;
+
+  const MapWidget({
+    Key? key,
+    required this.center,
+    required this.markerTitle,
+    required this.markerSnippet,
+    this.mapHeight = 200.0,
+    this.mapWidth = double.infinity,
+  }) : super(key: key);
+
+  @override
+  State<MapWidget> createState() => _MapWidgetState();
+}
+
+class _MapWidgetState extends State<MapWidget> {
+  late GoogleMapController mapController;
+
+  final Set<Marker> _markers = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeMarker();
+  }
+
+  void _initializeMarker() {
+    _markers.add(
+      Marker(
+        markerId: const MarkerId('location'),
+        position: widget.center,
+        infoWindow: InfoWindow(
+          title: widget.markerTitle,
+          snippet: widget.markerSnippet,
+        ),
+      ),
+    );
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: widget.mapWidth,
+      height: widget.mapHeight,
+      // decoration: BoxDecoration(
+      //   border: Border.all(color: Colors.grey.shade400),
+      //   borderRadius: BorderRadius.circular(8),
+      // ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: GoogleMap(
+          onMapCreated: _onMapCreated,
+          initialCameraPosition: CameraPosition(
+            target: widget.center,
+            zoom: 17.0,
+          ),
+          markers: _markers,
+          mapType: MapType.normal,
+          zoomControlsEnabled: true,
+          zoomGesturesEnabled: true,
+          myLocationButtonEnabled: true,
+          myLocationEnabled: true,
+        ),
       ),
     );
   }

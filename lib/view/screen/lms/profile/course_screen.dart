@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../data/color/color_screen.dart';
+import '../../../widgets/studentsWidget/widget_detail_card/course_detail_screen.dart';
 
 class CourseScreen extends StatelessWidget {
   const CourseScreen({super.key});
@@ -179,7 +180,7 @@ class CourseScreen extends StatelessWidget {
             description: 'This course provides an introduction to the mathematical concepts and techniques that are fundamental to ...',
             year: '1',
             semester: '2',
-            credits: '3',
+            credits: '3', theory: '3', practice: '3',
           ),
           SizedBox(height: 16),
           CourseCard(
@@ -188,7 +189,7 @@ class CourseScreen extends StatelessWidget {
             description: 'This course provides an introduction to the mathematical concepts and techniques that are fundamental to ...',
             year: '1',
             semester: '2',
-            credits: '3',
+            credits: '3', theory: '3', practice: '3',
           ),
           SizedBox(height: 16),
           CourseCard(
@@ -197,7 +198,7 @@ class CourseScreen extends StatelessWidget {
             description: 'This course provides an introduction to the mathematical concepts and techniques that are fundamental to ...',
             year: '1',
             semester: '2',
-            credits: '3',
+            credits: '3', theory: '3', practice: '3',
           ),
         ],
       ),
@@ -212,6 +213,8 @@ class CourseCard extends StatelessWidget {
   final String year;
   final String semester;
   final String credits;
+  final String theory;
+  final String practice;
 
   const CourseCard({
     super.key,
@@ -221,118 +224,148 @@ class CourseCard extends StatelessWidget {
     required this.year,
     required this.semester,
     required this.credits,
+    required this.theory,
+    required this.practice,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.white, // Add background color here
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Text(
-                  '$number.',
-                  style: const TextStyle(
-                    color: AppColors.primaryColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    title,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CourseDetailScreen(
+              title: title,
+              description: description,
+              year: year,
+              semester: semester,
+              credits: credits, theory: theory, practice: practice,
+            ),
+          ),
+        );
+      },
+      child: Card(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    '$number.',
                     style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: AppColors.primaryColor
+                      color: AppColors.primaryColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
                     ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              description,
-              style: const TextStyle(
-                color: AppColors.defaultGrayColor,
-                fontSize: 16,
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: AppColors.primaryColor),
+                    ),
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const CircleAvatar(
-                  radius: 30,
-                  backgroundImage: NetworkImage('https://placeholder.co/60x60'),
+              const SizedBox(height: 8),
+              Text(
+                description,
+                style: const TextStyle(
+                  color: AppColors.defaultGrayColor,
+                  fontSize: 16,
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              ),
+              const SizedBox(height: 16),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Stack(
+                    clipBehavior: Clip.none,
                     children: [
-                      Row(
-                        children: [
-                          Text(
-                            'Year: $year',
-                            style: TextStyle(
-                              color: Colors.grey[700],
-                              fontSize: 14,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Semester: $semester',
-                            style: TextStyle(
-                              color: Colors.grey[700],
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundImage: AssetImage('assets/images/tevy.png'),
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Credit: $credits credits',
-                        style: TextStyle(
-                          color: Colors.grey[700],
-                          fontSize: 14,
+                      Positioned(
+                        left: 25,
+                        child: CircleAvatar(
+                          radius: 20,
+                          backgroundImage: AssetImage('assets/images/tevy.png'),
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Text(
-                            'Progress:',
-                            style: TextStyle(
-                              color: Colors.grey[700],
-                              fontSize: 14,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: LinearProgressIndicator(
-                              value: 0.7,
-                              backgroundColor: Colors.grey[200],
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[700]!),
-                              minHeight: 8,
-                            ),
-                          ),
-                        ],
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
-          ],
+                  const SizedBox(width: 50),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              'Year: $year',
+                              style: TextStyle(
+                                color: Colors.grey[700],
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Semester: $semester',
+                              style: TextStyle(
+                                color: Colors.grey[700],
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Credit: $credits credits',
+                          style: TextStyle(
+                            color: Colors.grey[700],
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Text(
+                              'Progress:',
+                              style: TextStyle(
+                                color: Colors.grey[700],
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: LinearProgressIndicator(
+                                value: 0.7,
+                                backgroundColor: Colors.grey[200],
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.grey[700]!),
+                                minHeight: 8,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

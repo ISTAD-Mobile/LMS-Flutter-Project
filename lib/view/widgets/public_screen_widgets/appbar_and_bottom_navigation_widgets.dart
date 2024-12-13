@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-
+import 'package:lms_mobile/view/screen/register/register_step_1.dart';
 import '../../../data/color/color_screen.dart';
-import '../../screen/register/register_step_1.dart';
 
 class MyAppLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      color: AppColors.defaultWhiteColor,
       debugShowCheckedModeBanner: false,
       title: 'Your App Title',
       theme: ThemeData(
@@ -14,7 +14,9 @@ class MyAppLayout extends StatelessWidget {
       ),
       home: AppLayout(
         title: 'Your App Title',
-        body: Container(),
+        body: Container(
+          color: AppColors.defaultWhiteColor,
+        ),
         currentIndex: 0,
         onTabTapped: (int index) {},
       ),
@@ -40,13 +42,13 @@ class AppLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.defaultWhiteColor,
-      appBar: currentIndex == 3 ? null : _buildAppBar(),
+      appBar: currentIndex == 3 ? null : _buildAppBar(context),
       body: body,
       bottomNavigationBar: currentIndex == 3 ? null : _buildBottomNavigationBar(),
     );
   }
 
-  AppBar _buildAppBar() {
+  AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       backgroundColor: AppColors.primaryColor,
       automaticallyImplyLeading: false,
@@ -55,22 +57,28 @@ class AppLayout extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Image.network(
-              'https://www.cstad.edu.kh/_next/image?url=%2Fschool-logo%2Flogo-white-version.png&w=256&q=75',
-              height: 30,
+            child: Image.asset(
+              'assets/images/istad-logo-white.png',
+              height: 37,
               width: 100,
               fit: BoxFit.cover,
             ),
           ),
-          _buildAdmissionButton(),
+          _buildAdmissionButton(context),
         ],
       ),
     );
   }
 
-  ElevatedButton _buildAdmissionButton() {
+  ElevatedButton _buildAdmissionButton(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const RegisterStep1(),
+          ),
+        );
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.secondaryColor,
@@ -120,6 +128,7 @@ class AppLayout extends StatelessWidget {
       unselectedLabelStyle: const TextStyle(
         fontSize: 14,
       ),
+      backgroundColor: AppColors.defaultWhiteColor,
       items: _bottomNavItems(),
     );
   }
@@ -127,12 +136,12 @@ class AppLayout extends StatelessWidget {
   List<BottomNavigationBarItem> _bottomNavItems() {
     return [
       _buildBottomNavItem(
-        'https://cdn-icons-png.flaticon.com/128/1828/1828864.png',
+        'https://cdn-icons-png.flaticon.com/128/69/69524.png',
         'Home',
         iconSize: 24,
       ),
       _buildBottomNavItem(
-        'https://cdn-icons-png.flaticon.com/128/8913/8913919.png',
+        'https://cdn-icons-png.flaticon.com/256/17278/17278445.png',
         'Academic',
         iconSize: 30,
       ),
