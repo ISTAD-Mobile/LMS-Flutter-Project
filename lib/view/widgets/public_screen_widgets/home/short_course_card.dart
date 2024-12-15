@@ -3,119 +3,6 @@ import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/model/course.dart';
 import 'package:lms_mobile/view/screen/homeScreen/course/course_details_screen.dart';
 
-// class Course {
-//   final String title;
-//   final String description;
-//   final String imageUrl;
-//   final String duration;
-//   final String level;
-//   final String scholarship;
-//
-//   Course({
-//     required this.title,
-//     required this.description,
-//     required this.imageUrl,
-//     required this.duration,
-//     required this.level,
-//     required this.scholarship,
-//   });
-// }
-// //
-// // final List<Course> courses = [
-// //   Course(
-// //     title: 'Flutter Mobile Development',
-// //     description: 'Develop multi-platform apps using Flutter.',
-// //     imageUrl: 'https://api.istad.co/media/image/899bac49-e47c-406c-abb2-30ad0b498f88.png',
-// //     duration: '80 Hours',
-// //     level: 'Medium',
-// //     scholarship: '20% Scholarship',
-// //   ),
-// //   Course(
-// //     title: 'IOS DEVELOPMENT',
-// //     description: 'Build native apps with React Native.',
-// //     imageUrl: 'https://api.istad.co/media/image/899bac49-e47c-406c-abb2-30ad0b498f88.png',
-// //     duration: '60 Hours',
-// //     level: 'Medium',
-// //     scholarship: '20% Scholarship',
-// //   ),
-// //   Course(
-// //     title: 'SQL & DATA MODELING WITH...',
-// //     description: 'Build native apps with React Native.',
-// //     imageUrl: 'https://api.istad.co/media/image/899bac49-e47c-406c-abb2-30ad0b498f88.png',
-// //     duration: '60 Hours',
-// //     level: 'Medium',
-// //     scholarship: '20% Scholarship',
-// //   ),
-// //   Course(
-// //     title: 'Web Design',
-// //     description: 'Build native apps with React Native.',
-// //     imageUrl: 'https://api.istad.co/media/image/899bac49-e47c-406c-abb2-30ad0b498f88.png',
-// //     duration: '60 Hours',
-// //     level: 'Medium',
-// //     scholarship: '20% Scholarship',
-// //   ),
-// //   Course(
-// //     title: 'DevOps Engineering',
-// //     description: 'Build native apps with React Native.',
-// //     imageUrl: 'https://api.istad.co/media/image/899bac49-e47c-406c-abb2-30ad0b498f88.png',
-// //     duration: '60 Hours',
-// //     level: 'Medium',
-// //     scholarship: '20% Scholarship',
-// //   ),
-// //   Course(
-// //     title: 'C++ Programming',
-// //     description: 'Build native apps with React Native.',
-// //     imageUrl: 'https://api.istad.co/media/image/899bac49-e47c-406c-abb2-30ad0b498f88.png',
-// //     duration: '60 Hours',
-// //     level: 'Medium',
-// //     scholarship: '20% Scholarship',
-// //   ),
-// //   Course(
-// //     title: 'Docker',
-// //     description: 'Build native apps with React Native.',
-// //     imageUrl: 'https://api.istad.co/media/image/899bac49-e47c-406c-abb2-30ad0b498f88.png',
-// //     duration: '60 Hours',
-// //     level: 'Medium',
-// //     scholarship: '20% Scholarship',
-// //   ),
-// //   Course(
-// //     title: 'Data Analytics',
-// //     description: 'Build native apps with React Native.',
-// //     imageUrl: 'https://api.istad.co/media/image/899bac49-e47c-406c-abb2-30ad0b498f88.png',
-// //     duration: '60 Hours',
-// //     level: 'Medium',
-// //     scholarship: '20% Scholarship',
-// //   ),
-// // ];
-
-
-
-
-
-
-// class HorizontalCourseList extends StatelessWidget {
-//   final List<Course> courses;
-//
-//   const HorizontalCourseList({Key? key, required this.courses}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       height: 250,
-//       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-//       child: ListView.builder(
-//         scrollDirection: Axis.horizontal,
-//         itemCount: courses.length,
-//         itemBuilder: (context, index) {
-//           final course = courses[index];
-//           return ShortCourseCard(course: course);
-//         },
-//       ),
-//     );
-//   }
-// }
-
-
 class ShortCourseCard extends StatelessWidget {
   final Course course;
 
@@ -256,7 +143,6 @@ class ShortCourseCard extends StatelessWidget {
                 ],
               ),
             ),
-            // Time and Level
           ],
         ),
       ),
