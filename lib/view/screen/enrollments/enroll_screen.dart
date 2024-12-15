@@ -26,21 +26,6 @@ class _EnrollScreen extends State<EnrollScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.backgroundColor,
-        elevation: 0.5,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: const Text(
-          'Enrollment Screen',
-          style: TextStyle(color: AppColors.primaryColor, fontSize: 18),
-        ),
-        centerTitle: true,
-      ),
       body: Column(
         children: [
           Expanded(
