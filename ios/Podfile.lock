@@ -5,6 +5,7 @@ PODS:
   - Flutter (1.0.0)
   - flutter_keyboard_visibility (0.0.1):
     - Flutter
+<<<<<<< HEAD
   - Google-Maps-iOS-Utils (5.0.0):
     - GoogleMaps (~> 8.0)
   - google_maps_flutter_ios (0.0.1):
@@ -16,6 +17,8 @@ PODS:
   - GoogleMaps/Base (8.4.0)
   - GoogleMaps/Maps (8.4.0):
     - GoogleMaps/Base
+=======
+>>>>>>> 484f045b298d66aff74efc3a677a415e9badcfc2
   - image_picker_ios (0.0.1):
     - Flutter
   - pointer_interceptor_ios (0.0.1):
@@ -30,7 +33,10 @@ DEPENDENCIES:
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/darwin`)
   - Flutter (from `Flutter`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
+<<<<<<< HEAD
   - google_maps_flutter_ios (from `.symlinks/plugins/google_maps_flutter_ios/ios`)
+=======
+>>>>>>> 484f045b298d66aff74efc3a677a415e9badcfc2
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - pointer_interceptor_ios (from `.symlinks/plugins/pointer_interceptor_ios/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
@@ -48,8 +54,11 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_keyboard_visibility:
     :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
+<<<<<<< HEAD
   google_maps_flutter_ios:
     :path: ".symlinks/plugins/google_maps_flutter_ios/ios"
+=======
+>>>>>>> 484f045b298d66aff74efc3a677a415e9badcfc2
   image_picker_ios:
     :path: ".symlinks/plugins/image_picker_ios/ios"
   pointer_interceptor_ios:
@@ -63,9 +72,12 @@ SPEC CHECKSUMS:
   connectivity_plus: 4c41c08fc6d7c91f63bc7aec70ffe3730b04f563
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_keyboard_visibility: 0339d06371254c3eb25eeb90ba8d17dca8f9c069
+<<<<<<< HEAD
   Google-Maps-iOS-Utils: 66d6de12be1ce6d3742a54661e7a79cb317a9321
   google_maps_flutter_ios: e31555a04d1986ab130f2b9f24b6cdc861acc6d3
   GoogleMaps: 8939898920281c649150e0af74aa291c60f2e77d
+=======
+>>>>>>> 484f045b298d66aff74efc3a677a415e9badcfc2
   image_picker_ios: c560581cceedb403a6ff17f2f816d7fea1421fc1
   pointer_interceptor_ios: 508241697ff0947f853c061945a8b822463947c1
   url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
