@@ -1,21 +1,50 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lms_mobile/viewModel/JobVacancyViewmodel.dart';
+import 'package:provider/provider.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
+import 'package:lms_mobile/view/widgets/public_screen_widgets/home/it_news/it_news_card.dart';
+import 'package:lms_mobile/data/response/status.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'It_news_card.dart';
-import 'it_news_detail.dart';
+void main() {
+  runApp(MyApp());
+}
 
-class ItNewsSection extends StatelessWidget {
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        Provider(create: (_) => JobvacancyViewModel()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Course App',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: ItNewsSection(),
+      ),
+    );
+  }
+}
+
+class ItNewsSection extends StatefulWidget {
   const ItNewsSection({Key? key}) : super(key: key);
 
-  void _launchURL() async {
-    const url = 'https://www.facebook.com/istad.co?mibextid=ZbWKwL';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
+  @override
+  _ItNewsSectionState createState() => _ItNewsSectionState();
+}
+
+class _ItNewsSectionState extends State<ItNewsSection> {
+  late JobvacancyViewModel _viewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    _viewModel = Provider.of<JobvacancyViewModel>(context, listen: false);
+    _viewModel.fetchAllJobvacancy();
   }
 
   @override
@@ -25,57 +54,75 @@ class ItNewsSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-        Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Useful Content'.toUpperCase(),
-            style: const TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.bold,
-              color: AppColors.primaryColor,
-            ),
-          ),
-          GestureDetector(
-            onTap: _launchURL,
-            child: const Text(
-              'See more',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primaryColor,
-                // decoration: TextDecoration.underline,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Useful Content'.toUpperCase(),
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primaryColor,
+                ),
               ),
-            ),
-          ),
-        ],
-      ),
-          const SizedBox(height: 16),
-          SizedBox(
-            height: 330,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: news.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ItNewsDetail(news: news[index]),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.only(right: 16),
-                    child: ItNewsCard(news: news[index]),
+              GestureDetector(
+                onTap: _launchURL,
+                child: const Text(
+                  'See More',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryColor,
                   ),
-                );
-              },
-            ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Builder(
+            builder: (context) {
+              switch (_viewModel.jobvacancy.status!) {
+                case Status.LOADING:
+                  return const Center(child: CircularProgressIndicator());
+                case Status.COMPLETED:
+                  final jobvacancys = _viewModel.jobvacancy.data?.dataList ?? [];
+                  return jobvacancys.isEmpty
+                      ? Center(child: Text('No Jobvacancy available'))
+                      : SizedBox(
+                    height: 170,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: jobvacancys.length,
+                      itemBuilder: (context, index) {
+                        final jobvacancy = jobvacancys[index];
+                        return ItNewsCard(jobvacancy);
+                      },
+                    ),
+                  );
+                case Status.ERROR:
+                  return Center(
+                    child: Text(
+                      'An error occurred: ${_viewModel.jobvacancy.message}',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  );
+                default:
+                  return const Center(child: Text('Unknown status'));
+              }
+            },
           ),
         ],
       ),
     );
+  }
+
+  void _launchURL() async {
+    final url = Uri.parse('https://www.facebook.com/istad.co?mibextid=ZbWKwL');
+    print("Launching URL: $url");
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    } else {
+      print("Could not launch $url");
+    }
   }
 }

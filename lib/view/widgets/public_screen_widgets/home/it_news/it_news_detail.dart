@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
+import 'package:lms_mobile/model/jobvacancy.dart';
 
-import 'It_news_card.dart';
 
 class ItNewsDetail extends StatelessWidget {
-  final News news;
+  final JobVacancy jobvacancyModel;
 
-  const ItNewsDetail({super.key, required this.news});
+  const ItNewsDetail({super.key, required this.jobvacancyModel});
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +19,13 @@ class ItNewsDetail extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: AppColors.defaultGrayColor),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text(
-          news.title,
-          style: const TextStyle(
-            fontSize: 18,
-            color: AppColors.primaryColor
-          ),
-        ),
+        // title: Text(
+        //   jobvacancyModel.title,
+        //   style: const TextStyle(
+        //     fontSize: 18,
+        //     color: AppColors.primaryColor
+        //   ),
+        // ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -35,7 +35,7 @@ class ItNewsDetail extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(20),
               child: Text(
-                news.title,
+                jobvacancyModel.title,
                 style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w500,
@@ -47,7 +47,7 @@ class ItNewsDetail extends StatelessWidget {
             // Main Image
             ClipRRect(
               child: Image.network(
-                news.imageUrl,
+                jobvacancyModel.thumbnail,
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
@@ -67,7 +67,7 @@ class ItNewsDetail extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        news.date,
+                        jobvacancyModel.publishedAt,
                         style: const TextStyle(
                           color: AppColors.primaryColor,
                           fontSize: 14,
@@ -88,7 +88,7 @@ class ItNewsDetail extends StatelessWidget {
                             vertical: 4,
                           ),
                           child: Text(
-                            news.category,
+                            jobvacancyModel.contentType.type,
                             style: const TextStyle(
                               color: AppColors.primaryColor,
                               fontSize: 14,
@@ -108,7 +108,7 @@ class ItNewsDetail extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    news.title,
+                    jobvacancyModel.editorContent,
                     style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w500,
@@ -116,80 +116,80 @@ class ItNewsDetail extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    news.description,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: AppColors.defaultGrayColor,
-                      height: 1.5,
-                    ),
-                  ),
-                  const SizedBox(height:30),
-                  // Course Details
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(0, 25, 0, 0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ClipRRect(
-                          borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(8),
-                            bottom: Radius.circular(8),
-                          ),
-                          child: Image.network(
-                            news.imageUrl1,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        const SizedBox(height: 25,),
-                        ClipRRect(
-                          borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(8),
-                            bottom: Radius.circular(8),
-                          ),
-                          child: Image.network(
-                            news.imageUrl2,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        const SizedBox(height: 30,),
-                        Text(
-                          news.title,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.primaryColor,
-                          ),
-                        ),
-                        Text(
-                          news.description,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: AppColors.defaultGrayColor,
-                            height: 1.5,
-                          ),
-                        ),
-                        const SizedBox(height: 20,),
-                        ClipRRect(
-                          borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(8),
-                            bottom: Radius.circular(8),
-                          ),
-                          child: Image.network(
-                            news.imageUrl3,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        const SizedBox(height: 25,)
-                      ],
-                    ),
-                  ),
+                  // Text(
+                  //   news.description,
+                  //   style: const TextStyle(
+                  //     fontSize: 16,
+                  //     color: AppColors.defaultGrayColor,
+                  //     height: 1.5,
+                  //   ),
+                  // ),
+                  // const SizedBox(height:30),
+                  // // Course Details
+                  // Container(
+                  //   padding: const EdgeInsets.fromLTRB(0, 25, 0, 0),
+                  //   decoration: BoxDecoration(
+                  //     borderRadius: BorderRadius.circular(8),
+                  //   ),
+                  //   child: Column(
+                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                  //     children: [
+                  //       ClipRRect(
+                  //         borderRadius: const BorderRadius.vertical(
+                  //           top: Radius.circular(8),
+                  //           bottom: Radius.circular(8),
+                  //         ),
+                  //         child: Image.network(
+                  //           news.imageUrl1,
+                  //           width: double.infinity,
+                  //           fit: BoxFit.cover,
+                  //         ),
+                  //       ),
+                  //       const SizedBox(height: 25,),
+                  //       ClipRRect(
+                  //         borderRadius: const BorderRadius.vertical(
+                  //           top: Radius.circular(8),
+                  //           bottom: Radius.circular(8),
+                  //         ),
+                  //         child: Image.network(
+                  //           news.imageUrl2,
+                  //           width: double.infinity,
+                  //           fit: BoxFit.cover,
+                  //         ),
+                  //       ),
+                  //       const SizedBox(height: 30,),
+                  //       Text(
+                  //         news.title,
+                  //         style: const TextStyle(
+                  //           fontSize: 18,
+                  //           fontWeight: FontWeight.w500,
+                  //           color: AppColors.primaryColor,
+                  //         ),
+                  //       ),
+                  //       Text(
+                  //         news.description,
+                  //         style: const TextStyle(
+                  //           fontSize: 16,
+                  //           color: AppColors.defaultGrayColor,
+                  //           height: 1.5,
+                  //         ),
+                  //       ),
+                  //       const SizedBox(height: 20,),
+                  //       ClipRRect(
+                  //         borderRadius: const BorderRadius.vertical(
+                  //           top: Radius.circular(8),
+                  //           bottom: Radius.circular(8),
+                  //         ),
+                  //         child: Image.network(
+                  //           news.imageUrl3,
+                  //           width: double.infinity,
+                  //           fit: BoxFit.cover,
+                  //         ),
+                  //       ),
+                  //       const SizedBox(height: 25,)
+                  //     ],
+                  //   ),
+                  // ),
                 ],
               ),
             ),
