@@ -6,30 +6,6 @@ import 'package:lms_mobile/view/widgets/public_screen_widgets/home/it_news/it_ne
 import 'package:lms_mobile/data/response/status.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        Provider(create: (_) => JobvacancyViewModel()),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Course App',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
-        home: ItNewsSection(),
-      ),
-    );
-  }
-}
-
 class ItNewsSection extends StatefulWidget {
   const ItNewsSection({Key? key}) : super(key: key);
 
