@@ -119,7 +119,7 @@ class CourseDetailsPage extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios, color: AppColors.defaultGrayColor),
         ),
         title: const Text("Course Description",
           style: TextStyle(fontSize: 16, color: AppColors.primaryColor),),
