@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+
 class ShortCourseCardSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {},
       child: SizedBox(  // Use SizedBox to ensure size constraints
-        width: 325,  // Set width
+        width: double.infinity,  // Set width
         height: 150, // Set height
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),

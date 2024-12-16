@@ -19,28 +19,13 @@ class _EnrollScreen extends State<EnrollScreen> {
   final List<Widget> _steps = [
     const EnrollStep1(),
     const EnrollStep2(),
-    EnrollStep3(),
+    // EnrollStep3(),
   ];
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.backgroundColor,
-        elevation: 0.5,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: const Text(
-          'Enrollment Screen',
-          style: TextStyle(color: AppColors.primaryColor, fontSize: 18),
-        ),
-        centerTitle: true,
-      ),
       body: Column(
         children: [
           Expanded(

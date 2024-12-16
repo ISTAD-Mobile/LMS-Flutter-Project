@@ -32,6 +32,9 @@ import 'package:provider/provider.dart';
 //   }
 // }
 
+
+
+
 class CourseSection extends StatefulWidget {
 
   @override
@@ -71,7 +74,7 @@ class _CourseSectionState extends State<CourseSection> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const CourseVerticalListPage(),
+                      builder: (context) => CourseScreen(),
                     ),
                   );
                 },
@@ -87,8 +90,6 @@ class _CourseSectionState extends State<CourseSection> {
             ],
           ),
           const SizedBox(height: 16),
-
-          // Provide a fixed height for the ListView.builder
           ChangeNotifierProvider(
             create: (context) => courseViewModel,
             child: Consumer<CourseViewmodel>(
@@ -96,20 +97,20 @@ class _CourseSectionState extends State<CourseSection> {
                 switch (viewModel.course.status!) {
                   case Status.LOADING:
                     return SizedBox(
-                      height: 200, // Fixed height for loading
-                      child: ListView.builder(
+                      height: 170,
+                      child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemCount: 10,
                         itemBuilder: (context, index) => ShortCourseCardSkeleton(),
+                        separatorBuilder: (context, index) => SizedBox(width: 8),
                       ),
                     );
-
                   case Status.COMPLETED:
                     final courses = viewModel.course.data?.dataList ?? [];
                     return courses.isEmpty
                         ? Center(child: Text('No courses available'))
                         : SizedBox(
-                      height: 200, // Fixed height for the course list
+                      height: 170,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: courses.length,

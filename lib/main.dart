@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lms_mobile/view/home.dart';
 import 'package:lms_mobile/view/screen/splashScreen/splash_screen.dart';
 
 void main() {

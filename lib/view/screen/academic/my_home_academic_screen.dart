@@ -112,10 +112,10 @@ class MyAcademicScreen extends StatelessWidget {
                       imagePath: 'https://cdn-icons-png.flaticon.com/128/10748/10748520.png',
                       page: AssociatePage(),
                     ),
-                    const _HoverCard(
+                    _HoverCard(
                       title: "Short Course",
                       imagePath: 'https://cdn-icons-png.flaticon.com/128/613/613307.png',
-                      page: CourseVerticalListPage(),
+                      page: CourseScreen(),
                     ),
                     const _HoverCard(
                       title: "IT Expert",
