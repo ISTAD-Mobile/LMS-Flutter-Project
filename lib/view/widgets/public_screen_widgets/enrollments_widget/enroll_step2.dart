@@ -176,7 +176,7 @@ class _CourseEnrollForm extends State<EnrollStep2> {
                 GestureDetector(
                   onTap: _showDatePicker,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
                       borderRadius: BorderRadius.circular(10),
