@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lms_mobile/data/color/color_screen.dart';
 
 import '../../widgets/public_screen_widgets/enrollments_widget/enroll_step1.dart';
 import '../../widgets/public_screen_widgets/enrollments_widget/enroll_step2.dart';
@@ -19,7 +18,7 @@ class _EnrollScreen extends State<EnrollScreen> {
   final List<Widget> _steps = [
     const EnrollStep1(),
     const EnrollStep2(),
-    // EnrollStep3(),
+    const EnrollStep3(),
   ];
 
 
