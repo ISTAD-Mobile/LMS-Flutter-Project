@@ -1,30 +1,44 @@
+import 'dart:io';
+
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/view/screen/register/register_step_1.dart';
 import 'package:lms_mobile/view/screen/register/register_step_3.dart';
-import 'package:lms_mobile/view/widgets/public_screen_widgets/appbar_register.dart';
 
 class RegisterStep2 extends StatefulWidget {
   const RegisterStep2({Key? key}) : super(key: key);
 
   @override
   _StudentAdmissionFormState createState() => _StudentAdmissionFormState();
+
+
 }
 
 class _StudentAdmissionFormState extends State<RegisterStep2> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _fatherNameController = TextEditingController();
-  final TextEditingController _fatherContactController = TextEditingController();
-  final TextEditingController _motherNameController = TextEditingController();
-  final TextEditingController _motherContactController = TextEditingController();
-  final TextEditingController _nameOfHightSchoolController = TextEditingController();
-  final TextEditingController _getToKnowIstadController = TextEditingController();
-  final TextEditingController _whoGuideYouController = TextEditingController();
-  final TextEditingController _relationshipController = TextEditingController();
   String? _selectedProvince;
   String? _selectedCurrentAddress;
   String? _selectedGrade;
+  String? _selectedGender;
+
+  File? _selectedImage;
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage() async {
+    final XFile? pickedImage = await _picker.pickImage(
+        source: ImageSource.gallery);
+    if (pickedImage != null) {
+      setState(() {
+        _selectedImage = File(pickedImage.path);
+      });
+    }
+  }
+
+  final List<String> genderOptions = ['Female', 'Male', 'Other'];
+  bool _isFormSubmitted = false;
 
   @override
   Widget build(BuildContext context) {
@@ -54,99 +68,21 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Additional Information',
+                  'Education Information',
                   style: TextStyle(
-                    color: Colors.indigo[900],
+                    color: AppColors.primaryColor,
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 16),
-                _buildTextField(
-                  label: 'Father Name *',
-                  controller: _fatherNameController,
-                  hintText: 'Dara Phan',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your name in Khmer';
-                    }
-                    return null;
-                  },
-                ),
-                _buildTextField(
-                  label: 'Father Contact Number (Optional) *',
-                  controller: _fatherContactController,
-                  hintText: '0965432135',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your name in Khmer';
-                    }
-                    return null;
-                  },
-                ),
-                _buildTextField(
-                  label: 'Mother Name *',
-                  controller: _motherNameController,
-                  hintText: 'Sokchea Kim',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your name in English';
-                    }
-                    return null;
-                  },
-                ),
-                _buildTextField(
-                  label: 'Mother Contact Number (Optional) *',
-                  controller: _motherContactController,
-                  hintText: '0965495043',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your name in English';
-                    }
-                    return null;
-                  },
-                ),
-                _buildTextField(
-                  label: 'Name of Your High School *',
-                  controller: _nameOfHightSchoolController,
-                  hintText: 'Bak Touk High School',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your name in English';
-                    }
-                    return null;
-                  },
-                ),
+                SizedBox(height: 20,),
                 _buildDropdownField(
-                  label: 'Province *',
+                  label: 'Class Student *',
                   value: _selectedProvince,
-                  hintText: 'Select a province',
+                  hintText: 'Science Class',
                   items: [
-                    'Select a province',
-                    'Phnom Penh',
-                    'Siem Reap',
-                    'Battambang',
-                    'Kampot',
-                    'Kandal',
-                    'Kep',
-                    'Koh Kong',
-                    'Banteay Meanchey',
-                    'Kampong Cham',
-                    'Kampong Speu',
-                    'Kampong Thom',
-                    'Kratie',
-                    'Mondulkiri',
-                    'Oddar Meanchey',
-                    'Peilin',
-                    'Preah Sihanouk',
-                    'Preah Vihear',
-                    'Prey Veng',
-                    'Pursat',
-                    'Rotanakiri',
-                    'Stung Treng',
-                    'Svay Rieng',
-                    'Takeo',
-                    'Tboung Khmum',
+                    'Science Class',
+                    'Social Science Class',
                   ],
                   onChanged: (value) {
                     setState(() {
@@ -155,8 +91,8 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty ||
-                        value == 'Select a province') {
-                      return 'Please select your place of birth';
+                        value == 'Select Class') {
+                      return 'This field is required';
                     }
                     return null;
                   },
@@ -174,7 +110,7 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                     'Grade E',
                     'Grade F',
                     'Grade Auto',
-                    'Grade Not Yet Released',
+                    'Waiting for Results',
                   ],
                   onChanged: (value) {
                     setState(() {
@@ -183,42 +119,23 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty ||
-                        value == 'Select a province') {
-                      return 'Please select your place of birth';
+                        value == 'Select a Grade') {
+                      return 'This field is required';
                     }
                     return null;
                   },
                 ),
                 _buildDropdownField(
-                  label: 'Current Address *',
+                  label: 'Diploma Session *',
                   value: _selectedCurrentAddress,
-                  hintText: 'Select a province',
+                  hintText: 'Select a Diploma Session',
                   items: [
-                    'Select a province',
-                    'Phnom Penh',
-                    'Siem Reap',
-                    'Battambang',
-                    'Kampot',
-                    'Kandal',
-                    'Kep',
-                    'Koh Kong',
-                    'Banteay Meanchey',
-                    'Kampong Cham',
-                    'Kampong Speu',
-                    'Kampong Thom',
-                    'Kratie',
-                    'Mondulkiri',
-                    'Oddar Meanchey',
-                    'Peilin',
-                    'Preah Sihanouk',
-                    'Preah Vihear',
-                    'Prey Veng',
-                    'Pursat',
-                    'Rotanakiri',
-                    'Stung Treng',
-                    'Svay Rieng',
-                    'Takeo',
-                    'Tboung Khmum',
+                    'Select a Diploma Session',
+                    '2021',
+                    '2022',
+                    '2023',
+                    '2024',
+                    'Other',
                   ],
                   onChanged: (value) {
                     setState(() {
@@ -228,45 +145,70 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                   validator: (value) {
                     if (value == null || value.isEmpty ||
                         value == 'Select a province') {
-                      return 'Please select your place of birth';
+                      return 'This field is required';
                     }
                     return null;
                   },
                 ),
-                _buildTextField(
-                  label: 'Get to know ISTAD through: *',
-                  controller: _getToKnowIstadController,
-                  hintText: 'Please specify how you knew about ISTAD',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your contact number';
-                    }
-                    return null;
-                  },
+                Text(
+                  'High Certificate (Optional)',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryColor,
+                  ),
                 ),
-                _buildTextField(
-                  label: 'Who guide you to enroll (Optional) *',
-                  controller: _whoGuideYouController,
-                  hintText: 'Teacher or Friend',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your contact number';
-                    }
-                    return null;
-                  },
+                SizedBox(height: 8,),
+                GestureDetector(
+                  onTap: _pickImage,
+                  child: Container(
+                    width: double.infinity,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey.shade400,
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: _selectedImage == null
+                        ? const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.cloud_download_outlined,
+                            color: AppColors.primaryColor, size: 40),
+                        SizedBox(height: 5),
+                        Text(
+                          'Select a file or drag and drop here',
+                          style: TextStyle(color: AppColors.defaultBlackColor),
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          "Please provide a BacII certificate (Cambodia National Exam Certificate), exam result or equivalent professional degree",
+                          style: TextStyle(
+                            color: AppColors.defaultBlackColor,
+                            fontSize: 13,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          "JPG,PNG or PDF,file size no more than 10MB",
+                          style: TextStyle(color: Colors.grey, fontSize: 12),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    )
+                        : ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.file(
+                        _selectedImage!,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
                 ),
-                _buildTextField(
-                  label: 'Relationship (Optional) *',
-                  controller: _relationshipController,
-                  hintText: 'Uncle or Friends',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your contact number';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 10),
+                SizedBox(height: 16,),
                 Align(
                   alignment: Alignment.centerRight,
                   child: SizedBox(
@@ -275,18 +217,17 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => RegisterStep1()),
-                            );
+                            Navigator.pop(context);
                           },
 
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.grey.shade100,
-                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 25),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
-                              side: BorderSide(color: Colors.grey.shade300, width: 1),
+                              side: BorderSide(
+                                  color: Colors.grey.shade300, width: 1),
                             ),
                           ),
                           child: const Text(
@@ -299,7 +240,8 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Processing Data')),
+                                const SnackBar(
+                                    content: Text('Processing Data')),
                               );
                               Navigator.push(
                                 context,
@@ -311,11 +253,13 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                           },
                           child: const Text(
                             'Next',
-                            style: TextStyle(fontSize: 16, color: AppColors.defaultWhiteColor),
+                            style: TextStyle(fontSize: 16,
+                                color: AppColors.defaultWhiteColor),
                           ),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.primaryColor,
-                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 25),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                               // side: BorderSide(color: Colors.grey.shade300, width: 1),
@@ -335,76 +279,6 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
     );
   }
 
-  Widget _buildTextField({
-    required String label,
-    required TextEditingController controller,
-    String? hintText,
-    TextInputType? keyboardType,
-    String? Function(String?)? validator,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          RichText(
-            text: TextSpan(
-              text: label.endsWith('*') ? label.substring(0, label.length - 1) : label,
-              style: const TextStyle(
-                fontSize: 16,
-                color: AppColors.primaryColor,
-                fontWeight: FontWeight.bold,
-              ),
-              children: [
-                if (label.endsWith('*'))
-                  const TextSpan(
-                    text: ' *',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 8),
-          TextFormField(
-            controller: controller,
-            keyboardType: keyboardType,
-            validator: validator,
-            cursorColor: AppColors.primaryColor,
-            decoration: InputDecoration(
-              hintText: hintText,
-              hintStyle: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w400,fontFamily: 'NotoSansKhmer'),
-              filled: true,
-              fillColor: Colors.transparent,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(
-                  color: Colors.grey.shade400,
-                  // width: 2,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(
-                  color: Colors.grey.shade400,
-                  // width: 2,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(color: AppColors.primaryColor,width: 2),
-              ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-
   Widget _buildDropdownField({
     required String label,
     required String? value,
@@ -420,7 +294,9 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
         children: [
           RichText(
             text: TextSpan(
-              text: label.endsWith('*') ? label.substring(0, label.length - 1) : label,
+              text: label.endsWith('*')
+                  ? label.substring(0, label.length - 1)
+                  : label,
               style: const TextStyle(
                 fontSize: 16,
                 color: AppColors.primaryColor,
@@ -468,93 +344,13 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: AppColors.primaryColor,width: 2),
+                borderSide: BorderSide(color: AppColors.primaryColor, width: 2),
               ),
               contentPadding: const EdgeInsets.symmetric(
                   horizontal: 12, vertical: 16),
             ),
-            hint: hintText != null ? Text(hintText, style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w400),) : null,
-          ),
-        ],
-      ),
-    );
-  }
-
-
-  Widget _buildDateField({
-    required String label,
-    required TextEditingController controller,
-    String? hintText,
-    String? Function(String?)? validator,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          RichText(
-            text: TextSpan(
-              text: label.endsWith('*') ? label.substring(0, label.length - 1) : label,
-              style: const TextStyle(
-                fontSize: 16,
-                color: AppColors.primaryColor,
-                fontWeight: FontWeight.bold,
-              ),
-              children: [
-                if (label.endsWith('*'))
-                  const TextSpan(
-                    text: ' *',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 8),
-          TextFormField(
-            controller: controller,
-            readOnly: true,
-            onTap: () async {
-              DateTime? pickedDate = await showDatePicker(
-                context: context,
-                initialDate: DateTime.now(),
-                firstDate: DateTime(1900),
-                lastDate: DateTime.now(),
-              );
-              if (pickedDate != null) {
-                String formattedDate = DateFormat('dd-MM-yyyy').format(
-                    pickedDate);
-                setState(() {
-                  controller.text = formattedDate;
-                });
-              }
-            },
-            validator: validator,
-            decoration: InputDecoration(
-              hintText: hintText,
-              hintStyle: const TextStyle(
-                  color: Colors.grey, fontWeight: FontWeight.w400
-              ),
-              filled: true,
-              fillColor: Colors.transparent,
-              suffixIcon: const Icon(Icons.calendar_today, color: Colors.grey),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: AppColors.defaultBlackColor!),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: AppColors.defaultGrayColor!),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: AppColors.primaryColor!),
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 12, vertical: 16),
-            ),
+            hint: hintText != null ? Text(hintText, style: const TextStyle(
+                color: Colors.grey, fontWeight: FontWeight.w400),) : null,
           ),
         ],
       ),

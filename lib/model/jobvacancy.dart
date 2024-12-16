@@ -15,20 +15,14 @@ class JobVacancyResponse {
   });
 
   factory JobVacancyResponse.fromJson(Map<String, dynamic> json) {
-    try {
-      print('Parsing JobVacancyResponse: $json');
-      return JobVacancyResponse(
-        code: json['code'] ?? 0,
-        message: json['message'] ?? 'No message',
-        dataList: json['dataList'] != null
-            ? List<JobVacancy>.from(json['dataList'].map((x) => JobVacancy.fromJson(x)))
-            : [],
-      );
-    } catch (e) {
-      print('Error parsing JobVacancyResponse: $e');
-      print('Error JSON: $json');
-      throw FormatException('Invalid JSON format for JobVacancyResponse');
-    }
+    return JobVacancyResponse(
+      code: json['code'] ?? 0,
+      message: json['message'] ?? 'No message',
+      dataList: (json['dataList'] as List?)
+          ?.map((item) => JobVacancy.fromJson(item))
+          .toList() ??
+          [], // Handle null or missing `dataList`
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -44,20 +38,20 @@ class JobVacancy {
   final int id;
   final String uuid;
   final String title;
-  final String? description;
+  final String? description; // Nullable
   final String slug;
-  final String editorContent;
-  final String thumbnail;
-  final List<String>? images;
+  final String? editorContent; // Nullable
+  final String? thumbnail; // Nullable
+  final List<String> images;
   final ContentType contentType;
   final List<int> tagIds;
   final int view;
-  final String publishedAt;
-  final String publishedBy;
-  final String? updatedAt;
-  final String? updatedBy;
-  final bool? isDeleted;
-  final bool? isDraft;
+  final String? publishedAt; // Nullable
+  final String? publishedBy; // Nullable
+  final String? updatedAt; // Nullable
+  final String? updatedBy; // Nullable
+  final bool isDeleted;
+  final bool isDraft;
 
   JobVacancy({
     required this.id,
@@ -65,51 +59,47 @@ class JobVacancy {
     required this.title,
     this.description,
     required this.slug,
-    required this.editorContent,
-    required this.thumbnail,
-    this.images,
+    this.editorContent,
+    this.thumbnail,
+    required this.images,
     required this.contentType,
     required this.tagIds,
     required this.view,
-    required this.publishedAt,
-    required this.publishedBy,
+    this.publishedAt,
+    this.publishedBy,
     this.updatedAt,
     this.updatedBy,
-    this.isDeleted,
-    this.isDraft,
+    required this.isDeleted,
+    required this.isDraft,
   });
 
   factory JobVacancy.fromJson(Map<String, dynamic> json) {
     try {
       return JobVacancy(
-        id: json['id'] ?? 0,
+        id: json['id'] ?? 0, // Provide default values
         uuid: json['uuid'] ?? '',
-        title: json['title'] ?? '',
-        description: json['description'],
+        title: json['title'] ?? 'Untitled',
+        description: json['description'], // Allow null
         slug: json['slug'] ?? '',
-        editorContent: json['editorContent'] ?? '',
-        thumbnail: json['thumbnail'] ?? '',
-        images: json['images'] != null
-            ? List<String>.from(json['images'] as List)
-            : null,
-        contentType: json['contentType'] != null
-            ? ContentType.fromJson(json['contentType'])
-            : ContentType(id: 0, type: 'Unknown'),
-        tagIds: List<int>.from(json['tagIds'] ?? []),
+        editorContent: json['editorContent'], // Allow null
+        thumbnail: json['thumbnail'], // Allow null
+        images: (json['images'] as List?)?.map((e) => e.toString()).toList() ??
+            [], // Handle null
+        contentType: ContentType.fromJson(json['contentType'] ?? {}),
+        tagIds: (json['tagIds'] as List?)?.map((e) => e as int).toList() ?? [],
         view: json['view'] ?? 0,
-        publishedAt: json['publishedAt'] ?? '',
-        publishedBy: json['publishedBy'] ?? '',
-        updatedAt: json['updatedAt'],
-        updatedBy: json['updatedBy'],
-        isDeleted: json['isDeleted'],
-        isDraft: json['isDraft'],
+        publishedAt: json['publishedAt'], // Allow null
+        publishedBy: json['publishedBy'], // Allow null
+        updatedAt: json['updatedAt'], // Allow null
+        updatedBy: json['updatedBy'], // Allow null
+        isDeleted: json['isDeleted'] ?? false,
+        isDraft: json['isDraft'] ?? false,
       );
     } catch (e) {
       print('Error parsing JobVacancy: $e');
       throw FormatException('Invalid JSON format for JobVacancy');
     }
   }
-
 
   Map<String, dynamic> toJson() {
     return {
@@ -147,9 +137,10 @@ class ContentType {
     try {
       return ContentType(
         id: json['id'] ?? 0,
-        type: json['type'] ?? '',
+        type: json['type'] ?? 'Unknown',
       );
     } catch (e) {
+      print('Error parsing ContentType: $e');
       throw FormatException('Invalid JSON format for ContentType');
     }
   }
@@ -161,4 +152,3 @@ class ContentType {
     };
   }
 }
-

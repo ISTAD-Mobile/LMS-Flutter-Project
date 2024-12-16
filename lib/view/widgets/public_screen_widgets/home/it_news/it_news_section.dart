@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lms_mobile/view/Skelaton/homepageSkeleton/jobVacancySkeleton.dart';
 import 'package:lms_mobile/viewModel/JobVacancyViewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
@@ -14,13 +15,12 @@ class ItNewsSection extends StatefulWidget {
 }
 
 class _ItNewsSectionState extends State<ItNewsSection> {
-  late JobvacancyViewModel _viewModel;
+  final jobvacancyViewModel = JobvacancyViewModel();
 
   @override
   void initState() {
     super.initState();
-    _viewModel = Provider.of<JobvacancyViewModel>(context, listen: false);
-    _viewModel.fetchAllJobvacancy();
+    jobvacancyViewModel.fetchAllJobvacancy();
   }
 
   @override
@@ -30,11 +30,12 @@ class _ItNewsSectionState extends State<ItNewsSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Header Row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Useful Content'.toUpperCase(),
+                'Short Course'.toUpperCase(),
                 style: const TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.bold,
@@ -55,15 +56,28 @@ class _ItNewsSectionState extends State<ItNewsSection> {
             ],
           ),
           const SizedBox(height: 16),
-          Builder(
-            builder: (context) {
-              switch (_viewModel.jobvacancy.status!) {
+          ChangeNotifierProvider(
+            create: (context) => jobvacancyViewModel,
+            child: Consumer<JobvacancyViewModel>(builder: (context, viewModel, _) {
+              final status = viewModel.jobvacancy.status;
+              if (status == null) {
+                return Center(child: Text('Status is null'));
+              }
+              switch (status) {
                 case Status.LOADING:
-                  return const Center(child: CircularProgressIndicator());
+                  return SizedBox(
+                    height: 170,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 10,
+                      itemBuilder: (context, index) => Jobvacancyskeleton(),
+                      separatorBuilder: (context, index) => SizedBox(width: 8),
+                    ),
+                  );
                 case Status.COMPLETED:
-                  final jobvacancys = _viewModel.jobvacancy.data?.dataList ?? [];
+                  final jobvacancys = viewModel.jobvacancy.data?.dataList ?? [];
                   return jobvacancys.isEmpty
-                      ? Center(child: Text('No Jobvacancy available'))
+                      ? Center(child: Text('No courses available'))
                       : SizedBox(
                     height: 170,
                     child: ListView.builder(
@@ -71,21 +85,20 @@ class _ItNewsSectionState extends State<ItNewsSection> {
                       itemCount: jobvacancys.length,
                       itemBuilder: (context, index) {
                         final jobvacancy = jobvacancys[index];
-                        return ItNewsCard(jobvacancy);
+                        return ItNewsCard(jobVacancy: jobvacancy);
                       },
                     ),
                   );
+
                 case Status.ERROR:
                   return Center(
                     child: Text(
-                      'An error occurred: ${_viewModel.jobvacancy.message}',
+                      'An error occurred: ${viewModel.jobvacancy.message ?? 'Unknown error'}',
                       style: TextStyle(color: Colors.red),
                     ),
                   );
-                default:
-                  return const Center(child: Text('Unknown status'));
               }
-            },
+            }),
           ),
         ],
       ),
