@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
-// import 'package:flutter_typeahead/flutter_typeahead.dart';
-// import 'package:flutter_typeahead/flutter_typeahead.dart';
-// import 'package:flutter_typeahead/src/material/flutter_typeahead.dart';
-
 import '../../../../data/color/color_screen.dart';
+import 'enroll_successful_screen.dart';
 
 class EnrollStep3 extends StatefulWidget {
-  // const EnrollStep3({Key? key}) : super(key: key);
   const EnrollStep3({super.key});
   @override
   _EnrollStep3State createState() => _EnrollStep3State();
@@ -15,31 +10,100 @@ class EnrollStep3 extends StatefulWidget {
 
 class _EnrollStep3State extends State<EnrollStep3> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final List<String> _courses = ['Web design', 'Java', 'Block Chain', 'DevOps'];
+  final List<String> _courses = [
+    'Web design',
+    'Java',
+    'Block Chain',
+    'DevOps',
+    'Python',
+    'Artificial Intelligence'
+  ];
   String? _selectedClass;
   String? _selectedCourse;
-  bool _showCourseList = false;
   String? _selectedShift;
   String? _selectedHour;
 
-  final TextEditingController _typeAheadController = TextEditingController();
-
-  @override
-  void dispose() {
-    _typeAheadController.dispose();
-    super.dispose();
+  Widget _buildDropdownMenu({
+    required String hint,
+    required List<String> options,
+    required String? selectedValue,
+    required void Function(String?) onSelected,
+  }) {
+    return SizedBox(
+      width: double.infinity,
+      child: DropdownMenu<String>(
+        width: 398,
+        hintText: hint,
+        errorText: _formKey.currentState?.validate() == false && selectedValue == null ? 'Please select $hint' : null,
+        textStyle: const TextStyle(
+          fontSize: 16,
+          color: Colors.black,
+        ),
+        menuStyle: MenuStyle(
+          backgroundColor: WidgetStateProperty.all(Colors.white),
+          shape: WidgetStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.grey,),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.grey,),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: AppColors.primaryColor),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.red),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.red),
+          ),
+          filled: true,
+          fillColor: Colors.white,
+        ),
+        dropdownMenuEntries: options.map((e) =>
+            DropdownMenuEntry(
+              value: e,
+              label: e,
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.all(Colors.transparent),
+                foregroundColor: WidgetStateProperty.all(Colors.black),
+                textStyle: WidgetStateProperty.resolveWith((states) {
+                  return const TextStyle(
+                    fontSize: 17.0,
+                    fontWeight: FontWeight.w400,
+                  );
+                }),
+              ),
+            ),
+        ).toList(),
+        onSelected: onSelected,
+        enableSearch: true,
+        requestFocusOnTap: true,
+        enableFilter: true,
+      ),
+    );
   }
-
 
   Widget _buildSelectionSummary() {
     if (_selectedCourse == null || _selectedClass == null) return const SizedBox.shrink();
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 16),
+      margin: const EdgeInsets.fromLTRB(0, 16, 0, 0),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(10),
         border: Border.all(color: Colors.grey.shade300),
       ),
       child: Column(
@@ -57,7 +121,6 @@ class _EnrollStep3State extends State<EnrollStep3> {
           _buildSelectionRow(_selectedCourse!, () {
             setState(() {
               _selectedCourse = null;
-              _typeAheadController.clear();
               _selectedClass = null;
               _selectedShift = null;
               _selectedHour = null;
@@ -115,28 +178,28 @@ class _EnrollStep3State extends State<EnrollStep3> {
       backgroundColor: AppColors.defaultWhiteColor,
       appBar: AppBar(
         backgroundColor: AppColors.defaultWhiteColor,
-        elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.primaryColor),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
           'Enrollment Screen',
-          style: TextStyle(color: AppColors.primaryColor, fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(color: AppColors.primaryColor, fontSize: 18),
         ),
         centerTitle: true,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16.0),
             child: Form(
               key: _formKey,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Course *',
+                    'Course',
                     style: TextStyle(
                       color: AppColors.primaryColor,
                       fontSize: 16,
@@ -144,8 +207,20 @@ class _EnrollStep3State extends State<EnrollStep3> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  _buildCourseSelector(),
-                  const SizedBox(height: 20),
+                  _buildDropdownMenu(
+                    hint: 'Select Course',
+                    options: _courses,
+                    selectedValue: _selectedCourse,
+                    onSelected: (value) {
+                      setState(() {
+                        _selectedCourse = value;
+                        _selectedClass = null;
+                        _selectedShift = null;
+                        _selectedHour = null;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 8),
                   if (_selectedCourse != null) ...[
                     const Text(
                       '* Please select the class:',
@@ -166,12 +241,12 @@ class _EnrollStep3State extends State<EnrollStep3> {
                         _buildClassCard('Evening-Weekday', '06:00 PM - 08:00 PM'),
                         _buildClassCard('Morning-Weekday', '08:00 AM - 10:00 AM'),
                         _buildClassCard('Afternoon-Weekend', '12:00 PM - 05:00 PM'),
-                        _buildClassCard('Morning-Weekend', '08:00 PM - 12:00 PM'),
+                        _buildClassCard('Morning-Weekend', '08:00 AM - 12:00 PM'),
                       ],
                     ),
                     if (_selectedClass != null) _buildSelectionSummary(),
                   ],
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 26),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -195,8 +270,14 @@ class _EnrollStep3State extends State<EnrollStep3> {
                         onPressed: _selectedClass != null
                             ? () {
                           if (_formKey.currentState!.validate()) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Processing Enroll')),
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EnrollSuccessfulScreen(
+                                  course: _selectedCourse ?? 'Unknown Course',
+                                  classTime: _selectedHour ?? 'Unknown Time',
+                                ),
+                              ),
                             );
                           }
                         }
@@ -225,83 +306,6 @@ class _EnrollStep3State extends State<EnrollStep3> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildCourseSelector() {
-    return SizedBox(
-      height: 55,
-      // child: TypeAheadFormField<String>(  // Changed to TypeAheadFormField
-      //   textFieldConfiguration: TextFieldConfiguration(
-      //     controller: _typeAheadController,
-      //     decoration: InputDecoration(
-      //       hintText: "Select Course",
-      //       border: OutlineInputBorder(
-      //         borderRadius: BorderRadius.circular(10),
-      //         borderSide: const BorderSide(color: Colors.grey),
-      //       ),
-      //       enabledBorder: OutlineInputBorder(
-      //         borderRadius: BorderRadius.circular(10),
-      //         borderSide: const BorderSide(color: Colors.grey),
-      //       ),
-      //       focusedBorder: OutlineInputBorder(
-      //         borderRadius: BorderRadius.circular(10),
-      //         borderSide: const BorderSide(color: Colors.blue),
-      //       ),
-      //       contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-      //     ),
-      //   ),
-      //   suggestionsCallback: (pattern) async {  // Added async
-      //     if (pattern.isEmpty) return [];
-      //     return _courses
-      //         .where((course) => course.toLowerCase().contains(pattern.toLowerCase()))
-      //         .toList();
-      //   },
-      //   itemBuilder: (context, String suggestion) {  // Added type annotation
-      //     return ListTile(
-      //       title: Text(
-      //         suggestion,
-      //         style: const TextStyle(fontSize: 16, color: Colors.black),
-      //       ),
-      //     );
-      //   },
-      //   onSuggestionSelected: (String suggestion) {  // Added type annotation
-      //     setState(() {
-      //       _selectedCourse = suggestion;
-      //       _typeAheadController.text = suggestion;
-      //     });
-      //   },
-      //   suggestionsBoxBuilder: (context, suggestionsBox) {  // New way to style suggestions box
-      //     return Container(
-      //       decoration: BoxDecoration(
-      //         color: Colors.white,
-      //         borderRadius: BorderRadius.circular(10),
-      //         boxShadow: [
-      //           BoxShadow(
-      //             color: Colors.grey.withOpacity(0.2),
-      //             spreadRadius: 2,
-      //             blurRadius: 4,
-      //             offset: const Offset(0, 2),
-      //           ),
-      //         ],
-      //       ),
-      //       child: suggestionsBox,
-      //     );
-      //   },
-      //   noItemsFoundBuilder: (context) => const Padding(
-      //     padding: EdgeInsets.all(8.0),
-      //     child: Text(
-      //       'No matches found',
-      //       style: TextStyle(color: Colors.grey),
-      //     ),
-      //   ),
-      //   validator: (value) {
-      //     if (value == null || value.isEmpty) {
-      //       return 'Please select a course';
-      //     }
-      //     return null;
-      //   },
-      // ),
     );
   }
 
@@ -352,4 +356,3 @@ class _EnrollStep3State extends State<EnrollStep3> {
     );
   }
 }
-

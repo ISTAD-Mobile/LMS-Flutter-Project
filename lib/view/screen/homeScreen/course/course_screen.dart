@@ -1,97 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
-import 'package:lms_mobile/view/screen/homeScreen/course/course_details_screen.dart';
-
-class CoursePage {
-  final String title;
-  final String description;
-  final String imageUrl;
-  final String duration;
-  final String level;
-  final String scholarship;
-
-  CoursePage({
-    required this.title,
-    required this.description,
-    required this.imageUrl,
-    required this.duration,
-    required this.level,
-    required this.scholarship,
-  });
-
-
-}
-
-final List<CoursePage> coursesPage = [
-  CoursePage(
-    title: 'Flutter Mobile Development',
-    description: 'Develop multi-platform apps using Flutter.',
-    imageUrl: 'https://api.istad.co/media/image/899bac49-e47c-406c-abb2-30ad0b498f88.png',
-    duration: '80 Hours',
-    level: 'Medium',
-    scholarship: '20% Scholarship',
-  ),
-  CoursePage(
-    title: 'IOS DEVELOPMENT',
-    description: 'Build native apps with React Native.',
-    imageUrl: 'https://api.istad.co/media/image/899bac49-e47c-406c-abb2-30ad0b498f88.png',
-    duration: '60 Hours',
-    level: 'Medium',
-    scholarship: '20% Scholarship',
-  ),
-  CoursePage(
-    title: 'SQL & DATA MODELING WITH...',
-    description: 'Build native apps with React Native.',
-    imageUrl: 'https://api.istad.co/media/image/899bac49-e47c-406c-abb2-30ad0b498f88.png',
-    duration: '60 Hours',
-    level: 'Medium',
-    scholarship: '20% Scholarship',
-  ),
-  CoursePage(
-    title: 'Web Design',
-    description: 'Build native apps with React Native.',
-    imageUrl: 'https://api.istad.co/media/image/899bac49-e47c-406c-abb2-30ad0b498f88.png',
-    duration: '60 Hours',
-    level: 'Medium',
-    scholarship: '20% Scholarship',
-  ),
-  CoursePage(
-    title: 'DevOps Engineering',
-    description: 'Build native apps with React Native.',
-    imageUrl: 'https://api.istad.co/media/image/899bac49-e47c-406c-abb2-30ad0b498f88.png',
-    duration: '60 Hours',
-    level: 'Medium',
-    scholarship: '20% Scholarship',
-  ),
-  CoursePage(
-    title: 'C++ Programming',
-    description: 'Build native apps with React Native.',
-    imageUrl: 'https://api.istad.co/media/image/899bac49-e47c-406c-abb2-30ad0b498f88.png',
-    duration: '60 Hours',
-    level: 'Medium',
-    scholarship: '20% Scholarship',
-  ),
-  CoursePage(
-    title: 'Docker',
-    description: 'Build native apps with React Native.',
-    imageUrl: 'https://api.istad.co/media/image/899bac49-e47c-406c-abb2-30ad0b498f88.png',
-    duration: '60 Hours',
-    level: 'Medium',
-    scholarship: '20% Scholarship',
-  ),
-  CoursePage(
-    title: 'Data Analytics',
-    description: 'Build native apps with React Native.',
-    imageUrl: 'https://api.istad.co/media/image/899bac49-e47c-406c-abb2-30ad0b498f88.png',
-    duration: '60 Hours',
-    level: 'Medium',
-    scholarship: '20% Scholarship',
-  ),
-
-];
-
-class CourseCard extends StatelessWidget {
-  final CoursePage coursePage;
+import 'package:lms_mobile/data/response/status.dart';
+import 'package:lms_mobile/view/Skelaton/homepageSkeleton/coursScreenSkeleton.dart';
+import 'package:lms_mobile/view/widgets/public_screen_widgets/home/short_course_screen.dart';
+import 'package:lms_mobile/viewModel/course_viewmodel.dart';
+import 'package:provider/provider.dart';
 
   const CourseCard({Key? key, required this.coursePage}) : super(key: key);
 
@@ -138,8 +51,8 @@ class CourseCard extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
                         ),
-                        children: const [
-                          TextSpan(
+                        children: [
+                          const TextSpan(
                             text: '\n ',
                             style: TextStyle(
                               color: Colors.transparent,
@@ -176,7 +89,7 @@ class CourseCard extends StatelessWidget {
                             const SizedBox(width: 8),
                             Text(
                               coursePage.duration,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: AppColors.defaultGrayColor,
                                 fontSize: 13,
                               ),
@@ -195,7 +108,7 @@ class CourseCard extends StatelessWidget {
                             const SizedBox(width: 6),
                             Text(
                               coursePage.level,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: AppColors.defaultGrayColor,
                                 fontSize: 13,
                               ),
@@ -233,40 +146,71 @@ class CourseCard extends StatelessWidget {
   }
 }
 
+class _HomeScreenState extends State<CourseScreen> {
+  final courseViewModel = CourseViewmodel();
 
-
-class CourseVerticalListPage extends StatelessWidget {
-  const CourseVerticalListPage({super.key});
+  @override
+  void initState() {
+    super.initState();
+    courseViewModel.fetchAllBlogs();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.defaultWhiteColor,
       appBar: AppBar(
-        backgroundColor: AppColors.defaultWhiteColor,
+        backgroundColor: AppColors.backgroundColor,
         leading: IconButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            Navigator.pop(context);
+          },
           icon: const Icon(Icons.arrow_back_ios),
         ),
-        title: const Text("Back", style: TextStyle(fontSize: 18)),
+        title: const Text("Back",style: TextStyle(fontSize: 20,color: AppColors.defaultGrayColor)),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Text(
-              'AVAILABLE COURSES',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700,color: AppColors.primaryColor),
-            ),
-            const SizedBox(height: 16),
-            ...coursesPage.map(
-                  (coursesPage) => Padding(
-                padding: const EdgeInsets.only(bottom: 5.0),
-                child: CourseCard(coursePage: coursesPage),
-              ),
-            ).toList(),
-          ],
+      body: Container(
+        color: AppColors.backgroundColor,
+        child: ChangeNotifierProvider(
+          create: (context) => courseViewModel,
+          child: Consumer<CourseViewmodel>(
+            builder: (context, viewModel, _) {
+              switch (viewModel.course.status!) {
+                case Status.LOADING:
+                  return SizedBox(
+                    height: MediaQuery.of(context).size.height,
+                    child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      itemCount: 10,
+                      itemBuilder: (context, index) => Coursscreenskeleton(),
+                    ),
+                  );
+
+                case Status.COMPLETED:
+                  final courses = viewModel.course.data?.dataList ?? [];
+                  return courses.isEmpty
+                      ? Center(child: Text('No courses available'))
+                      : ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: courses.length,
+                    itemBuilder: (context, index) {
+                      final course = courses[index];
+                      return Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: ShortCourseScreen(course),
+                      );
+                    },
+                  );
+
+                case Status.ERROR:
+                  return Center(
+                    child: Text(
+                      'An error occurred: ${viewModel.course.message}',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  );
+              }
+            },
+          ),
         ),
       ),
 

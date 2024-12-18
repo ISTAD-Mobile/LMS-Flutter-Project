@@ -3,10 +3,10 @@ import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/model/course.dart';
 import 'package:lms_mobile/view/screen/homeScreen/course/course_details_screen.dart';
 
-class ShortCourseCard extends StatelessWidget {
+class ShortCourseScreen extends StatelessWidget {
   final Course course;
 
-  ShortCourseCard(this.course);
+  ShortCourseScreen(this.course);
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +20,8 @@ class ShortCourseCard extends StatelessWidget {
         );
       },
       child: Container(
-        width: 335,
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-        margin: const EdgeInsets.only(right: 16),
         decoration: BoxDecoration(
-          color: AppColors.defaultWhiteColor,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             width: 0.5,
@@ -32,14 +29,15 @@ class ShortCourseCard extends StatelessWidget {
           ),
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Center(
+            Align(
+              alignment: Alignment.center,
               child: Image.network(
                 course.thumbnailUri,
-                width: 85,
-                height: 85,
+                width: 70,
+                height: 70,
                 fit: BoxFit.cover,
               ),
             ),
@@ -55,7 +53,7 @@ class ShortCourseCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
                       ),
-                      children: [
+                      children: const [
                         TextSpan(
                           text: '\n ',
                           style: TextStyle(
@@ -73,7 +71,7 @@ class ShortCourseCard extends StatelessWidget {
                     course.description,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                       color: AppColors.defaultGrayColor,
                     ),
@@ -93,7 +91,7 @@ class ShortCourseCard extends StatelessWidget {
                           const SizedBox(width: 8),
                           Text(
                             course.totalHour.toString(),
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: AppColors.defaultGrayColor,
                               fontSize: 13,
                             ),
@@ -112,7 +110,7 @@ class ShortCourseCard extends StatelessWidget {
                           const SizedBox(width: 6),
                           Text(
                             course.level,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: AppColors.defaultGrayColor,
                               fontSize: 13,
                             ),
@@ -121,9 +119,8 @@ class ShortCourseCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10,),
+                  const SizedBox(height: 10),
                   Container(
-                    width: 200,
                     padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 25),
                     decoration: BoxDecoration(
                       color: AppColors.secondaryColor,
