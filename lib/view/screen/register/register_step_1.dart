@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/view/screen/register/register_step_2.dart';
@@ -17,15 +20,41 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
   final TextEditingController _nameEnController = TextEditingController();
   final TextEditingController _dateOfBirthController = TextEditingController();
   final TextEditingController _contactNumberController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _nameOfHightSchoolController = TextEditingController();
-  final TextEditingController _guardianContactNumberController = TextEditingController();
+  final TextEditingController _contactEmailController = TextEditingController();
+  final TextEditingController _contactHighSchoolController = TextEditingController();
+  final TextEditingController _contactContactNumberController = TextEditingController();
+  final TextEditingController _contactGuardianContactController = TextEditingController();
+
+
   String? _selectedGender;
   String? _selectedPlaceOfBirth;
-  String? _selectedShift;
-  String? _selectedCurrentAddress;
-  String? _selectedGuardianRelationship;
-  String? _getToKnowIstadController;
+  String? _selectCurrentAddress;
+  String? _selectGuardianRelationship;
+  String? _selectGetToKnowIstad;
+
+  File? _selectedUploadIdentity;
+  final ImagePicker _pickerUploadIdentity = ImagePicker();
+
+  Future<void> _pickImageUploadIndentity() async {
+    final XFile? pickedUploadIndentiry = await _pickerUploadIdentity.pickImage(source: ImageSource.gallery);
+    if (pickedUploadIndentiry != null) {
+      setState(() {
+        _selectedUploadIdentity = File(pickedUploadIndentiry.path);
+      });
+    }
+  }
+
+  File? _selectedHighCertificate;
+  final ImagePicker _pickerCertificate = ImagePicker();
+
+  Future<void> _pickImageCertificate() async {
+    final XFile? pickedImageCertificate = await _pickerCertificate.pickImage(source: ImageSource.gallery);
+    if (pickedImageCertificate != null) {
+      setState(() {
+        _selectedHighCertificate = File(pickedImageCertificate.path);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +63,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: AppColors.defaultGrayColor),
           onPressed: () {
-            Navigator.popUntil(context, (route) => route.isFirst);
+            Navigator.pop(context);
           },
         ),
         title: Text(
@@ -68,6 +97,11 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your name in Khmer';
                     }
+
+                    final khmerRegex = RegExp(r'^[\u1780-\u17FF\s]+$');
+                    if (!khmerRegex.hasMatch(value)) {
+                      return 'This field is required';
+                    }
                     return null;
                   },
                 ),
@@ -77,7 +111,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                   hintText: 'Leang Naikim',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your name in English';
+                      return 'This field is required';
                     }
                     return null;
                   },
@@ -94,7 +128,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please select your gender';
+                      return 'This field is required';
                     }
                     return null;
                   },
@@ -105,7 +139,42 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                   hintText: '30/08/2003',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your date of birth';
+                      return 'This field is required';
+                    }
+                    return null;
+                  },
+                ),
+                _buildTextField(
+                  label: 'Contact Number (Telegram) *',
+                  controller: _contactNumberController,
+                  keyboardType: TextInputType.phone,
+                  hintText: '092382489',
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'This field is required';
+                    }
+                    return null;
+                  },
+                ),
+                _buildTextField(
+                  label: 'Email *',
+                  controller: _contactEmailController,
+                  // keyboardType: TextInputType.phone,
+                  hintText: 'student.istad@gmail.com',
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'This field is required';
+                    }
+                    return null;
+                  },
+                ),
+                _buildTextField(
+                  label: 'High School *',
+                  controller: _contactHighSchoolController,
+                  hintText: 'Bak Touk High School',
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'This field is required';
                     }
                     return null;
                   },
@@ -149,50 +218,15 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                   validator: (value) {
                     if (value == null || value.isEmpty ||
                         value == 'Select a province') {
-                      return 'Please select your place of birth';
-                    }
-                    return null;
-                  },
-                ),
-                _buildTextField(
-                  label: 'Contact Number (Telegram) *',
-                  controller: _contactNumberController,
-                  keyboardType: TextInputType.phone,
-                  hintText: '092382489',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your contact number';
-                    }
-                    return null;
-                  },
-                ),
-                _buildTextField(
-                  label: 'Email *',
-                  controller: _emailController,
-                  keyboardType: TextInputType.text,
-                  hintText: 'nounsovannthon@gmail.com',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email address';
-                    }
-                    return null;
-                  },
-                ),
-                _buildTextField(
-                  label: 'Name of Your High School *',
-                  controller: _nameOfHightSchoolController,
-                  hintText: 'Bak Touk High School',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your name in English';
+                      return 'This field is required';
                     }
                     return null;
                   },
                 ),
                 _buildDropdownField(
                   label: 'Current Address *',
-                  value: _selectedCurrentAddress,
-                  hintText: 'Select a province',
+                  value: _selectCurrentAddress,
+                  hintText: 'Phnom Penh',
                   items: [
                     'Select a province',
                     'Phnom Penh',
@@ -222,35 +256,35 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                   ],
                   onChanged: (value) {
                     setState(() {
-                      _selectedCurrentAddress = value;
+                      _selectCurrentAddress = value!;
                     });
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty ||
                         value == 'Select a province') {
-                      return 'Please select your current address';
+                      return 'This field is required';
                     }
                     return null;
                   },
                 ),
                 _buildTextField(
                   label: 'Guardian Contact *',
-                  controller: _guardianContactNumberController,
+                  controller: _contactGuardianContactController,
                   keyboardType: TextInputType.phone,
                   hintText: '092382489',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your guardian contact number';
+                      return 'This field is required';
                     }
                     return null;
                   },
                 ),
                 _buildDropdownField(
                   label: 'Guardian Relationship *',
-                  value: _selectedGuardianRelationship,
-                  hintText: 'Select Guardian Relationship',
+                  value: _selectGuardianRelationship,
+                  hintText: 'Select a province',
                   items: [
-                    'Select Guardian Relationship',
+                    'Select a province',
                     'Mother',
                     'Father',
                     'Grandmother',
@@ -266,63 +300,184 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                   ],
                   onChanged: (value) {
                     setState(() {
-                      _selectedGuardianRelationship = value;
+                      _selectGuardianRelationship = value!;
                     });
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty ||
-                        value == 'Select Guardian relationship') {
-                      return 'Please select guardian relationship';
+                        value == 'Select a province') {
+                      return 'This field is required';
                     }
                     return null;
                   },
                 ),
                 _buildDropdownField(
                   label: 'Get to know ISTAD through: *',
-                  value: _getToKnowIstadController,
-                  hintText: 'Select how you know about ISTAD',
+                  value: _selectGetToKnowIstad,
+                  hintText: 'Select how you knew about ISTAD',
                   items: [
-                    'Select how you know about ISTAD',
+                    'Select how you knew about ISTAD',
                     'Ministry, Provincial Department',
                     'Teacher',
                     'Senior Student',
-                    'Social Media (Facebook) ',
+                    'Social Media (Facebook)',
                     'Friend',
                     'Website',
-                    'Parents or Relatives',
+                    'Parents or Relative',
                     'Other',
                   ],
                   onChanged: (value) {
                     setState(() {
-                      _getToKnowIstadController = value;
+                      _selectGetToKnowIstad = value!;
                     });
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty ||
-                        value == 'Select how you know about ISTAD') {
-                      return 'Please select how you know about ISTAD';
+                        value == 'Select a province') {
+                      return 'This field is required';
                     }
                     return null;
                   },
                 ),
-                _buildDropdownField(
-                  label: 'Shift *',
-                  value: _selectedShift,
-                  hintText: 'Morning',
-                  items: ['Morning', 'Afternoon', 'Evening'],
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedShift = value;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please select your shift';
-                    }
-                    return null;
-                  },
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(
+                      children: [
+                        const Text(
+                          "Sample Photo",
+                          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                        ),
+                        const SizedBox(height: 10),
+                        Container(
+                          width: 135,
+                          height: 160,
+                          decoration: BoxDecoration(
+                            // border: Border.all(color: Colors.grey),
+                            color: Colors.grey.shade200,
+                          ),
+                          child: Image.asset(
+                            'assets/images/cher_muyleang.png',
+                            fit: BoxFit.cover,
+                            // color: AppColors.defaultGrayColor,
+                            width: 20,
+                            height: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 20),
+                Text(
+                  'Upload Formal Picture',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+                SizedBox(height: 8,),
+                GestureDetector(
+                  onTap: _pickImageCertificate,
+                  child: Container(
+                    width: double.infinity,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey.shade400,
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: _selectedHighCertificate == null
+                        ? const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.cloud_download_outlined,
+                            color: AppColors.primaryColor, size: 40),
+                        SizedBox(height: 5),
+                        Text(
+                          'Avatar',
+                          style: TextStyle(color: AppColors.defaultBlackColor),
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          "Select a file or drag and drop here",
+                          style: TextStyle(
+                            color: AppColors.defaultBlackColor,
+                            fontSize: 13,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          "JPG,PNG or PDF,file size no more than 10MB",
+                          style: TextStyle(color: Colors.grey, fontSize: 12),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    )
+                        : ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.file(
+                        _selectedHighCertificate!,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16,),
+                Text(
+                  'Upload Identity (Optional)',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+                SizedBox(height: 8,),
+                GestureDetector(
+                  onTap: _pickImageUploadIndentity,
+                  child: Container(
+                    width: double.infinity,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey.shade400,
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: _selectedUploadIdentity == null
+                        ? const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.cloud_download_outlined,
+                            color: AppColors.primaryColor, size: 40),
+                        SizedBox(height: 5),
+                        Text(
+                          'Select a file or drag and drop here',
+                          style: TextStyle(color: AppColors.defaultBlackColor),
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          "JPG,PNG or PDF,file size no more than 10MB",
+                          style: TextStyle(color: Colors.grey, fontSize: 12),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    )
+                        : ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.file(
+                        _selectedUploadIdentity!,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
                 Align(
                   alignment: Alignment.centerRight,
                   child: SizedBox(
@@ -599,7 +754,8 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
 }
 
 
-//
+
+
 // import 'package:flutter/material.dart';
 // import 'package:lms_mobile/data/color/color_screen.dart';
 // import 'package:lms_mobile/view/screen/register/register_step_2.dart';

@@ -27,7 +27,7 @@ class AcademicTypeAndScholarshipWidget extends StatelessWidget {
       case 'Short Course':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const CourseVerticalListPage()),
+          MaterialPageRoute(builder: (context) => CourseScreen()),
         );
         break;
       case 'IT Expert':

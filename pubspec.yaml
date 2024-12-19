@@ -49,6 +49,7 @@ dependencies:
   connectivity_plus: ^6.1.0
   provider: ^6.1.2
   skeletonizer: ^1.4.2
+  dotted_border: ^2.1.0
 
 dev_dependencies:
   flutter_test:

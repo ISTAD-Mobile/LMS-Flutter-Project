@@ -1,4 +1,3 @@
-
 import 'status.dart';
 
 class ApiResponse<T>{
@@ -6,7 +5,6 @@ class ApiResponse<T>{
   T? data;
   String? message;
 
-  // constructor
   ApiResponse(this.status, this.data,this.message);
 
   ApiResponse.loading(): status = Status.LOADING;

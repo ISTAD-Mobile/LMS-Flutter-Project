@@ -4,7 +4,7 @@ import 'package:lms_mobile/view/home.dart';
 import '../../../../data/color/color_screen.dart';
 
 class EnrollSuccessfulScreen extends StatelessWidget {
-  const EnrollSuccessfulScreen({super.key});
+  const EnrollSuccessfulScreen({super.key, required String course, required String classTime});
 
   @override
   Widget build(BuildContext context) {
