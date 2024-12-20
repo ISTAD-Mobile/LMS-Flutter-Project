@@ -6,7 +6,6 @@ import '../../widgets/public_screen_widgets/appbar_and_bottom_navigation_widgets
 import '../lms/auth/first_log_in_screen.dart';
 import 'my_home_academic_screen.dart';
 
-
 class ITExpertPage extends StatefulWidget {
   const ITExpertPage({Key? key}) : super(key: key);
 
@@ -19,7 +18,7 @@ class _ITExpertPageState extends State<ITExpertPage> {
 
   // List of screens for each tab
   final List<Widget> screens = [
-     HomeScreen(),
+    const HomeScreen(),
     const MyAcademicScreen(),
     const HomeIstadScreen(),
     const FirstLogInScreen(),
@@ -31,7 +30,6 @@ class _ITExpertPageState extends State<ITExpertPage> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,13 +37,16 @@ class _ITExpertPageState extends State<ITExpertPage> {
       appBar: AppBar(
         backgroundColor: AppColors.defaultWhiteColor,
         leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back),
         ),
         centerTitle: true,
-        title: const Text("IT Expert",style: TextStyle(fontSize: 16,color: AppColors.primaryColor),),
+        title: const Text(
+          "IT Expert",
+          style: TextStyle(fontSize: 16, color: AppColors.primaryColor),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -117,7 +118,8 @@ class _ITExpertPageState extends State<ITExpertPage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(right: 36.0), // Add right padding to "8hr"
+                    padding: EdgeInsets.only(right: 36.0),
+                    // Add right padding to "8hr"
                     child: Text(
                       "8hr",
                       style: TextStyle(
@@ -179,26 +181,26 @@ class _ITExpertPageState extends State<ITExpertPage> {
       children: courses
           .map(
             (course) => Padding(
-          padding: const EdgeInsets.only(left: 10.0,bottom: 10.0),
-          child: Row(
-            children: [
-              const Icon(
-                Icons.star,
-                color: Color(0xFFEAB305),
-                size: 18,
+              padding: const EdgeInsets.only(left: 10.0, bottom: 10.0),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.star,
+                    color: Color(0xFFEAB305),
+                    size: 18,
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    course,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Color(0xFF535763),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 10),
-              Text(
-                course,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Color(0xFF535763),
-                ),
-              ),
-            ],
-          ),
-        ),
-      )
+            ),
+          )
           .toList(),
     );
   }
