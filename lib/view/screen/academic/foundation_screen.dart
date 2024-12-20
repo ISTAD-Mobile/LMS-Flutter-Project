@@ -5,7 +5,6 @@ import '../../home.dart';
 import '../lms/auth/first_log_in_screen.dart';
 import 'my_home_academic_screen.dart';
 
-
 class FoundationPage extends StatefulWidget {
   const FoundationPage({Key? key}) : super(key: key);
 
@@ -18,10 +17,10 @@ class _ITExpertPageState extends State<FoundationPage> {
 
   // List of screens for each tab
   final List<Widget> screens = [
-     HomeScreen(),
+    const HomeScreen(),
     const MyAcademicScreen(),
     const HomeIstadScreen(),
-    const firstSignInScreen(),
+    const FirstLogInScreen(),
   ];
 
   void onTabTapped(int index) {
@@ -29,7 +28,6 @@ class _ITExpertPageState extends State<FoundationPage> {
       currentIndex = index;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +42,10 @@ class _ITExpertPageState extends State<FoundationPage> {
           icon: const Icon(Icons.arrow_back),
         ),
         centerTitle: true,
-        title: const Text("Foundation",style: TextStyle(fontSize: 16,color: AppColors.primaryColor),),
+        title: const Text(
+          "Foundation",
+          style: TextStyle(fontSize: 16, color: AppColors.primaryColor),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -116,7 +117,8 @@ class _ITExpertPageState extends State<FoundationPage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(right: 36.0), // Add right padding to "8hr"
+                    padding: EdgeInsets.only(right: 36.0),
+                    // Add right padding to "8hr"
                     child: Text(
                       "4hr",
                       style: TextStyle(
@@ -127,7 +129,9 @@ class _ITExpertPageState extends State<FoundationPage> {
                   ),
                 ],
               ),
-              SizedBox(height: 8,),
+              SizedBox(
+                height: 8,
+              ),
               const Row(
                 children: [
                   Text(
@@ -155,7 +159,8 @@ class _ITExpertPageState extends State<FoundationPage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(right: 36.0), // Add right padding to "8hr"
+                    padding: EdgeInsets.only(right: 36.0),
+                    // Add right padding to "8hr"
                     child: Text(
                       "4hr",
                       style: TextStyle(
@@ -201,26 +206,26 @@ class _ITExpertPageState extends State<FoundationPage> {
       children: courses
           .map(
             (course) => Padding(
-          padding: const EdgeInsets.only(left: 10.0,bottom: 10.0),
-          child: Row(
-            children: [
-              const Icon(
-                Icons.star,
-                color: Color(0xFFEAB305),
-                size: 18,
+              padding: const EdgeInsets.only(left: 10.0, bottom: 10.0),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.star,
+                    color: Color(0xFFEAB305),
+                    size: 18,
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    course,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Color(0xFF535763),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 10),
-              Text(
-                course,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Color(0xFF535763),
-                ),
-              ),
-            ],
-          ),
-        ),
-      )
+            ),
+          )
           .toList(),
     );
   }

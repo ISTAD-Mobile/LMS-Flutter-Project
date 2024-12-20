@@ -2,7 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/view/screen/academic/pre_university_screen.dart';
-import '../homeScreen/course/course_screen.dart';
+import '../lms/profile/course_screen.dart';
 import 'IT_expert_screen.dart';
 import 'associate_screen.dart';
 import 'bachelor_screen.dart';

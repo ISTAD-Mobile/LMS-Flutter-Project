@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/data/response/status.dart';
-import 'package:lms_mobile/model/course.dart';
 import 'package:lms_mobile/view/Skelaton/homepageSkeleton/courseCardSkeleton.dart';
-import 'package:lms_mobile/view/screen/homeScreen/course/course_screen.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/short_course_card.dart';
 import 'package:lms_mobile/viewModel/course_viewmodel.dart';
 import 'package:provider/provider.dart';
+
+import '../../../screen/lms/profile/course_screen.dart';
 
 
 // void main() {

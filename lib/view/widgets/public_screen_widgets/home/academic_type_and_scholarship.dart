@@ -5,7 +5,8 @@ import 'package:lms_mobile/view/screen/academic/associate_screen.dart';
 import 'package:lms_mobile/view/screen/academic/bachelor_screen.dart';
 import 'package:lms_mobile/view/screen/academic/foundation_screen.dart';
 import 'package:lms_mobile/view/screen/academic/pre_university_screen.dart';
-import 'package:lms_mobile/view/screen/homeScreen/course/course_screen.dart';
+
+import '../../../screen/lms/profile/course_screen.dart';
 
 class AcademicTypeAndScholarshipWidget extends StatelessWidget {
   const AcademicTypeAndScholarshipWidget({super.key});

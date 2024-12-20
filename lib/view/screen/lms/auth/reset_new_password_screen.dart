@@ -4,8 +4,7 @@ import '../../../../data/color/color_screen.dart';
 
 void main() {
   runApp(const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: ResetPasswordScreen()));
+      debugShowCheckedModeBanner: false, home: ResetPasswordScreen()));
 }
 
 class ResetPasswordScreen extends StatefulWidget {
@@ -17,7 +16,8 @@ class ResetPasswordScreen extends StatefulWidget {
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
 
@@ -36,7 +36,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         backgroundColor: AppColors.defaultWhiteColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: AppColors.defaultGrayColor),
+          icon: const Icon(Icons.arrow_back_ios,
+              color: AppColors.defaultGrayColor),
           onPressed: () => Navigator.pop(context),
           padding: EdgeInsets.zero,
         ),
@@ -90,7 +91,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       borderSide: const BorderSide(color: Colors.grey),
                     ),
                     focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: AppColors.primaryColor), // Border color when focused
+                      borderSide: BorderSide(color: AppColors.primaryColor),
+                      // Border color when focused
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                     suffixIcon: IconButton(
@@ -144,7 +146,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       borderSide: const BorderSide(color: Colors.grey),
                     ),
                     focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: AppColors.primaryColor), // Border color when focused
+                      borderSide: BorderSide(color: AppColors.primaryColor),
+                      // Border color when focused
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                     suffixIcon: IconButton(
@@ -167,7 +170,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
             ElevatedButton(
               onPressed: () {
                 // Add your password reset logic here
-                if (_passwordController.text == _confirmPasswordController.text) {
+                if (_passwordController.text ==
+                    _confirmPasswordController.text) {
                   // Proceed with password reset
                   print('Passwords match - proceed with reset');
                 } else {
