@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../../../data/color/color_screen.dart';
 
 void main() {
@@ -8,7 +7,7 @@ void main() {
 }
 
 class ResetPasswordScreen extends StatefulWidget {
-  const ResetPasswordScreen({Key? key}) : super(key: key);
+  const ResetPasswordScreen({super.key});
 
   @override
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
@@ -21,11 +20,91 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
 
+  String? _passwordError;
+  String? _confirmPasswordError;
+  String? _successMessage;
+
+  bool _isLoading = false;
+
   @override
   void dispose() {
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
+  }
+
+  bool _isPasswordStrong(String password) {
+    // Password must have at least one uppercase letter, one lowercase letter, one number, and one special symbol
+    return password.length >= 6 &&
+        RegExp(r'(?=.*[A-Z])').hasMatch(password) &&
+        RegExp(r'(?=.*[a-z])').hasMatch(password) &&
+        RegExp(r'(?=.*\d)').hasMatch(password) &&
+        RegExp(r'(?=.*[@$!%*?&])').hasMatch(password);
+  }
+
+  void _validateForm() async {
+    setState(() {
+      _passwordError = null;
+      _confirmPasswordError = null;
+      _successMessage = null;
+      _isLoading = true; // Show the loading spinner
+    });
+
+    // Simulate a short delay (e.g., network request or processing)
+    await Future.delayed(const Duration(seconds: 2));
+
+    // Validate the password and confirm password
+    if (_passwordController.text.isEmpty) {
+      setState(() {
+        _passwordError = 'Password is required';
+      });
+    } else if (_passwordController.text.length < 6) {
+      setState(() {
+        _passwordError = 'Password must be equal to or more than 6 characters';
+      });
+    } else if (!_isPasswordStrong(_passwordController.text)) {
+      setState(() {
+        _passwordError = 'Password must be strong';
+      });
+    }
+
+    if (_confirmPasswordController.text.isEmpty) {
+      setState(() {
+        _confirmPasswordError = 'Password is required';
+      });
+    }
+
+    if (_passwordController.text != _confirmPasswordController.text) {
+      setState(() {
+        _confirmPasswordError = 'Passwords do not match';
+      });
+    }
+
+    if (_passwordController.text.isNotEmpty &&
+        _confirmPasswordController.text.isNotEmpty &&
+        _passwordController.text == _confirmPasswordController.text &&
+        _passwordError == null &&
+        _confirmPasswordError == null) {
+      setState(() {
+        _successMessage = 'Reset password successfully!';
+      });
+      _showSuccessMessage();
+    }
+
+    setState(() {
+      _isLoading = false; // Hide the loading spinner after processing
+    });
+  }
+
+  void _showSuccessMessage() {
+    // Show a SnackBar with a success message
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(_successMessage!),
+        backgroundColor: Colors.green,
+        duration: const Duration(seconds: 3),
+      ),
+    );
   }
 
   @override
@@ -70,7 +149,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     ),
                     children: [
                       TextSpan(
-                        text: '*',
                         style: TextStyle(color: Colors.red),
                       ),
                     ],
@@ -81,7 +159,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   controller: _passwordController,
                   obscureText: _obscurePassword,
                   decoration: InputDecoration(
-                    hintText: 'Enter new password',
+                    hintText: 'New password',
+                    hintStyle: TextStyle(color: Colors.grey.shade600),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: const BorderSide(color: Colors.grey),
@@ -92,7 +171,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     ),
                     focusedBorder: const OutlineInputBorder(
                       borderSide: BorderSide(color: AppColors.primaryColor),
-                      // Border color when focused
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                     suffixIcon: IconButton(
@@ -100,6 +178,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         _obscurePassword
                             ? Icons.visibility_off
                             : Icons.visibility,
+                        color: Colors.grey.shade500,
                       ),
                       onPressed: () {
                         setState(() {
@@ -109,6 +188,13 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     ),
                   ),
                 ),
+                if (_passwordError != null) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    _passwordError!,
+                    style: const TextStyle(color: Colors.red, fontSize: 14),
+                  ),
+                ],
               ],
             ),
             const SizedBox(height: 20),
@@ -125,7 +211,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     ),
                     children: [
                       TextSpan(
-                        text: '*',
                         style: TextStyle(color: Colors.red),
                       ),
                     ],
@@ -136,7 +221,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   controller: _confirmPasswordController,
                   obscureText: _obscureConfirmPassword,
                   decoration: InputDecoration(
-                    hintText: 'Enter confirm password',
+                    hintText: 'Confirm password',
+                    hintStyle: TextStyle(color: Colors.grey.shade600),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: const BorderSide(color: Colors.grey),
@@ -147,7 +233,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     ),
                     focusedBorder: const OutlineInputBorder(
                       borderSide: BorderSide(color: AppColors.primaryColor),
-                      // Border color when focused
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                     suffixIcon: IconButton(
@@ -155,6 +240,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         _obscureConfirmPassword
                             ? Icons.visibility_off
                             : Icons.visibility,
+                        color: Colors.grey.shade500,
                       ),
                       onPressed: () {
                         setState(() {
@@ -164,24 +250,19 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     ),
                   ),
                 ),
+                if (_confirmPasswordError != null) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    _confirmPasswordError!,
+                    style: const TextStyle(color: Colors.red, fontSize: 14),
+                  ),
+                ],
               ],
             ),
             const SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
-                // Add your password reset logic here
-                if (_passwordController.text ==
-                    _confirmPasswordController.text) {
-                  // Proceed with password reset
-                  print('Passwords match - proceed with reset');
-                } else {
-                  // Show error
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Passwords do not match'),
-                    ),
-                  );
-                }
+                _validateForm();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryColor,
@@ -190,14 +271,18 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Text(
-                'Reset Password',
-                style: TextStyle(
-                  color: AppColors.defaultWhiteColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+              child: _isLoading
+                  ? const CircularProgressIndicator(
+                      color: Colors.white,
+                    )
+                  : const Text(
+                      'Reset Password',
+                      style: TextStyle(
+                        color: AppColors.defaultWhiteColor,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
             ),
           ],
         ),

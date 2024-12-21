@@ -16,12 +16,12 @@ class LogInScreen extends StatefulWidget {
 class _LogInScreenState extends State<LogInScreen> {
   bool _obscurePassword = true;
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
+  final _identifierController = TextEditingController();
   final _passwordController = TextEditingController();
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _identifierController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -62,7 +62,10 @@ class _LogInScreenState extends State<LogInScreen> {
               Image.asset('assets/images/logo_log_in.png', height: 60),
               const SizedBox(height: 40),
               _buildTextField(
-                  'Email or UserName', _emailController, _validateEmail),
+                'Email or Username',
+                _identifierController,
+                _validateIdentifier,
+              ),
               const SizedBox(height: 20),
               _buildPasswordField(),
               const SizedBox(height: 16),
@@ -88,29 +91,41 @@ class _LogInScreenState extends State<LogInScreen> {
                 onPressed: viewModel.isLoading
                     ? null
                     : () async {
-                        // Pass the value from _emailController directly to the login method
-                        final success = await viewModel.login(
-                          _emailController.text, // Username or Email
-                          _passwordController.text, // Password
-                        );
-                        if (success) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Login Successful')),
+                        if (_formKey.currentState!.validate()) {
+                          final success = await viewModel.login(
+                            _identifierController.text,
+                            _passwordController.text,
                           );
-                          // Navigate to home screen or next screen
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const StudentScreen(
-                                      title: 'Course',
-                                    )),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content:
-                                    Text('Error: ${viewModel.errorMessage}')),
-                          );
+
+                          if (success) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'Login Successful',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                backgroundColor: AppColors.successColor,
+                              ),
+                            );
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const StudentScreen(title: 'Course'),
+                              ),
+                            );
+                          } else {
+                            // Login failed, show error message
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: const Text(
+                                  'Incorrect username/email or password',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                backgroundColor: Colors.red, // Error color
+                              ),
+                            );
+                          }
                         }
                       },
                 style: ElevatedButton.styleFrom(
@@ -137,7 +152,7 @@ class _LogInScreenState extends State<LogInScreen> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-              ),
+              )
             ],
           ),
         ),
@@ -145,10 +160,15 @@ class _LogInScreenState extends State<LogInScreen> {
     );
   }
 
-  String? _validateEmail(String? value) {
-    if (value == null || value.isEmpty) return 'Email is required';
+  String? _validateIdentifier(String? value) {
+    if (value == null || value.isEmpty) return 'Email or Username is required';
+
     final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    if (!emailRegExp.hasMatch(value)) return 'Invalid email';
+    final usernameRegExp = RegExp(r'^[a-zA-Z0-9_]{3,}$');
+
+    if (!emailRegExp.hasMatch(value) && !usernameRegExp.hasMatch(value)) {
+      return 'Enter a valid email or username';
+    }
     return null;
   }
 
@@ -173,19 +193,10 @@ class _LogInScreenState extends State<LogInScreen> {
           controller: controller,
           validator: validator,
           decoration: InputDecoration(
-            hintText: 'Enter your email or user name',
+            hintText: 'Enter your email or username',
             hintStyle: const TextStyle(color: AppColors.defaultGrayColor),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: Colors.grey),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: Colors.grey),
-            ),
-            focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: AppColors.primaryColor),
-              borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
           ),
         ),
@@ -214,20 +225,10 @@ class _LogInScreenState extends State<LogInScreen> {
             hintStyle: const TextStyle(color: AppColors.defaultGrayColor),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Colors.grey),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Colors.grey),
-            ),
-            focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: AppColors.primaryColor),
-              borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
             suffixIcon: IconButton(
               icon: Icon(
                 _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                color: Colors.grey,
               ),
               onPressed: () {
                 setState(() {

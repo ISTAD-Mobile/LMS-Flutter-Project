@@ -42,19 +42,19 @@ class _HomeScreenState extends State<HomeScreen> {
           const IstadActivity(),
           const AcademicTypeAndScholarshipWidget(),
           CourseSection(),
-          ItNewsSection(),
+          const ItNewsSection(),
           ProjectArcheivementHome(),
           BachelorProgramHome(),
           Container(
             height: 430,
-            child: TestimonialPage(),
+            child: const TestimonialPage(),
           ),
         ],
       ),
     },
     {
       'title': 'Academic',
-      'page': MyAcademicScreen(),
+      'page': const MyAcademicScreen(),
     },
     {
       'title': 'About',
@@ -62,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
     },
     {
       'title': 'LMS',
-      'page': LogInScreen(),
+      'page': const LogInScreen(),
     },
   ];
 

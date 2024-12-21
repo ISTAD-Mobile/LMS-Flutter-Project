@@ -6,7 +6,7 @@ import '../lms/auth/first_log_in_screen.dart';
 import 'my_home_academic_screen.dart';
 
 class FoundationPage extends StatefulWidget {
-  const FoundationPage({Key? key}) : super(key: key);
+  const FoundationPage({super.key});
 
   @override
   _ITExpertPageState createState() => _ITExpertPageState();
