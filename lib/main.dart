@@ -66,13 +66,13 @@ class _MyAppState extends State<MyApp> {
           }
 
           // Internet available
-          return MaterialApp(
+          return const MaterialApp(
             debugShowCheckedModeBanner: false,
-            home: SplashScreenPage(),
+            home: SplashScreen(),
           );
         }
 
-        return MaterialApp(
+        return const MaterialApp(
           debugShowCheckedModeBanner: false,
           home: Scaffold(
             body: Center(child: Text('No connectivity data available')),
