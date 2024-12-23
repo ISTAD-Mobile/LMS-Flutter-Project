@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
-
+import 'package:lms_mobile/model/enrollmentRequest/enrollment_model.dart';
+import 'package:lms_mobile/viewModel/enroll/enrollment_view_model.dart';
 import '../../../screen/homeScreen/course/course_details_screen.dart';
 import 'enroll_step2.dart';
 
@@ -8,10 +9,11 @@ class EnrollStep1 extends StatefulWidget {
   const EnrollStep1({super.key});
 
   @override
-  _CourseEnrollForm createState() => _CourseEnrollForm();
+  _EnrollStep1 createState() => _EnrollStep1();
 }
 
-class _CourseEnrollForm extends State<EnrollStep1> {
+class _EnrollStep1 extends State<EnrollStep1> {
+
   final _formKey = GlobalKey<FormState>();
   String? _selectedGender;
   String? _email;
@@ -19,7 +21,12 @@ class _CourseEnrollForm extends State<EnrollStep1> {
   bool _isFormSubmitted = false;
 
   final List<String> _previousNames = [];
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _fullNameController = TextEditingController();
+  final emailController = TextEditingController();
+  final genderController = TextEditingController();
+  final phoneNumberController = TextEditingController();
+  final _enrollmentViewModel = EnrollmentViewModel();
+
   final FocusNode _focusNode = FocusNode();
   bool _isExpanded = false;
 
@@ -31,7 +38,7 @@ class _CourseEnrollForm extends State<EnrollStep1> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    _fullNameController.dispose();
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
     super.dispose();
@@ -87,7 +94,7 @@ class _CourseEnrollForm extends State<EnrollStep1> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Please fill in form for enroll',
+                  'Please fill in form for enrollmentRequest',
                   style: TextStyle(
                     color: AppColors.defaultGrayColor,
                     fontSize: 16,
@@ -106,7 +113,7 @@ class _CourseEnrollForm extends State<EnrollStep1> {
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
-                  controller: _controller,
+                  controller: _fullNameController,
                   focusNode: _focusNode,
                   decoration: InputDecoration(
                     hintText: 'Chan SomNan',
@@ -149,7 +156,7 @@ class _CourseEnrollForm extends State<EnrollStep1> {
                     return null;
                   },
                 ),
-                if (_isExpanded && _controller.text.isNotEmpty)
+                if (_isExpanded && _fullNameController.text.isNotEmpty)
                   Container(
                     margin: const EdgeInsets.only(top: 4),
                     decoration: BoxDecoration(
@@ -158,14 +165,14 @@ class _CourseEnrollForm extends State<EnrollStep1> {
                     ),
                     child: Column(
                       children: _previousNames
-                          .where((name) => name.toLowerCase().startsWith(_controller.text.toLowerCase()))
+                          .where((name) => name.toLowerCase().startsWith(_fullNameController.text.toLowerCase()))
                           .map((name) => ListTile(
                         title: Text(name),
                         onTap: () {
                           setState(() {
-                            _controller.text = name;
-                            _controller.selection = TextSelection.fromPosition(
-                              TextPosition(offset: _controller.text.length),
+                            _fullNameController.text = name;
+                            _fullNameController.selection = TextSelection.fromPosition(
+                              TextPosition(offset: _fullNameController.text.length),
                             );
                           });
                           _focusNode.unfocus();
@@ -186,6 +193,7 @@ class _CourseEnrollForm extends State<EnrollStep1> {
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
+                  controller: emailController,
                   decoration: InputDecoration(
                     hintText: 'example@gmail.com',
                     hintStyle: const TextStyle(color: Colors.grey),
@@ -210,8 +218,8 @@ class _CourseEnrollForm extends State<EnrollStep1> {
                       borderSide: const BorderSide(color: Colors.red),
                     ),
                   ),
+                  keyboardType: TextInputType.emailAddress,
                   validator: (value) {
-                    _email = value;
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email';
                     }
@@ -252,6 +260,7 @@ class _CourseEnrollForm extends State<EnrollStep1> {
                         ),
                       ),
                     ),
+                    controller: genderController,
                     inputDecorationTheme: InputDecorationTheme(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -321,6 +330,7 @@ class _CourseEnrollForm extends State<EnrollStep1> {
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
+                  controller: phoneNumberController,
                   decoration: InputDecoration(
                     hintText: '+855123456789',
                     hintStyle: const TextStyle(color: Colors.grey),
@@ -346,12 +356,10 @@ class _CourseEnrollForm extends State<EnrollStep1> {
                     ),
                   ),
                   keyboardType: TextInputType.phone,
-                  // Removed the inputFormatters to allow any input
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your phone number';
                     }
-                    // Check if the input is a valid phone number
                     final phoneRegExp = RegExp(r'^\+?[0-9]{9,14}$');
                     if (!phoneRegExp.hasMatch(value)) {
                       return 'Please enter a valid phone number';
@@ -365,6 +373,7 @@ class _CourseEnrollForm extends State<EnrollStep1> {
                   child: SizedBox(
                     child: ElevatedButton(
                       onPressed: () {
+                        _saveStep1();
                         setState(() {
                           _isFormSubmitted = true;  // Add this line
                         });
@@ -406,4 +415,43 @@ class _CourseEnrollForm extends State<EnrollStep1> {
       ),
     );
   }
+  void _saveStep1() {
+    // Construct the EnrollmentModel
+    var enrollmentRequest = EnrollmentModel(
+      id: 0,
+      uuid: "uuid_placeholder",
+      email: emailController.text,
+      nameEn: _fullNameController.text,
+      nameKh: null,
+      gender: genderController.text,
+      dob: DateTime.now(),
+      pob: CurrentAddress(
+        id: 0,
+        shortName: "PobShortName",
+        fullName: "PobFullName",
+      ),
+      currentAddress: CurrentAddress(
+        id: 0,
+        shortName: "CurrentAddressShortName",
+        fullName: "CurrentAddressFullName",
+      ),
+      phoneNumber: phoneNumberController.text,
+      photoUri: "photo_uri_placeholder",
+      universityInfo: CurrentAddress(
+        id: 0,
+        shortName: "UniversityShortName",
+        fullName: "UniversityFullName",
+      ),
+    );
+
+    // Send the data to the ViewModel
+    _enrollmentViewModel.postEnrollment(enrollmentRequest.toJson());
+
+    // Log the data for debugging
+    print('Name: ${_fullNameController.text}');
+    print('Email: ${emailController.text}');
+    print('Gender: ${genderController.text}');
+    print('Phone Number: ${phoneNumberController.text}');
+  }
+
 }
