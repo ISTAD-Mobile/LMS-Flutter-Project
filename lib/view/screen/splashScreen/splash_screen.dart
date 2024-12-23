@@ -3,19 +3,17 @@ import 'package:lms_mobile/view/home.dart';
 
 class SplashScreenPage extends StatefulWidget {
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  _SplashScreenPageState createState() => _SplashScreenPageState();
 }
 
-class _SplashScreenState extends State<SplashScreenPage> {
+class _SplashScreenPageState extends State<SplashScreenPage> {
   @override
   void initState() {
     super.initState();
-
-    // Navigate to ProfileScreen after 3 seconds
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
     });
   }
@@ -28,7 +26,8 @@ class _SplashScreenState extends State<SplashScreenPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/images/New Logo iSTAD-06.png', width: 150,height: 150),
+            Image.asset('assets/images/New Logo iSTAD-06.png',
+                width: 150, height: 150),
           ],
         ),
       ),

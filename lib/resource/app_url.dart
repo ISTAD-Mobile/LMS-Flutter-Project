@@ -12,3 +12,9 @@ class AdmissionUrl {
   static String admisionbaseUrl = "https://dev-flutter.cstad.edu.kh/api/v1";
   static String postAdmisionByUrl = '$admisionbaseUrl/student-admissions';
 }
+
+class ApiUrl {
+  static String baseUrl = 'https://dev-flutter.cstad.edu.kh/api/v1';
+  static String login = '$baseUrl/auth/login';
+  static String refreshToken = '$baseUrl/auth/refresh-token';
+}

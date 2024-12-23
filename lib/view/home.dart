@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lms_mobile/model/course.dart';
 import 'package:lms_mobile/view/screen/academic/my_home_academic_screen.dart';
-import 'package:lms_mobile/view/screen/lms/auth/first_log_in_screen.dart';
+import 'package:lms_mobile/view/screen/lms/auth/log_in_screen.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/about_tapbar_navigation_widget.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/academic_type_and_scholarship.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/appbar_and_bottom_navigation_widgets.dart';
@@ -11,15 +10,14 @@ import 'package:lms_mobile/view/widgets/public_screen_widgets/home/course_sectio
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/istad_activity.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/it_news/it_news_section.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/project_archeivement_section.dart';
-import 'package:lms_mobile/view/widgets/public_screen_widgets/home/short_course_card.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/video_background.dart';
 import 'package:lms_mobile/viewModel/course_viewmodel.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../data/color/color_screen.dart';
 
-
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -44,19 +42,19 @@ class _HomeScreenState extends State<HomeScreen> {
           const IstadActivity(),
           const AcademicTypeAndScholarshipWidget(),
           CourseSection(),
-          ItNewsSection(),
+          const ItNewsSection(),
           ProjectArcheivementHome(),
           BachelorProgramHome(),
           Container(
             height: 430,
-            child: TestimonialPage(),
+            child: const TestimonialPage(),
           ),
         ],
       ),
     },
     {
       'title': 'Academic',
-      'page': MyAcademicScreen(),
+      'page': const MyAcademicScreen(),
     },
     {
       'title': 'About',
@@ -64,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
     },
     {
       'title': 'LMS',
-      'page': firstSignInScreen(),
+      'page': const LogInScreen(),
     },
   ];
 
@@ -118,7 +116,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-
-
-

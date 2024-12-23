@@ -6,12 +6,12 @@ import 'package:lms_mobile/view/widgets/public_screen_widgets/home/short_course_
 import 'package:lms_mobile/viewModel/course_viewmodel.dart';
 import 'package:provider/provider.dart';
 
-class CourseScreen extends StatefulWidget {
+class ShortCoursePage extends StatefulWidget {
   @override
-  State<CourseScreen> createState() => _HomeScreenState();
+  State<ShortCoursePage> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<CourseScreen> {
+class _HomeScreenState extends State<ShortCoursePage> {
   final courseViewModel = CourseViewmodel();
 
   @override

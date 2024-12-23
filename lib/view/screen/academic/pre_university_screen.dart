@@ -20,7 +20,7 @@ class _PreUniversityPageState extends State<PreUniversityPage> {
      HomeScreen(),
     const MyAcademicScreen(),
     const HomeIstadScreen(),
-    const firstSignInScreen(),
+    const FirstLogInScreen(),
   ];
 
   void onTabTapped(int index) {
@@ -32,7 +32,9 @@ class _PreUniversityPageState extends State<PreUniversityPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.defaultWhiteColor,
       appBar: AppBar(
+        backgroundColor: AppColors.defaultWhiteColor,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);

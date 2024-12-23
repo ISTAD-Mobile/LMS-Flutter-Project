@@ -18,8 +18,57 @@ class _CourseEnrollForm extends State<EnrollStep2> {
   bool _isFormSubmitted = false;
   String? _selectedCountry;
 
+  // Add age restrictions
+  final int _minAge = 16;
+  final int _maxAge = 100;
+
   // Birth Date
   DateTime? _selectedBirthDate;
+  void _showDatePicker() {
+    final now = DateTime.now();
+    final minDate = DateTime(now.year - _maxAge);
+    final maxDate = DateTime(now.year - _minAge);
+
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => Container(
+        height: 216,
+        padding: const EdgeInsets.only(top: 6.0),
+        margin: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        color: CupertinoColors.systemBackground.resolveFrom(context),
+        child: SafeArea(
+          top: false,
+          child: CupertinoDatePicker(
+            initialDateTime: _selectedBirthDate ?? maxDate,
+            mode: CupertinoDatePickerMode.date,
+            use24hFormat: true,
+            maximumDate: maxDate,
+            minimumDate: minDate,
+            onDateTimeChanged: (DateTime newDate) {
+              setState(() => _selectedBirthDate = newDate);
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  String? _validateBirthDate() {
+    if (_selectedBirthDate == null) {
+      return 'Please select your date of birth';
+    }
+
+    final age = DateTime.now().year - _selectedBirthDate!.year;
+    if (age < _minAge) {
+      return 'You must be at least $_minAge years old';
+    }
+    if (age > _maxAge) {
+      return 'Please enter a valid birth date';
+    }
+    return null;
+  }
 
   // Education dropdown
   final List<String> educationOptions = [
@@ -115,7 +164,6 @@ class _CourseEnrollForm extends State<EnrollStep2> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Birth Date Field
                 const Text(
                   'Date of Birth',
                   style: TextStyle(
@@ -126,19 +174,7 @@ class _CourseEnrollForm extends State<EnrollStep2> {
                 ),
                 const SizedBox(height: 8),
                 GestureDetector(
-                  onTap: () async {
-                    final DateTime? pickedDate = await showDatePicker(
-                      context: context,
-                      initialDate: _selectedBirthDate ?? DateTime.now(),
-                      firstDate: DateTime(1900),
-                      lastDate: DateTime.now(),
-                    );
-                    if (pickedDate != null) {
-                      setState(() {
-                        _selectedBirthDate = pickedDate;
-                      });
-                    }
-                  },
+                  onTap: _showDatePicker,
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                     decoration: BoxDecoration(
@@ -150,11 +186,11 @@ class _CourseEnrollForm extends State<EnrollStep2> {
                       children: [
                         Text(
                           _selectedBirthDate != null
-                              ? '${_selectedBirthDate!.year}-${_selectedBirthDate!.month}-${_selectedBirthDate!.day}'
+                              ? '${_selectedBirthDate!.year}-${_selectedBirthDate!.month.toString().padLeft(2, '0')}-${_selectedBirthDate!.day.toString().padLeft(2, '0')}'
                               : 'Select Date of Birth',
                           style: const TextStyle(fontSize: 16),
                         ),
-                        const Icon(Icons.calendar_today, color: Colors.grey),
+                        const Icon(CupertinoIcons.calendar, color: Colors.grey),
                       ],
                     ),
                   ),
@@ -202,7 +238,7 @@ class _CourseEnrollForm extends State<EnrollStep2> {
                 ),
                 const SizedBox(height: 8),
                 _buildDropdownMenu(
-                  hint: 'Select Education',
+                  hint: 'Select high school',
                   options: educationOptions,
                   selectedValue: _selectedEducation,
                   onSelected: (value) {
@@ -233,8 +269,7 @@ class _CourseEnrollForm extends State<EnrollStep2> {
                     });
                   },
                 ),
-                const SizedBox(height: 24),
-
+                const SizedBox(height: 26),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -247,10 +282,13 @@ class _CourseEnrollForm extends State<EnrollStep2> {
                         backgroundColor: Colors.grey[200],
                         padding: const EdgeInsets.symmetric(
                             vertical: 12, horizontal: 24),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
                       child: const Text(
                         'Previous',
-                        style: TextStyle(color: Colors.black),
+                        style: TextStyle(color: AppColors.defaultGrayColor,fontSize: 16),
                       ),
                     ),
                     // Next Button
@@ -275,10 +313,13 @@ class _CourseEnrollForm extends State<EnrollStep2> {
                         backgroundColor: AppColors.primaryColor,
                         padding: const EdgeInsets.symmetric(
                             vertical: 12, horizontal: 24),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
                       child: const Text(
                         'Next',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white,fontSize: 16),
                       ),
                     ),
                   ],

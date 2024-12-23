@@ -1,29 +1,19 @@
-// import 'package:flutter/material.dart';
-// import 'package:lms_mobile/view/screen/splashScreen/splash_screen.dart';
-//
-// void main() {
-//   runApp(MyApp());
-// }
-//
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       home: SplashScreenPage(),
-//     );
-//   }
-// }
-
-
-
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:lms_mobile/view/screen/splashScreen/splash_screen.dart';
+import 'package:lms_mobile/viewModel/login_view_model.dart';
+import 'package:provider/provider.dart';
 import 'package:lms_mobile/view/widgets/sytem_screen/no_internet.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => LoginViewModel()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {

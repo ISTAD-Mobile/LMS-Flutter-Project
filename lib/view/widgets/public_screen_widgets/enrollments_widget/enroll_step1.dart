@@ -352,14 +352,14 @@ class _CourseEnrollForm extends State<EnrollStep1> {
                       return 'Please enter your phone number';
                     }
                     // Check if the input is a valid phone number
-                    final phoneRegExp = RegExp(r'^\+?[0-9]{10,14}$');
+                    final phoneRegExp = RegExp(r'^\+?[0-9]{9,14}$');
                     if (!phoneRegExp.hasMatch(value)) {
                       return 'Please enter a valid phone number';
                     }
                     return null;
                   },
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 26),
                 Align(
                   alignment: Alignment.centerRight,
                   child: SizedBox(
