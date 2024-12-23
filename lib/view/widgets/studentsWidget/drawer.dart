@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-
+import 'package:lms_mobile/view/screen/lms/profile/course_screen.dart';
 import '../../../data/color/color_screen.dart';
 import '../../home.dart';
+import '../../screen/lms/profile/acheivement_screen.dart';
 import '../../screen/lms/profile/profile_view_screen.dart';
+import '../../screen/lms/profile/settings/static_profile_setting_screen.dart';
 
 void main() => runApp(const MyApp());
 
@@ -16,105 +18,118 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: appTitle,
-      home: MyHomePage(title: appTitle),
+      home: StudentScreen(title: appTitle),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class StudentScreen extends StatefulWidget {
+  const StudentScreen({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<StudentScreen> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>(); // Add a GlobalKey
-
+class _MyHomePageState extends State<StudentScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  static const List<Map<String, dynamic>> _widgetOptions = [
-    {
-      'title': 'profile',
-      'page': ProfileScreen(),  // Your CourseScreen widget
-    },
+  final List<Map<String, dynamic>> _pages = [
+    {'title': 'Course', 'widget': const CourseScreen()},
+    {'title': 'Profile', 'widget': const ProfileScreen()},
+    {'title': 'Achievement', 'widget': const AcheivementScreen()},
+    {'title': 'Setting', 'widget': const StaticProfileViewScreen()},
   ];
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+    Navigator.pop(context); // Close the drawer on item tap
+  }
+
+  Widget _buildDrawerListTile({
+    required IconData icon,
+    required String title,
+    required bool selected,
+    required VoidCallback onTap,
+    Color? iconColor,
+    Color? textColor,
+  }) {
+    // Check if it's the Sign Out item based on the title
+    final isSignOut = title == 'Sign Out';
+
+    return ListTile(
+      leading: Icon(
+          icon,
+          color: isSignOut
+              ? AppColors.secondaryColor  // Use secondaryColor for Sign Out
+              : (selected ? AppColors.primaryColor : AppColors.defaultGrayColor)
+      ),
+      title: Text(
+        title,
+        style: TextStyle(
+          color: isSignOut
+              ? AppColors.secondaryColor  // Use secondaryColor for Sign Out
+              : (selected ? AppColors.primaryColor : AppColors.defaultGrayColor),
+          fontSize: 18,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
+      selected: selected,
+      onTap: onTap,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
-      key: _scaffoldKey, // Assign the key to the Scaffold
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight + 1),
-        child: Column(
-          mainAxisSize: MainAxisSize.min, // Ensure height wraps content
+      backgroundColor: AppColors.defaultWhiteColor,
+      key: _scaffoldKey,
+      appBar: AppBar(
+        backgroundColor: AppColors.defaultWhiteColor,
+        automaticallyImplyLeading: false,
+        elevation: 2, // This adds a subtle shadow
+        scrolledUnderElevation: 2, // This maintains the shadow when scrolling
+        surfaceTintColor: Colors.transparent, // This prevents color change on scroll
+        shadowColor: Colors.black.withOpacity(0.1), // This controls shadow color
+        title: Row(
           children: [
-            AppBar(
-              backgroundColor: AppColors.defaultWhitColor,
-              automaticallyImplyLeading: false, // Removes default hamburger icon
-              title: Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      _scaffoldKey.currentState?.openDrawer(); // Use the key to open the drawer
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: CircleAvatar(
-                        backgroundImage: AssetImage('assets/images/tevy.png'),
-                      ),
-                    ),
-                  ),
-                  const Spacer(), // Adds space between the CircleAvatar and the logo
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => HomeScreen(), // Replace with your page
-                        ),
-                      );
-                    },
-                    child: Image.asset(
-                      'assets/images/logo_log_in.png',
-                      height: 35,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ],
+            GestureDetector(
+              onTap: () => _scaffoldKey.currentState?.openDrawer(),
+              child: const CircleAvatar(
+                backgroundImage: AssetImage('assets/images/tevy.png'),
               ),
             ),
-            const Divider(
-              height: 1,
-              thickness: 1,
-              color: Colors.black12, // Replace with your desired color
+            const Spacer(),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                );
+              },
+              child: Image.asset(
+                'assets/images/logo_log_in.png',
+                height: 35,
+                fit: BoxFit.contain,
+              ),
             ),
           ],
         ),
       ),
-      body: const Center(
-      ),
+
+      body: _pages[_selectedIndex]['widget'] as Widget,
       drawer: Drawer(
-        backgroundColor: AppColors.defaultWhitColor,
+        backgroundColor: AppColors.defaultWhiteColor,
         child: Column(
           children: [
             Container(
               height: 115,
               padding: const EdgeInsets.fromLTRB(20, 45, 0, 0),
-              decoration: const BoxDecoration(
-                color: AppColors.defaultWhitColor,
-              ),
+              color: AppColors.defaultWhiteColor,
               child: const Row(
                 children: [
                   CircleAvatar(
@@ -136,112 +151,52 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       Text(
                         'STUDENT',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14,
-                        ),
+                        style: TextStyle(color: Colors.grey, fontSize: 14),
                       ),
                     ],
                   ),
                 ],
               ),
             ),
-            const Divider(
-              height: 0.3,
-              thickness: 0.3,
-              color: AppColors.primaryColor,
-            ),
+            const Divider(color: AppColors.primaryColor, thickness: 0.3),
             Expanded(
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
-                  ListTile(
-                    leading: const Icon(Icons.account_circle_rounded),
-                    iconColor: AppColors.primaryColor,
-                    title: const Text(
-                      'Profile',
-                      style: TextStyle(
-                        color: AppColors.primaryColor,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    selected: _selectedIndex == 0,
-                    onTap: () {
-                      _onItemTapped(0);
-                      Navigator.pop(context);
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.collections_bookmark_rounded),
-                    iconColor: AppColors.defaultGrayColor,
-                    title: const Text(
-                      'Course',
-                      style: TextStyle(
-                        color: AppColors.defaultGrayColor,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
+                  _buildDrawerListTile(
+                    icon: Icons.account_circle_rounded,
+                    title: 'Profile',
                     selected: _selectedIndex == 1,
-                    onTap: () {
-                      _onItemTapped(1);
-                      Navigator.pop(context);
-                    },
+                    onTap: () => _onItemTapped(1),
                   ),
-                  ListTile(
-                    leading: const Icon(Icons.account_balance_wallet),
-                    iconColor: AppColors.defaultGrayColor,
-                    title: const Text(
-                      'Achievement',
-                      style: TextStyle(
-                        color: AppColors.defaultGrayColor,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
+                  _buildDrawerListTile(
+                    icon: Icons.collections_bookmark_rounded,
+                    title: 'Course',
+                    selected: _selectedIndex == 0,
+                    onTap: () => _onItemTapped(0),
+                  ),
+                  _buildDrawerListTile(
+                    icon: Icons.account_balance_wallet,
+                    title: 'Achievement',
                     selected: _selectedIndex == 2,
-                    onTap: () {
-                      _onItemTapped(2);
-                      Navigator.pop(context);
-                    },
+                    onTap: () => _onItemTapped(2),
                   ),
-                  ListTile(
-                    leading: const Icon(Icons.settings),
-                    iconColor: AppColors.defaultGrayColor,
-                    title: const Text(
-                      'Setting',
-                      style: TextStyle(
-                        color: AppColors.defaultGrayColor,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
+                  _buildDrawerListTile(
+                    icon: Icons.settings,
+                    title: 'Setting',
                     selected: _selectedIndex == 3,
-                    onTap: () {
-                      _onItemTapped(3);
-                      Navigator.pop(context);
-                    },
+                    onTap: () => _onItemTapped(3),
                   ),
-                  const Divider(
-                    height: 0.3,
-                    thickness: 0.3,
-                    color: AppColors.primaryColor,
-                  ),
-                  ListTile(
-                    iconColor: AppColors.secondaryColor,
-                    leading: const Icon(Icons.logout),
-                    title: const Text(
-                      'Sign Out',
-                      style: TextStyle(
-                        color: AppColors.secondaryColor,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 18,
-                      ),
-                    ),
+                  const Divider(color: AppColors.primaryColor, thickness: 0.3),
+                  _buildDrawerListTile(
+                    icon: Icons.logout,
+                    title: 'Sign Out',
+                    selected: false,
                     onTap: () {
-                      // Add your logout logic here
-                      Navigator.pop(context);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) =>  HomeScreen()),
+                      );
                     },
                   ),
                 ],

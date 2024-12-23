@@ -8,9 +8,10 @@ class DirectorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.defaultWhiteColor,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(top: 20),
+          padding: const EdgeInsets.all(15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -18,9 +19,10 @@ class DirectorScreen extends StatelessWidget {
               const Text(
                 'សាររបស់លោកនាយក',
                 style: TextStyle(
-                  fontSize: 19,
+                  fontSize: 20,
                   color: AppColors.primaryColor,
-                  fontWeight: FontWeight.normal,
+                  fontWeight: FontWeight.w700,
+                  fontFamily: 'NotoSansKhmer',
                 ),
               ),
               const SizedBox(height: 10),
@@ -34,63 +36,93 @@ class DirectorScreen extends StatelessWidget {
                   children: [
                     TextSpan(
                       text: 'កាលពីបីឆ្នាំមុន ក្នុងឆ្នាំ 2020 ខ្ញុំបាទ ',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'NotoSansKhmer',
+                      ),
 
                     ),
                     TextSpan(
                       text: ' ចិន ភីរម្យ',
                       style: TextStyle(
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w900,
+                        fontFamily: 'NotoSansKhmer',
                       ),
                     ),
                     TextSpan(
-                      text: 'ខនាយករបស់ ',
+                      text: ' នាយករបស់ '
+                      ,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'NotoSansKhmer',
+                      ),
                     ),
                     TextSpan(
                       text: ' មជ្ឈមណ្ឌល សាយអិនស៍ អេន ថេកណឡជី អ៊ែតវ៉ានស៍ ឌីវេឡុបម៉ិន (iSTAD) ',
                       style: TextStyle(
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w900,
+                        fontFamily: 'NotoSansKhmer',
                       ),
                     ),
                     TextSpan(
                       text: 'និងគណៈកម្មារការក្រុមប្រឹក្សាភិបាលផ្សេងទៀតបានពិភាក្សាអំពីការបើកកន្លែងមួយដែលនឹងនាំនិស្សិតកម្ពុជាទៅរកវិទ្យាសាស្ត្រ និងបច្ចេកវិទ្យាកម្រិតខ្ពស់មួយ ដែលរួមមានទាំងការស្រាវជ្រាវ និងការអភិវឌ្ឍជំនាញឌីជីថល ជាមួយនឹងការធានាឱកាសការងារដ៏ល្អដល់ និស្សិតដែលបានបញ្ចប់ការសិក្សា ទៅតាមស្ថាប័នរដ្ឋនិងឯកជន។ កិច្ចពិភាក្សាបានបញ្ចប់ដោយការសម្រេចចិត្តបើកស្ថាប័នអប់រំដែលនឹងផ្តល់ផលវិជ្ជមាន និងការរីកចម្រើនដល់ធនធានមនុស្សផ្នែកឌីជីថល និងលើកកម្ពស់វិស័យ ICT ក្នុងប្រទេសម្ពុជាដើម្បី ឱ្យសមស្របទៅតាមផែនការយុទ្ធសាស្រ្តរបស់រាជ្យរដ្ឋាភិបាលកម្ពុជា។ ក្នុងនាមខ្ញុំជានាយករបស់ iSTAD ខ្ញុំសូមស្វាគមន៍យ៉ាងកក់ក្តៅដល់អ្នកទាំងអស់គ្នាដែលបានក្លាយនិស្សិតជំនាន់ទី2 នៃកម្មវិធីបណ្តុះបណ្តាលអាហារូបករណ៍ព័ត៌មានវិទ្យារបស់ iSTAD។ ខ្ញុំសូមយកឱកាសនេះដើម្បីអបអរសាទរដល់អ្នក',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'NotoSansKhmer',
+                      ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
+            GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 20,
+                // mainAxisSpacing: 10,
+              ),
+              itemCount: 4,
+              itemBuilder: (context, index) {
+                List<String> imagePaths = [
+                  'assets/images/about_our_director1.png',
+                  'assets/images/about_our_director2.png',
+                  'assets/images/about_our_director3.png',
+                  'assets/images/about_our_director4.png',
+                ];
 
-              GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  childAspectRatio: 1.0,
-                ),
-                itemCount: 4,
-                itemBuilder: (context, index) {
+                List<Size> imageSizes = [
+                  Size(300, 200),
+                  Size(400, 200),
+                  Size(150, 200),
+                  Size(300, 300),
+                ];
 
-                  List<String> imagePaths = [
-                    'assets/images/about_our_director1.png',
-                    'assets/images/about_our_director2.png',
-                    'assets/images/about_our_director3.png',
-                    'assets/images/about_our_director4.png',
-                  ];
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(0),
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(0),
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: imageSizes[index].width,
+                    height: imageSizes[index].height,
                     child: Image.asset(
                       imagePaths[index],
                       fit: BoxFit.cover,
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
+            ),
 
-              const SizedBox(height: 20),
+            const SizedBox(height: 10),
               const Column(
                 children: [
-                  Text('ទាំងអស់គ្នាដែលបានទទួលអាហារូបករណ៍របស់ iSTAD ដោយជោគជ័យ។ នេះគឺជាសមិទ្ធិផលដ៏អស្ចារ្យមួយ ហើយវាគឺជាសក្ខីភាពបញ្ជាក់ពីការខិតខំប្រឹងប្រែង ការលះបង់ និងការប្តេជ្ញាចិត្តចំពោះការសិក្សារបស់អ្នកទាំងអស់គ្នា។ នៅក្នុងយុគសម័យឌីជីថលនាពេលបច្ចុប្បន្ននេះ បច្ចេកវិទ្យាបានដើរតួនាទីយ៉ាងសំខាន់ក្នុងជីវិតប្រចាំថ្ងៃរបស់យើង ហើយក្នុងនាមអ្នក ជាអ្នកដឹកនាំនាពេលអនាគត អ្នកមាន តួនាទីយ៉ាងសំខាន់ក្នុងការសម្រួចខ្លួនឱ្យស្របទៅតាមទិសដៅនៃចក្ខុវិស័យមួយនេះ មិនថាអ្នកកំពុងបន្តអាជីពផ្នែកព័ត៌មានវិទ្យា ឬគ្រាន់តែប្រើប្រាស់បច្ចេកវិទ្យាដើម្បីសម្រួលនៅក្នុងការរស់នៅផ្ទាល់ខ្លួនតែប៉ុណ្ណោះទេ ចំណេះដឹង ជំនាញ និងអាជីពរបស់អ្នកគឺមានតម្លៃមិនអាចកាត់ថ្លៃបានទេ។ នៅពេលអ្នកចាប់ផ្តើមសិក្សាផ្នែក IT ខ្ញុំសូមលើកទឹកចិត្តអ្នកឱ្យបើកចិត្តឱ្យបានទូលាយដើម្បីស្វែងរកបញ្ហាប្រឈមថ្មីៗ ដែលអ្នកត្រូវស្វែងយល់ពីបច្ចេកវិទ្យាដែលកំពុងរីកចម្រើន'),
+                  Text('ទាំងអស់គ្នាដែលបានទទួលអាហារូបករណ៍របស់ iSTAD ដោយជោគជ័យ។ នេះគឺជាសមិទ្ធិផលដ៏អស្ចារ្យមួយ ហើយវាគឺជាសក្ខីភាពបញ្ជាក់ពីការខិតខំប្រឹងប្រែង ការលះបង់ និងការប្តេជ្ញាចិត្តចំពោះការសិក្សារបស់អ្នកទាំងអស់គ្នា។ នៅក្នុងយុគសម័យឌីជីថលនាពេលបច្ចុប្បន្ននេះ បច្ចេកវិទ្យាបានដើរតួនាទីយ៉ាងសំខាន់ក្នុងជីវិតប្រចាំថ្ងៃរបស់យើង ហើយក្នុងនាមអ្នក ជាអ្នកដឹកនាំនាពេលអនាគត អ្នកមាន តួនាទីយ៉ាងសំខាន់ក្នុងការសម្រួចខ្លួនឱ្យស្របទៅតាមទិសដៅនៃចក្ខុវិស័យមួយនេះ មិនថាអ្នកកំពុងបន្តអាជីពផ្នែកព័ត៌មានវិទ្យា ឬគ្រាន់តែប្រើប្រាស់បច្ចេកវិទ្យាដើម្បីសម្រួលនៅក្នុងការរស់នៅផ្ទាល់ខ្លួនតែប៉ុណ្ណោះទេ ចំណេះដឹង ជំនាញ និងអាជីពរបស់អ្នកគឺមានតម្លៃមិនអាចកាត់ថ្លៃបានទេ។ នៅពេលអ្នកចាប់ផ្តើមសិក្សាផ្នែក IT ខ្ញុំសូមលើកទឹកចិត្តអ្នកឱ្យបើកចិត្តឱ្យបានទូលាយដើម្បីស្វែងរកបញ្ហាប្រឈមថ្មីៗ ដែលអ្នកត្រូវស្វែងយល់ពីបច្ចេកវិទ្យាដែលកំពុងរីកចម្រើន',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'NotoSansKhmer',
+                    ),
+                  ),
                 ],
               ),
 
@@ -103,7 +135,12 @@ class DirectorScreen extends StatelessWidget {
               const SizedBox(height: 20),
               const Column(
                 children: [
-                  Text("ហើយសហការជាមួយមិត្តភ័ក្តិ និងក្រុមការងាររបស់អ្នក ពិសេស លោកគ្រូ អ្នកគ្រូ ដែលអាចដឹកនាំអ្នក ទៅកាន់ក្តីស្រមៃរបស់អ្នក។ និស្សិត iSTAD ទាំងអស់មិនត្រឹមតែត្រូវបានបណ្តុះបណ្តាលជាមួយនឹងជំនាញបច្ចេកទេសទំនើបប៉ុណ្ណោះទេ ប៉ុន្តែថែមទាំង ត្រូវបានបង្រៀនឱ្យមានការប្តេជ្ញាចិត្តខ្ពស់ មានភាពជាអ្នកដឹកនាំ ការសហការជាក្រុម ឯករាជ្យភាព ទំនួលខុសត្រូវ ខ្ពស់ និងក្លាយជាអ្នក ចែករំលែកដល់អ្នកដទៃ ដ៏ឆ្នើមមួយរូប។ ជាមួយគ្នានេះ ខ្ញុំក៏ចង់សង្កត់ធ្ងន់អំពីសារៈសំខាន់នៃការកសាងមូលដ្ឋានគ្រឹះដ៏រឹងមាំនៅក្នុងផ្នែកព័ត៌មានវិទ្យា ។ គោលគំនិតស្នូលនៃវិទ្យាសាស្ត្រកុំព្យូទ័រ ការសរសេរកម្មវិធី និងការវិភាគទិន្នន័យនឹងផ្តល់ឱ្យអ្នកនូវគ្រឹះដ៏រឹងមាំមួយសម្រាប់កសាងចំណេះដឹង និងជំនាញរបស់អ្នក ហើយនឹងជួយអ្នកបានយ៉ាងល្អពេញមួយអាជីពរបស់អ្នក។ iSTAD នឹងក្លាយជាវិទ្យាស្ថានព័ត៌មានវិទ្យាកម្រិតខ្ពស់មួយដែលមាន បេសកកម្មក្នុងការផ្តល់នូវវិធីសាស្រ្តបង្រៀនថ្មីៗ ជាមួយនឹងការបណ្តុះបណ្តាល និងការតម្រង់ទិសប្រកបដោយគុណភាពខ្ពស់ ដើម្បីបង្កើតសមត្ថភាព និងអាជីពរបស់អ្នកជំនាញព័ត៌មានវិទ្យានៅកម្ពុជា, ការផ្តល់ការប្រឹក្សា និងការផ្សាភ្ជាប់សិក្ខាកាមរបស់ iSTAD ទៅកាន់អាជីពព័ត៌មានវិទ្យាឈានមុខ ហើយតែងតែជាកន្លែងដែលអ្នកអាចរីកចម្រើនដោយខ្លួនឯង និងប្រកបដោយវិជ្ជាជីវៈ ដើម្បីសម្រេចបាននូវក្តីសុបិនរបស់អ្នក និងក្លាយជាគម្រូដ៏ល្អបំផុតសម្រាប់ខ្លួនអ្នក។ ជាចុងក្រោយ ខ្ញុំសូមធានាដល់អ្នកទាំងអស់គ្នាថា iSTAD នឹងនៅជាមួយអ្នក គាំទ្រអ្នកគ្រប់ជំហាន។ យើងមានក្រុមសាស្ត្រាចារ្យ និងបុគ្គលិកដែលមានទេពកោសល្យ ជំនាញវិជ្ជាជីវៈពិតប្រាកដ ដែលមានការប្តេជ្ញាចិត្តចំពោះភាពជោគជ័យរបស់អ្នក ហើយយើងនិងផ្តល់ជូននូវធនធាន និងការគាំទ្រជាច្រើន ដើម្បីជួយអ្នកឱ្យសម្រេចបាននូវគោលដៅរបស់អ្នក។ ពិសេសមានដៃគូសហប្រតិបត្តិការ ជាច្រើន ទាំងស្ថាប័នរដ្ឋ និង ឯកជន ទទួលយកអ្នក នៅពេលដែលបញ្ចប់ការសិក្សា និង មានឱកាស អភិវឌ្ឍន៍ ចំណេះដឹង ឱ្យកាន់តែខ្ពស់ ក្នុងកម្រិតថ្នាក់អនុបណ្ឌិត បណ្ឌិត នៅ បរទេសទៀតផង។"),
+                  Text("ហើយសហការជាមួយមិត្តភ័ក្តិ និងក្រុមការងាររបស់អ្នក ពិសេស លោកគ្រូ អ្នកគ្រូ ដែលអាចដឹកនាំអ្នក ទៅកាន់ក្តីស្រមៃរបស់អ្នក។ និស្សិត iSTAD ទាំងអស់មិនត្រឹមតែត្រូវបានបណ្តុះបណ្តាលជាមួយនឹងជំនាញបច្ចេកទេសទំនើបប៉ុណ្ណោះទេ ប៉ុន្តែថែមទាំង ត្រូវបានបង្រៀនឱ្យមានការប្តេជ្ញាចិត្តខ្ពស់ មានភាពជាអ្នកដឹកនាំ ការសហការជាក្រុម ឯករាជ្យភាព ទំនួលខុសត្រូវ ខ្ពស់ និងក្លាយជាអ្នក ចែករំលែកដល់អ្នកដទៃ ដ៏ឆ្នើមមួយរូប។ ជាមួយគ្នានេះ ខ្ញុំក៏ចង់សង្កត់ធ្ងន់អំពីសារៈសំខាន់នៃការកសាងមូលដ្ឋានគ្រឹះដ៏រឹងមាំនៅក្នុងផ្នែកព័ត៌មានវិទ្យា ។ គោលគំនិតស្នូលនៃវិទ្យាសាស្ត្រកុំព្យូទ័រ ការសរសេរកម្មវិធី និងការវិភាគទិន្នន័យនឹងផ្តល់ឱ្យអ្នកនូវគ្រឹះដ៏រឹងមាំមួយសម្រាប់កសាងចំណេះដឹង និងជំនាញរបស់អ្នក ហើយនឹងជួយអ្នកបានយ៉ាងល្អពេញមួយអាជីពរបស់អ្នក។ iSTAD នឹងក្លាយជាវិទ្យាស្ថានព័ត៌មានវិទ្យាកម្រិតខ្ពស់មួយដែលមាន បេសកកម្មក្នុងការផ្តល់នូវវិធីសាស្រ្តបង្រៀនថ្មីៗ ជាមួយនឹងការបណ្តុះបណ្តាល និងការតម្រង់ទិសប្រកបដោយគុណភាពខ្ពស់ ដើម្បីបង្កើតសមត្ថភាព និងអាជីពរបស់អ្នកជំនាញព័ត៌មានវិទ្យានៅកម្ពុជា, ការផ្តល់ការប្រឹក្សា និងការផ្សាភ្ជាប់សិក្ខាកាមរបស់ iSTAD ទៅកាន់អាជីពព័ត៌មានវិទ្យាឈានមុខ ហើយតែងតែជាកន្លែងដែលអ្នកអាចរីកចម្រើនដោយខ្លួនឯង និងប្រកបដោយវិជ្ជាជីវៈ ដើម្បីសម្រេចបាននូវក្តីសុបិនរបស់អ្នក និងក្លាយជាគម្រូដ៏ល្អបំផុតសម្រាប់ខ្លួនអ្នក។ ជាចុងក្រោយ ខ្ញុំសូមធានាដល់អ្នកទាំងអស់គ្នាថា iSTAD នឹងនៅជាមួយអ្នក គាំទ្រអ្នកគ្រប់ជំហាន។ យើងមានក្រុមសាស្ត្រាចារ្យ និងបុគ្គលិកដែលមានទេពកោសល្យ ជំនាញវិជ្ជាជីវៈពិតប្រាកដ ដែលមានការប្តេជ្ញាចិត្តចំពោះភាពជោគជ័យរបស់អ្នក ហើយយើងនិងផ្តល់ជូននូវធនធាន និងការគាំទ្រជាច្រើន ដើម្បីជួយអ្នកឱ្យសម្រេចបាននូវគោលដៅរបស់អ្នក។ ពិសេសមានដៃគូសហប្រតិបត្តិការ ជាច្រើន ទាំងស្ថាប័នរដ្ឋ និង ឯកជន ទទួលយកអ្នក នៅពេលដែលបញ្ចប់ការសិក្សា និង មានឱកាស អភិវឌ្ឍន៍ ចំណេះដឹង ឱ្យកាន់តែខ្ពស់ ក្នុងកម្រិតថ្នាក់អនុបណ្ឌិត បណ្ឌិត នៅ បរទេសទៀតផង។",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'NotoSansKhmer',
+                    ),
+                  ),
                 ],
               ),
 
@@ -136,9 +173,9 @@ class DirectorScreen extends StatelessWidget {
                           Text(
                             'លោក ចិន ភីរម្យ',
                             style: TextStyle(
+                              fontWeight: FontWeight.w700,
                               fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.primaryColor99,
+                              fontFamily: 'NotoSansKhmer',
                             ),
                           ),
                           SizedBox(width: 8),
@@ -156,7 +193,10 @@ class DirectorScreen extends StatelessWidget {
                       const SizedBox(height: 10),
                       const Text(
                         '“ ការផ្តល់ឱកាសឱ្យខ្លួនឯងជារឿងទីមួយ ការស្វែករកឱកាសជារឿងទីពីរ ការចាប់ឱកាសជារឿងទីបី គោលដៅមិនដែលដូរទេ ជាទូទៅខ្លួនអ្នកជាអ្នកផ្លាស់ប្តូរគោលដៅ ”',
-                        style: TextStyle(fontSize: 14, color: AppColors.defaultGrayColor),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'NotoSansKhmer',
+                        ),
                       ),
 
                       const SizedBox(height: 10),
@@ -184,9 +224,11 @@ class DirectorScreen extends StatelessWidget {
                                 throw 'Could not launch $url';
                               }
                             },
-                            child: Text(
+                            child: const Text(
                               'ពាក្យស្លោករបស់លោកគ្រូនាយក។',
-                              style: TextStyle(fontSize: 14, color: AppColors.primaryColor99),
+                              style: TextStyle(fontSize: 14, color: AppColors.primaryColor99,fontWeight: FontWeight.w700,
+                                fontFamily: 'NotoSansKhmer',
+                              ),
                             ),
                           ),
                         ],

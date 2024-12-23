@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/view/screen/about/my_home_about_istad_screen.dart';
+import '../../../data/color/color_screen.dart';
 import '../../home.dart';
-import '../../widgets/appbar_and_bottom_navigation_widgets.dart';
+import '../../widgets/public_screen_widgets/appbar_and_bottom_navigation_widgets.dart';
 import '../lms/auth/first_log_in_screen.dart';
 import 'my_home_academic_screen.dart';
-
 
 class ITExpertPage extends StatefulWidget {
   const ITExpertPage({Key? key}) : super(key: key);
@@ -21,7 +21,7 @@ class _ITExpertPageState extends State<ITExpertPage> {
     const HomeScreen(),
     const MyAcademicScreen(),
     const HomeIstadScreen(),
-    const firstSignInScreen(),
+    const FirstLogInScreen(),
   ];
 
   void onTabTapped(int index) {
@@ -30,12 +30,24 @@ class _ITExpertPageState extends State<ITExpertPage> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return AppLayout(
-      title: "Associate",
-      currentIndex: currentIndex,
+    return Scaffold(
+      backgroundColor: AppColors.defaultWhiteColor,
+      appBar: AppBar(
+        backgroundColor: AppColors.defaultWhiteColor,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back),
+        ),
+        centerTitle: true,
+        title: const Text(
+          "IT Expert",
+          style: TextStyle(fontSize: 16, color: AppColors.primaryColor),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -51,16 +63,16 @@ class _ITExpertPageState extends State<ITExpertPage> {
                   height: 200,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 25),
               const Text(
                 "Closed",
                 style: TextStyle(
-                  color: Colors.red,
+                  color: AppColors.secondaryColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
                 ),
               ),
-              const SizedBox(height: 4),
+              // const SizedBox(height: 2),
               const Text(
                 "IT Expert Scholarship",
                 style: TextStyle(
@@ -84,7 +96,7 @@ class _ITExpertPageState extends State<ITExpertPage> {
                   Text(
                     "Times: ",
                     style: TextStyle(
-                      color: Colors.black,
+                      color: AppColors.secondaryColor,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
@@ -100,13 +112,14 @@ class _ITExpertPageState extends State<ITExpertPage> {
                   Text(
                     "Hours: ",
                     style: TextStyle(
-                      color: Colors.black,
+                      color: AppColors.secondaryColor,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(right: 36.0), // Add right padding to "8hr"
+                    padding: EdgeInsets.only(right: 36.0),
+                    // Add right padding to "8hr"
                     child: Text(
                       "8hr",
                       style: TextStyle(
@@ -160,7 +173,6 @@ class _ITExpertPageState extends State<ITExpertPage> {
           ),
         ),
       ),
-      onTabTapped: onTabTapped, // Pass the method to AppLayout
     );
   }
 
@@ -169,26 +181,26 @@ class _ITExpertPageState extends State<ITExpertPage> {
       children: courses
           .map(
             (course) => Padding(
-          padding: const EdgeInsets.only(left: 24.0), // Adjust left padding here
-          child: Row(
-            children: [
-              const Icon(
-                Icons.star,
-                color: Color(0xFFEAB305),
-                size: 18,
+              padding: const EdgeInsets.only(left: 10.0, bottom: 10.0),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.star,
+                    color: Color(0xFFEAB305),
+                    size: 18,
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    course,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Color(0xFF535763),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 8),
-              Text(
-                course,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Color(0xFF535763),
-                ),
-              ),
-            ],
-          ),
-        ),
-      )
+            ),
+          )
           .toList(),
     );
   }

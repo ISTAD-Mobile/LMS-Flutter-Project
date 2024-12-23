@@ -1,0 +1,334 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:lms_mobile/data/color/color_screen.dart';
+import 'enroll_step3.dart';
+
+class EnrollStep2 extends StatefulWidget {
+  const EnrollStep2({super.key});
+
+  @override
+  _CourseEnrollForm createState() => _CourseEnrollForm();
+}
+
+class _CourseEnrollForm extends State<EnrollStep2> {
+  final _formKey = GlobalKey<FormState>();
+
+  // Country dropdown
+  final List<String> countryOptions = ['Cambodia', 'English', 'Other'];
+  bool _isFormSubmitted = false;
+  String? _selectedCountry;
+
+  // Add age restrictions
+  final int _minAge = 16;
+  final int _maxAge = 100;
+
+  // Birth Date
+  DateTime? _selectedBirthDate;
+  void _showDatePicker() {
+    final now = DateTime.now();
+    final minDate = DateTime(now.year - _maxAge);
+    final maxDate = DateTime(now.year - _minAge);
+
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => Container(
+        height: 216,
+        padding: const EdgeInsets.only(top: 6.0),
+        margin: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        color: CupertinoColors.systemBackground.resolveFrom(context),
+        child: SafeArea(
+          top: false,
+          child: CupertinoDatePicker(
+            initialDateTime: _selectedBirthDate ?? maxDate,
+            mode: CupertinoDatePickerMode.date,
+            use24hFormat: true,
+            maximumDate: maxDate,
+            minimumDate: minDate,
+            onDateTimeChanged: (DateTime newDate) {
+              setState(() => _selectedBirthDate = newDate);
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  String? _validateBirthDate() {
+    if (_selectedBirthDate == null) {
+      return 'Please select your date of birth';
+    }
+
+    final age = DateTime.now().year - _selectedBirthDate!.year;
+    if (age < _minAge) {
+      return 'You must be at least $_minAge years old';
+    }
+    if (age > _maxAge) {
+      return 'Please enter a valid birth date';
+    }
+    return null;
+  }
+
+  // Education dropdown
+  final List<String> educationOptions = [
+    'High School',
+    'Bachelor',
+    'Master',
+    'PhD',
+    'Other'
+  ];
+  String? _selectedEducation;
+
+  // University dropdown
+  final List<String> universityOptions = [
+    'University of Cambodia',
+    'Royal University of Phnom Penh',
+    'Norton University',
+    'Other'
+  ];
+  String? _selectedUniversity;
+
+  Widget _buildDropdownMenu({
+    required String hint,
+    required List<String> options,
+    required String? selectedValue,
+    required void Function(String?) onSelected,
+  }) {
+    return SizedBox(
+      width: double.infinity,
+      child: DropdownMenu<String>(
+        width: 398,
+        hintText: hint,
+        errorText:
+        _isFormSubmitted && selectedValue == null ? 'Please $hint' : null,
+        textStyle: const TextStyle(
+          fontSize: 16,
+          color: Colors.black,
+        ),
+        menuStyle: MenuStyle(
+          backgroundColor: WidgetStateProperty.all(Colors.white),
+          shape: WidgetStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: Colors.grey,
+            ),
+          ),
+        ),
+        dropdownMenuEntries: options
+            .map(
+              (e) => DropdownMenuEntry(
+            value: e,
+            label: e,
+          ),
+        )
+            .toList(),
+        onSelected: (String? value) {
+          onSelected(value);
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.defaultWhiteColor,
+      appBar: AppBar(
+        backgroundColor: AppColors.defaultWhiteColor,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: const Text(
+          'Enrollment Screen',
+          style: TextStyle(color: AppColors.primaryColor, fontSize: 18),
+        ),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Date of Birth',
+                  style: TextStyle(
+                    color: AppColors.primaryColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                GestureDetector(
+                  onTap: _showDatePicker,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          _selectedBirthDate != null
+                              ? '${_selectedBirthDate!.year}-${_selectedBirthDate!.month.toString().padLeft(2, '0')}-${_selectedBirthDate!.day.toString().padLeft(2, '0')}'
+                              : 'Select Date of Birth',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        const Icon(CupertinoIcons.calendar, color: Colors.grey),
+                      ],
+                    ),
+                  ),
+                ),
+                if (_isFormSubmitted && _selectedBirthDate == null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      'Please select date of birth',
+                      style: TextStyle(color: Colors.red[700], fontSize: 12),
+                    ),
+                  ),
+                const SizedBox(height: 15),
+
+                // Country address Field
+                const Text(
+                  'Country address',
+                  style: TextStyle(
+                    color: AppColors.primaryColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                _buildDropdownMenu(
+                  hint: 'Select Country',
+                  options: countryOptions,
+                  selectedValue: _selectedCountry,
+                  onSelected: (value) {
+                    setState(() {
+                      _selectedCountry = value;
+                    });
+                  },
+                ),
+                const SizedBox(height: 15),
+
+                // Education Field
+                const Text(
+                  'Education',
+                  style: TextStyle(
+                    color: AppColors.primaryColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                _buildDropdownMenu(
+                  hint: 'Select high school',
+                  options: educationOptions,
+                  selectedValue: _selectedEducation,
+                  onSelected: (value) {
+                    setState(() {
+                      _selectedEducation = value;
+                    });
+                  },
+                ),
+                const SizedBox(height: 15),
+
+                // University Field
+                const Text(
+                  'University',
+                  style: TextStyle(
+                    color: AppColors.primaryColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                _buildDropdownMenu(
+                  hint: 'Select University',
+                  options: universityOptions,
+                  selectedValue: _selectedUniversity,
+                  onSelected: (value) {
+                    setState(() {
+                      _selectedUniversity = value;
+                    });
+                  },
+                ),
+                const SizedBox(height: 26),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Previous Button
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey[200],
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 12, horizontal: 24),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: const Text(
+                        'Previous',
+                        style: TextStyle(color: AppColors.defaultGrayColor,fontSize: 16),
+                      ),
+                    ),
+                    // Next Button
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          _isFormSubmitted = true;
+                        });
+                        if (_formKey.currentState!.validate() &&
+                            _selectedBirthDate != null &&
+                            _selectedCountry != null &&
+                            _selectedEducation != null &&
+                            _selectedUniversity != null) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => EnrollStep3()),
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryColor,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 12, horizontal: 24),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: const Text(
+                        'Next',
+                        style: TextStyle(color: Colors.white,fontSize: 16),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

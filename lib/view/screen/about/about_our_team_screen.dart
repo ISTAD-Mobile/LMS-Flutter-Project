@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../../data/color/color_screen.dart';
 
@@ -8,9 +9,10 @@ class OurTeamScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.defaultWhiteColor,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(top: 20),
+          padding: const EdgeInsets.all(15),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -329,9 +331,11 @@ class OurTeamScreen extends StatelessWidget {
               const SizedBox(height: 20,),
               Column(
                 children: [
-                  Image.asset('assets/images/about_our_team8.png',
-                    width: 250,
-                    height: 250,
+                  Lottie.asset(
+                    'assets/animation/Animation5.json',
+                    width: 400,
+                    height: 200,
+                    fit: BoxFit.contain,
                   ),
                 ],
               ),
@@ -355,9 +359,11 @@ class OurTeamScreen extends StatelessWidget {
               const SizedBox(height: 20,),
               Column(
                 children: [
-                  Image.asset('assets/images/about_our_team8.png',
-                    width: 250,
-                    height: 250,
+                  Lottie.asset(
+                    'assets/animation/Our_team3.json',
+                    width: 400,
+                    height: 300,
+                    fit: BoxFit.contain,
                   ),
                 ],
               ),
