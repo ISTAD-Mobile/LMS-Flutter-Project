@@ -41,7 +41,7 @@ class _LogInScreenState extends State<FirstLogInScreen> {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => HomeScreen()),
-                  (route) => false,
+              (route) => false,
             );
           },
         ),
@@ -67,7 +67,7 @@ class _LogInScreenState extends State<FirstLogInScreen> {
               ),
               const SizedBox(height: 20),
               _buildPasswordField(),
-              const SizedBox(height: 26),
+              const SizedBox(height: 16),
               // Align(
               //   alignment: Alignment.center,
               //   child: TextButton(
@@ -90,43 +90,43 @@ class _LogInScreenState extends State<FirstLogInScreen> {
                 onPressed: viewModel.isLoading
                     ? null
                     : () async {
-                  if (_formKey.currentState!.validate()) {
-                    final success = await viewModel.login(
-                      _identifierController.text,
-                      _passwordController.text,
-                    );
+                        if (_formKey.currentState!.validate()) {
+                          final success = await viewModel.login(
+                            _identifierController.text,
+                            _passwordController.text,
+                          );
 
-                    if (success) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'Login Successful',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          backgroundColor: AppColors.successColor,
-                        ),
-                      );
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                          const StudentScreen(title: 'Course'),
-                        ),
-                      );
-                    } else {
-                      // Login failed, show error message
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: const Text(
-                            'Incorrect username/email or password',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          backgroundColor: Colors.red, // Error color
-                        ),
-                      );
-                    }
-                  }
-                },
+                          if (success) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'Login Successful',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                backgroundColor: AppColors.successColor,
+                              ),
+                            );
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const StudentScreen(title: 'Course'),
+                              ),
+                            );
+                          } else {
+                            // Login failed, show error message
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: const Text(
+                                  'Incorrect username/email or password',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                backgroundColor: Colors.red, // Error color
+                              ),
+                            );
+                          }
+                        }
+                      },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryColor,
                   padding: const EdgeInsets.symmetric(vertical: 16),
@@ -136,21 +136,21 @@ class _LogInScreenState extends State<FirstLogInScreen> {
                 ),
                 child: viewModel.isLoading
                     ? const SizedBox(
-                  height: 20,
-                  width: 20,
-                  child: CircularProgressIndicator(
-                    color: AppColors.defaultWhiteColor,
-                    strokeWidth: 2,
-                  ),
-                )
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          color: AppColors.defaultWhiteColor,
+                          strokeWidth: 2,
+                        ),
+                      )
                     : const Text(
-                  'Sign In',
-                  style: TextStyle(
-                    color: AppColors.defaultWhiteColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                        'Sign In',
+                        style: TextStyle(
+                          color: AppColors.defaultWhiteColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
               )
             ],
           ),
@@ -159,11 +159,23 @@ class _LogInScreenState extends State<FirstLogInScreen> {
     );
   }
 
+  // String? _validateIdentifier(String? value) {
+  //   if (value == null || value.isEmpty) return 'Email or Username is required';
+  //
+  //   final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+  //   final usernameRegExp = RegExp(r'^[a-zA-Z0-9_]{3,}$');
+  //
+  //   if (!emailRegExp.hasMatch(value) && !usernameRegExp.hasMatch(value)) {
+  //     return 'Enter a valid email or username';
+  //   }
+  //   return null;
+  // }
   String? _validateIdentifier(String? value) {
     if (value == null || value.isEmpty) return 'Email or Username is required';
 
     final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    final usernameRegExp = RegExp(r'^[a-zA-Z0-9_]{3,}$');
+    // Updated username regex to allow numbers and common symbols like @, #, $, -, &.
+    final usernameRegExp = RegExp(r'^[a-zA-Z0-9_@#$&\-]{3,}$');
 
     if (!emailRegExp.hasMatch(value) && !usernameRegExp.hasMatch(value)) {
       return 'Enter a valid email or username';

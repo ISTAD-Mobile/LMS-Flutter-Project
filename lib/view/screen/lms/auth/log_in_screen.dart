@@ -160,11 +160,23 @@ class _LogInScreenState extends State<LogInScreen> {
     );
   }
 
+  // String? _validateIdentifier(String? value) {
+  //   if (value == null || value.isEmpty) return 'Email or Username is required';
+  //
+  //   final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+  //   final usernameRegExp = RegExp(r'^[a-zA-Z0-9_]{3,}$');
+  //
+  //   if (!emailRegExp.hasMatch(value) && !usernameRegExp.hasMatch(value)) {
+  //     return 'Enter a valid email or username';
+  //   }
+  //   return null;
+  // }
   String? _validateIdentifier(String? value) {
     if (value == null || value.isEmpty) return 'Email or Username is required';
 
     final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    final usernameRegExp = RegExp(r'^[a-zA-Z0-9_]{3,}$');
+    // Updated username regex to allow numbers and common symbols like @, #, $, -, &.
+    final usernameRegExp = RegExp(r'^[a-zA-Z0-9_@#$&\-]{3,}$');
 
     if (!emailRegExp.hasMatch(value) && !usernameRegExp.hasMatch(value)) {
       return 'Enter a valid email or username';
