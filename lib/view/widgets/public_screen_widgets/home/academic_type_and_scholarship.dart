@@ -6,6 +6,7 @@ import 'package:lms_mobile/view/screen/academic/bachelor_screen.dart';
 import 'package:lms_mobile/view/screen/academic/foundation_screen.dart';
 import 'package:lms_mobile/view/screen/academic/pre_university_screen.dart';
 
+import '../../../screen/homeScreen/course/course_screen.dart';
 import '../../../screen/lms/profile/course_screen.dart';
 
 class AcademicTypeAndScholarshipWidget extends StatelessWidget {
@@ -28,7 +29,7 @@ class AcademicTypeAndScholarshipWidget extends StatelessWidget {
       case 'Short Course':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => CourseScreen()),
+          MaterialPageRoute(builder: (context) => ShortCoursePage()),
         );
         break;
       case 'IT Expert':
