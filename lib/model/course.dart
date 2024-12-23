@@ -7,19 +7,19 @@ String courseToJson(CourseResponse data) => json.encode(data.toJson());
 class CourseResponse {
   final int code;
   final String message;
-  final List<Course> dataList;
+  final List<Course> courseList;
 
   CourseResponse({
     required this.code,
     required this.message,
-    required this.dataList,
+    required this.courseList,
   });
 
   factory CourseResponse.fromJson(Map<String, dynamic> json) {
     return CourseResponse(
       code: json['code'],
       message: json['message'],
-      dataList: (json['dataList'] as List)
+      courseList: (json['dataList'] as List)
           .map((item) => Course.fromJson(item))
           .toList(),
     );
@@ -29,7 +29,7 @@ class CourseResponse {
     return {
       'code': code,
       'message': message,
-      'dataList': dataList.map((course) => course.toJson()).toList(),
+      'dataList': courseList.map((course) => course.toJson()).toList(),
     };
   }
 }

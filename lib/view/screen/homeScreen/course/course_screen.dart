@@ -51,7 +51,7 @@ class _HomeScreenState extends State<CourseScreen> {
                   );
 
                 case Status.COMPLETED:
-                  final courses = viewModel.course.data?.dataList ?? [];
+                  final courses = viewModel.course.data?.courseList ?? [];
                   return courses.isEmpty
                       ? Center(child: Text('No courses available'))
                       : ListView.builder(

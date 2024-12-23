@@ -16,12 +16,30 @@ class ApiService {
   }
 
   returnResponse(http.StreamedResponse response ) async {
-    // print(await response.stream.bytesToString());
     switch (response.statusCode) {
       case 200:{
         return await response.stream.bytesToString();
       }
       case 500:
+    }
+  }
+
+
+  Future<dynamic> postAdmission(url , data) async {
+    var headers = {
+      'Content-Type': 'application/json'
+    };
+    var request = http.Request('POST',Uri.parse(url));
+    request.body = data;
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 201){
+      print(await response.stream.bytesToString());
+    }
+    else{
+      print(response.reasonPhrase);
     }
   }
 }
