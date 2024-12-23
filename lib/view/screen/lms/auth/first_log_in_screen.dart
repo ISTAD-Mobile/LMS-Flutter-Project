@@ -67,25 +67,25 @@ class _LogInScreenState extends State<FirstLogInScreen> {
               ),
               const SizedBox(height: 20),
               _buildPasswordField(),
-              const SizedBox(height: 16),
-              Align(
-                alignment: Alignment.center,
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const FirstLogInScreen()),
-                    );
-                  },
-                  child: const Text(
-                    'First time Sign In?',
-                    style: TextStyle(
-                      color: AppColors.primaryColor,
-                    ),
-                  ),
-                ),
-              ),
+              const SizedBox(height: 26),
+              // Align(
+              //   alignment: Alignment.center,
+              //   child: TextButton(
+              //     onPressed: () {
+              //       Navigator.pushReplacement(
+              //         context,
+              //         MaterialPageRoute(
+              //             builder: (context) => const FirstLogInScreen()),
+              //       );
+              //     },
+              //     child: const Text(
+              //       'First time Sign In?',
+              //       style: TextStyle(
+              //         color: AppColors.primaryColor,
+              //       ),
+              //     ),
+              //   ),
+              // ),
               ElevatedButton(
                 onPressed: viewModel.isLoading
                     ? null
