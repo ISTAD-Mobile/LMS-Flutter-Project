@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/view/home.dart';
 
-class SplashScreenPage extends StatefulWidget {
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   _SplashScreenPageState createState() => _SplashScreenPageState();
 }
 
-class _SplashScreenPageState extends State<SplashScreenPage> {
+class _SplashScreenPageState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
