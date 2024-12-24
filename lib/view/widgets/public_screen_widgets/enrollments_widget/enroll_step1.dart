@@ -158,11 +158,7 @@ class _EnrollStep1 extends State<EnrollStep1> {
                 ),
                 if (_isExpanded && _fullNameController.text.isNotEmpty)
                   Container(
-                    margin: const EdgeInsets.only(top: 4),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                    margin: const EdgeInsets.only(top: 0),
                     child: Column(
                       children: _previousNames
                           .where((name) => name.toLowerCase().startsWith(_fullNameController.text.toLowerCase()))
@@ -295,12 +291,12 @@ class _EnrollStep1 extends State<EnrollStep1> {
                             textStyle: WidgetStateProperty.resolveWith((states) {
                               if (states.contains(WidgetState.hovered)) {
                                 return const TextStyle(
-                                  fontSize: 17.0,
+                                  fontSize: 16.0,
                                   fontWeight: FontWeight.w400,
                                 );
                               }
                               return const TextStyle(
-                                fontSize: 17.0,
+                                fontSize: 16.0,
                                 fontWeight: FontWeight.w400,
                               );
                             }),
