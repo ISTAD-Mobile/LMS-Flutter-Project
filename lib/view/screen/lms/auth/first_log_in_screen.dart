@@ -40,7 +40,7 @@ class _LogInScreenState extends State<FirstLogInScreen> {
           onPressed: () {
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (context) => HomeScreen()),
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
               (route) => false,
             );
           },
@@ -67,7 +67,7 @@ class _LogInScreenState extends State<FirstLogInScreen> {
               ),
               const SizedBox(height: 20),
               _buildPasswordField(),
-              const SizedBox(height: 16),
+              const SizedBox(height: 26),
               // Align(
               //   alignment: Alignment.center,
               //   child: TextButton(
