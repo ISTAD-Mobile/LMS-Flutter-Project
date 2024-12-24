@@ -7,6 +7,8 @@ import '../../screen/about/my_home_about_istad_screen.dart';
 
 
 class AboutTapbarNavigation extends StatefulWidget {
+  const AboutTapbarNavigation({super.key});
+
   @override
   _TabNavigationScreenState createState() => _TabNavigationScreenState();
 }
@@ -29,6 +31,7 @@ class _TabNavigationScreenState extends State<AboutTapbarNavigation> with Single
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.defaultWhiteColor,
       body: Column(
         children: [
           Container(
@@ -61,7 +64,7 @@ class _TabNavigationScreenState extends State<AboutTapbarNavigation> with Single
             child: TabBarView(
               controller: _tabController,
               children: [
-                HomeIstadScreen(),
+                const HomeIstadScreen(),
                 DirectorScreen(),
                 OurTeamScreen(),
               ],

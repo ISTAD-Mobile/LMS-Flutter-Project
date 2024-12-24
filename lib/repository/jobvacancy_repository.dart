@@ -5,9 +5,9 @@ import 'package:lms_mobile/resource/app_url.dart';
 class JobvacancyRepository{
   final ApiService apiService = ApiService();
 
-  Future<JobVacancyResponse> getAllJobvacancy() async {
+  Future<JobvacancyResponse> getAllJobvacancy() async {
     try{
-      final jobvacancyData = await apiService.getApiService(JobVocancyUrl.getJobvacancyByUrl);
+      dynamic jobvacancyData = await apiService.getApiService(JobVocancyUrl.getJobvacancyByUrl);
       return jobvacancyFromJson(jobvacancyData);
     }catch (exception) {
       rethrow;
