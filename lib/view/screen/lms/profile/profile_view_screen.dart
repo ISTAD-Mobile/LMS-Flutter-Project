@@ -17,7 +17,8 @@ class ProfileScreen extends StatelessWidget {
             children: [
               // Profile Info Title
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0, vertical: 20.0),
                 child: const Text(
                   'Your Profile Info',
                   style: TextStyle(
@@ -30,7 +31,8 @@ class ProfileScreen extends StatelessWidget {
 
               // Main Profile Card
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
                 child: Card(
                   color: AppColors.defaultWhiteColor,
                   child: Padding(
@@ -43,17 +45,14 @@ class ProfileScreen extends StatelessWidget {
                           backgroundImage: AssetImage('assets/images/tevy.png'),
                         ),
                         const SizedBox(height: 16),
-
                         const Text(
                           'Mi sorakmony',
                           style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.w500,
-                              color: AppColors.primaryColor
-                          ),
+                              color: AppColors.primaryColor),
                         ),
                         const SizedBox(height: 8),
-
                         const Text(
                           'Bio: Flutter development',
                           style: TextStyle(
@@ -62,7 +61,6 @@ class ProfileScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 40),
-
                         _buildProfileDetail('Gender:', 'Female'),
                         const SizedBox(height: 16),
                         _buildProfileDetail('Birth:', '15/08/2001'),

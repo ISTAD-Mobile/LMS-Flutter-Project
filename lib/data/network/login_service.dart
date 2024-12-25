@@ -14,10 +14,8 @@ class LoginService {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: jsonEncode({
-        'emailOrUsername': emailOrUsername,
-        'password': password,
-      }),
+      body: jsonEncode(
+          {'emailOrUsername': emailOrUsername, 'password': password}),
     );
 
     // Check response status

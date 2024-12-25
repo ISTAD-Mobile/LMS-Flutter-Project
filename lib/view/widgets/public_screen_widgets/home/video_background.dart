@@ -17,8 +17,7 @@ class _VideoBackgroundState extends State<VideoBackground> {
   void initState() {
     super.initState();
     _controller = VideoPlayerController.network(
-      'https://static.vecteezy.com/system/browse_category/video/140/Cityscapes.mp4',
-    )
+        'https://rr2---sn-npoxu-2ois.googlevideo.com/videoplayback?expire=1735114451&ei=c2prZ821DLHCvcAPrNDMmQQ&ip=136.228.158.126&id=o-ABvaC5Y1rtq-wQuTIzb3vusuRr0TNWmxpoTUQzn3f3Ja&itag=18&source=youtube&requiressl=yes&xpc=EgVo2aDSNQ%3D%3D&met=1735092851%2C&mh=JD&mm=31%2C29&mn=sn-npoxu-2ois%2Csn-i3bssn7e&ms=au%2Crdu&mv=m&mvi=2&pl=24&rms=au%2Cau&initcwndbps=1145000&bui=AfMhrI8qQ_Z4VM7P8aWCovj3RIdhMEiKF3xAKHHVcrIELxRR-xw84G-IA2g3KSGRujkVp5_BCb5TF5Vj&vprv=1&svpuc=1&mime=video%2Fmp4&ns=dpvyJg-RAPtvx3leXuGZAGQQ&rqh=1&gir=yes&clen=1704251&ratebypass=yes&dur=30.696&lmt=1730387521026597&mt=1735092304&fvip=4&fexp=51326932%2C51331020%2C51335594%2C51371294&c=MWEB&sefc=1&txp=5309224&n=kbIBod0xsqRkYA&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cxpc%2Cbui%2Cvprv%2Csvpuc%2Cmime%2Cns%2Crqh%2Cgir%2Cclen%2Cratebypass%2Cdur%2Clmt&sig=AJfQdSswRAIgCsY-7PSTxDZaIcq8lwfApDpXZQVJy5ROLBlU-Cp6aBkCIA1ZWcgcoVRkc7kPVrXbu-stcN6QT-ZkMJs7-nIQKDfZ&lsparams=met%2Cmh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Crms%2Cinitcwndbps&lsig=AGluJ3MwRQIgTyggu4dcKeRj_0kb4BUs7liNxSC0FX1LBfyLe_CfA5ECIQDOrdeBcbz8DymNgVXLhZBuCRRVkd1se44bA_cjSW-qwA%3D%3D')
       ..initialize().then((_) {
         _controller.setLooping(true);
         _controller.play();
@@ -44,16 +43,16 @@ class _VideoBackgroundState extends State<VideoBackground> {
           width: MediaQuery.of(context).size.width,
           child: _controller.value.isInitialized
               ? FittedBox(
-            fit: BoxFit.cover,
-            child: SizedBox(
-              width: _controller.value.size.width,
-              height: _controller.value.size.height,
-              child: VideoPlayer(_controller),
-            ),
-          )
+                  fit: BoxFit.cover,
+                  child: SizedBox(
+                    width: _controller.value.size.width,
+                    height: _controller.value.size.height,
+                    child: VideoPlayer(_controller),
+                  ),
+                )
               : const Center(
-            child: CircularProgressIndicator(),
-          ),
+                  child: CircularProgressIndicator(),
+                ),
         ),
         // Overlay Content
         SafeArea(
