@@ -13,16 +13,6 @@ class ProjectArcheivementHome extends StatelessWidget {
     ProjectGenerationOne(
       projects: [
         Project(
-            title: 'Developers Cambodia',
-            description: 'Developers community for Cambodian that developers...',
-            image: Image.asset('assets/images/project_developer_cambodia.png',width: 60,height: 60,),
-            features: ['E-Learning', 'Global Forum', 'Sharing Community'],
-            iconBgColor: Colors.blue,
-            label: '1st | Advanced',
-            textIcon: '',
-            textWithIcon: 'Khmer Community'
-        ),
-        Project(
             title: 'Live Hacking Demo',
             description: 'A tool to do the pentesting purpose on a website such...',
             image: Image.asset('assets/images/project_live-demo.png',width: 60,height: 60,),
@@ -35,6 +25,20 @@ class ProjectArcheivementHome extends StatelessWidget {
             ],
             textIcon: '',
             textWithIcon: 'Cybersecurity'
+        ),
+        Project(
+            title: 'K-QuickSight',
+            description: 'Catalyze your data journey with our powerful tools for...',
+            image: Image.asset('assets/images/project_k-quicksignt.jpg',width: 60,height: 60,),
+            iconBgColor: Colors.green,
+            label: '1st | Advanced',
+            features: [
+              'Data Prep Made Easy',
+              'Intelligent Insights',
+              'User-Friendly Dashboards',
+            ],
+            textIcon: '',
+            textWithIcon: 'Data Analytics'
         ),
         Project(
           title: 'DealKh',

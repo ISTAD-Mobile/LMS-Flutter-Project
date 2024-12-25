@@ -1,12 +1,13 @@
 class AppUrl {
-  static String baseUrl = "https://api.istad.co/shortcourse/api/v1";
-  static String getBlogUrl = '$baseUrl/courses';
+  static String baseUrl = "https://api.istad.co";
+  static String getBlogUrl = '$baseUrl/shortcourse/api/v1/courses';
+  static String getJobvacancyByUrl = '$baseUrl/website/api/v1/contents';
 }
 
-class JobVocancyUrl {
-  static String jobvacancybaseUrl = "https://api.istad.co/website/api/v1";
-  static String getJobvacancyByUrl = '$jobvacancybaseUrl/contents';
-}
+// class JobVocancyUrl {
+//   static String jobvacancybaseUrl = "https://api.istad.co";
+//   static String getJobvacancyByUrl = '$jobvacancybaseUrl/website/api/v1/contents';
+// }
 
 class AdmissionUrl {
   static String admisionbaseUrl = "https://dev-flutter.cstad.edu.kh/api/v1";

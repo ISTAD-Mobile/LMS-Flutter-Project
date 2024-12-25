@@ -24,7 +24,7 @@ class NoInternetPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Lottie.asset(
-              'assets/animation/Animation5.json',
+              'assets/animation/No_internet.json',
               width: 300,
               height: 300,
               fit: BoxFit.fill,
@@ -34,7 +34,7 @@ class NoInternetPage extends StatelessWidget {
             ),
             SizedBox(height: 20),
             Text(
-              'No Internet Connection',
+              'Check your Internet',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,

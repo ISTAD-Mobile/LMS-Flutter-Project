@@ -27,7 +27,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    connectivityStream = Connectivity().onConnectivityChanged;  // Stream<List<ConnectivityResult>>
+    connectivityStream = Connectivity().onConnectivityChanged;
   }
 
   @override

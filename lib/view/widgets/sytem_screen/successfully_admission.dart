@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../data/color/color_screen.dart';
 
@@ -37,20 +38,12 @@ class SuccessfullyAdmission extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.successColor,
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    padding: const EdgeInsets.all(16),
-                    child: const Icon(
-                      Icons.check,
-                      color: Colors.white,
-                      size: 48,
-                    ),
+                  Lottie.asset(
+                    'assets/animation/Successfully.json',
+                    width: 150,
+                    height: 200,
+                    fit: BoxFit.contain,
                   ),
-                  const SizedBox(height: 30),
-                  // Khmer Text
                   const Text(
                     'អ្នកបានចុះឈ្មោះបានដោយជោគជ័យ',
                     style: TextStyle(
