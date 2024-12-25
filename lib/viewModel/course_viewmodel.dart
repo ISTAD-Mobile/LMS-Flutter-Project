@@ -18,4 +18,20 @@ class CourseViewmodel extends ChangeNotifier {
         .onError((error, stackTrace)=> ApiResponse.error(stackTrace.toString()))
     ;
   }
+
+  List<String> get getCourseList {
+    try {
+      if (course.data == null) return [];
+      return course.data!.courseList
+          .map((data) => data.title)
+          .toList();
+    } catch (e) {
+      debugPrint('Error converting course: $e');
+      return [];
+    }
+  }
+
+  List<Course> get getCourseData {
+    return course.data?.courseList ?? [];
+  }
 }
