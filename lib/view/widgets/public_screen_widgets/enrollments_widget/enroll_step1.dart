@@ -449,5 +449,4 @@ class _EnrollStep1 extends State<EnrollStep1> {
     print('Gender: ${genderController.text}');
     print('Phone Number: ${phoneNumberController.text}');
   }
-
 }
