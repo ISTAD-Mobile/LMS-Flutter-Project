@@ -153,7 +153,7 @@ class _HomePageState extends State<HomeIstadScreen> {
 
                   const SizedBox(height: 25),
                   _buildInfoSection('WHO ARE WE?',
-                      'INSTITUTE is a noteworthy science and technology institute in Cambodia. INSTITUTE has routed Cambodian students to advanced science and technology, research, and develop digital skills and our graduates have been guaranteed excellent job opportunities with the Top IT company.'
+                      'INSTITUTE is a noteworthy science and technology institute in Cambodia. INSTITUTE has routed Cambodian students_model to advanced science and technology, research, and develop digital skills and our graduates have been guaranteed excellent job opportunities with the Top IT company.'
                   ),
                   _buildInfoSection('VISION & MISSION', ''),
                   _buildInfoContent(

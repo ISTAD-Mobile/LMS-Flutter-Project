@@ -351,7 +351,7 @@ class OurTeamScreen extends StatelessWidget {
                     style: TextStyle(color: AppColors.defaultGrayColor),
                   ),
                   SizedBox(height: 20,),
-                  Text('Our Integrated School Management System is designed to streamline academic processes, making it effortless for both students and teachers to navigate daily school activities. This comprehensive system includes features such as attendance tracking, grade management, assignment submission, and communication tools.',
+                  Text('Our Integrated School Management System is designed to streamline academic processes, making it effortless for both students_model and teachers to navigate daily school activities. This comprehensive system includes features such as attendance tracking, grade management, assignment submission, and communication tools.',
                       style: TextStyle(color: AppColors.defaultGrayColor)
                   ),
                 ],

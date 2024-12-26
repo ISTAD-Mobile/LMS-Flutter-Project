@@ -24,7 +24,7 @@ class _TestimonialPageState extends State<TestimonialPage> {
       "name": "Mrs. SIN MANNY",
       "role": "Student from ISTAD",
       "image": "assets/images/Testimonial Profile (5).png",
-      "quote": "As a student at CSTAD, I confidently say here is the best place for students who would like ....",
+      "quote": "As a student at CSTAD, I confidently say here is the best place for students_model who would like ....",
     },
     {
       "name": "Mr. PHIV LYHOU",

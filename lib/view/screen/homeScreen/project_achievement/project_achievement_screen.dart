@@ -134,7 +134,7 @@ class ProjectListScreen extends StatelessWidget {
         ),
         Project(
             title: 'Brachhna',
-            description: 'Brachhna is a website created to educate students...',
+            description: 'Brachhna is a website created to educate students_model...',
             image: Image.asset('assets/images/project_brachhna.png',width: 60,height: 60,),
             iconBgColor: Colors.green,
             label: '1st | Basic',
