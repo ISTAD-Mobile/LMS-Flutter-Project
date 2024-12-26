@@ -20,7 +20,7 @@ class _ItNewsSectionState extends State<ItNewsSection> {
   @override
   void initState() {
     super.initState();
-    jobvacancyViewModel.fetchAllJobvacancy();
+    jobvacancyViewModel.getAllJobvacancy();
   }
 
   @override
@@ -30,12 +30,11 @@ class _ItNewsSectionState extends State<ItNewsSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header Row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Short Course'.toUpperCase(),
+                'IT News'.toUpperCase(),
                 style: const TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.bold,
@@ -55,50 +54,39 @@ class _ItNewsSectionState extends State<ItNewsSection> {
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          ChangeNotifierProvider(
-            create: (context) => jobvacancyViewModel,
-            child: Consumer<JobvacancyViewModel>(builder: (context, viewModel, _) {
-              final status = viewModel.jobvacancy.status;
-              if (status == null) {
-                return Center(child: Text('Status is null'));
-              }
-              switch (status) {
-                case Status.LOADING:
-                  return SizedBox(
-                    height: 170,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 10,
-                      itemBuilder: (context, index) => Jobvacancyskeleton(),
-                      separatorBuilder: (context, index) => SizedBox(width: 8),
-                    ),
-                  );
-                case Status.COMPLETED:
-                  final jobvacancys = viewModel.jobvacancy.data?.dataList ?? [];
-                  return jobvacancys.isEmpty
-                      ? Center(child: Text('No courses available'))
-                      : SizedBox(
-                    height: 170,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: jobvacancys.length,
-                      itemBuilder: (context, index) {
-                        final jobvacancy = jobvacancys[index];
-                        return ItNewsCard(jobVacancy: jobvacancy);
-                      },
-                    ),
-                  );
-
-                case Status.ERROR:
-                  return Center(
-                    child: Text(
-                      'An error occurred: ${viewModel.jobvacancy.message ?? 'Unknown error'}',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  );
-              }
-            }),
+          SizedBox(height: 350,
+            child: ChangeNotifierProvider(
+              create: (context) => jobvacancyViewModel,
+              child: Consumer<JobvacancyViewModel>(
+                builder: (context ,viewModel,_){
+                  switch(viewModel.jobvacancy.status!){
+                    case Status.LOADING:
+                      return ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 10,
+                          itemBuilder: (context,index ) => Jobvacancyskeleton()
+                      );
+                    case Status.COMPLETED:
+                      final jobvacancys = viewModel.jobvacancy.data?.jobvacancyList ?? [];
+                      return jobvacancys.isEmpty
+                          ? Center(child: Text('No jobvacancy available'))
+                          : SizedBox(
+                        height: 170,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: jobvacancys.length,
+                          itemBuilder: (context, index) {
+                            final jobvacancy = jobvacancys[index];
+                            return ItNewsCard(jobvacancy);
+                          },
+                        ),
+                      );
+                    case Status.ERROR:
+                      return Center(child: Text("Error: ${viewModel.jobvacancy.message}"));
+                  }
+                },
+              ),
+            ),
           ),
         ],
       ),
