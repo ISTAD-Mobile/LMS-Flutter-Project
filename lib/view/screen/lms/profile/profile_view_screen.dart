@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../data/color/color_screen.dart';
+import 'package:lms_mobile/viewModel/student_profile_viewmodel.dart';
+
+import '../../../../data/response/status.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = Provider.of<StudentProfileViewModel>(context);
+
     return Scaffold(
       backgroundColor: AppColors.defaultWhiteColor, // Keep scaffold white
       body: SafeArea(
         child: Container(
-          // Add Container for body background
           color: AppColors.backgroundColor, // Grey background for body
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,49 +33,74 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
 
-              // Main Profile Card
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
-                child: Card(
-                  color: AppColors.defaultWhiteColor,
-                  child: Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const CircleAvatar(
-                          radius: 70,
-                          backgroundImage: AssetImage('assets/images/tevy.png'),
-                        ),
-                        const SizedBox(height: 16),
+              // Main Body Content
+              Expanded(
+                child: Builder(
+                  builder: (context) {
+                    final response = viewModel.response;
 
-                        const Text(
-                          'Mi sorakmony',
-                          style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.primaryColor
+                    // Handle API response
+                    if (response.status == Status.LOADING) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (response.status == Status.ERROR) {
+                      return Center(
+                        child: Text(
+                          "Error: ${response.message}",
+                          style: const TextStyle(color: Colors.red, fontSize: 16),
+                        ),
+                      );
+                    } else if (response.status == Status.COMPLETED) {
+                      final studentProfile = response.data!;
+                      final student = studentProfile.content.first; // Assuming the first student is displayed
+
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
+                        child: Card(
+                          color: AppColors.defaultWhiteColor,
+                          child: Padding(
+                            padding: const EdgeInsets.all(24.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                CircleAvatar(
+                                  radius: 70,
+                                  backgroundImage: NetworkImage(student.profileImage),
+                                ),
+                                const SizedBox(height: 16),
+
+                                Text(
+                                  student.nameEn,
+                                  style: const TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+
+                                Text(
+                                  "Bio: ${student.biography}",
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                const SizedBox(height: 40),
+
+                                _buildProfileDetail('Gender:', student.gender),
+                                const SizedBox(height: 16),
+                                _buildProfileDetail('Birth:', _formatDate(student.dob)),
+                                const SizedBox(height: 16),
+                                _buildProfileDetail('Personal Number:', student.phoneNumber),
+                              ],
+                            ),
                           ),
                         ),
-                        const SizedBox(height: 8),
-
-                        const Text(
-                          'Bio: Flutter development',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 18,
-                          ),
-                        ),
-                        const SizedBox(height: 40),
-
-                        _buildProfileDetail('Gender:', 'Female'),
-                        const SizedBox(height: 16),
-                        _buildProfileDetail('Birth:', '15/08/2001'),
-                        const SizedBox(height: 16),
-                        _buildProfileDetail('Personal Number:', '0965990394'),
-                      ],
-                    ),
-                  ),
+                      );
+                    } else {
+                      return const Center(child: Text("No data available."));
+                    }
+                  },
                 ),
               ),
             ],
@@ -80,6 +110,12 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
+  // Helper method to format date
+  String _formatDate(DateTime date) {
+    return "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}";
+  }
+
+  // Reusable widget for profile details
   Widget _buildProfileDetail(String label, String value) {
     return Row(
       children: [
