@@ -1,78 +1,84 @@
-// To parse this JSON data, do
-//
-//     final jobvacancyResponse = jobvacancyResponseFromJson(jsonString);
-
 import 'dart:convert';
 
-JobvacancyResponse jobvacancyResponseFromJson(String str) => JobvacancyResponse.fromJson(json.decode(str));
+JobvacancyResponse jobvacancyResponseFromJson(String str) =>
+    JobvacancyResponse.fromJson(json.decode(str));
 
-String jobvacancyResponseToJson(JobvacancyResponse data) => json.encode(data.toJson());
+String jobvacancyResponseToJson(JobvacancyResponse data) =>
+    json.encode(data.toJson());
 
 class JobvacancyResponse {
-  int? code;
-  String? message;
-  List<DataList>? dataList;
-  Map<String, int>? paging;
-  DateTime? requestedTime;
+  final int code;
+  final String message;
+  final List<DataList> dataList;
+  final Map<String, int>? paging;
+  final DateTime? requestedTime;
 
   JobvacancyResponse({
-    this.code,
-    this.message,
-    this.dataList,
+    required this.code,
+    required this.message,
+    required this.dataList,
     this.paging,
     this.requestedTime,
   });
 
-  factory JobvacancyResponse.fromJson(Map<String, dynamic> json) => JobvacancyResponse(
-    code: json["code"],
-    message: json["message"],
-    dataList: json["dataList"] == null ? [] : List<DataList>.from(json["dataList"]!.map((x) => DataList.fromJson(x))),
-    paging: Map.from(json["paging"]!).map((k, v) => MapEntry<String, int>(k, v)),
-    requestedTime: json["requestedTime"] == null ? null : DateTime.parse(json["requestedTime"]),
-  );
+  factory JobvacancyResponse.fromJson(Map<String, dynamic> json) =>
+      JobvacancyResponse(
+        code: json["code"] ?? 0,
+        message: json["message"] ?? "No message provided",
+        dataList: json["dataList"] == null
+            ? []
+            : List<DataList>.from(
+            json["dataList"].map((x) => DataList.fromJson(x))),
+        paging: json["paging"] == null
+            ? null
+            : Map<String, int>.from(json["paging"]),
+        requestedTime: json["requestedTime"] == null
+            ? null
+            : DateTime.tryParse(json["requestedTime"]),
+      );
 
   Map<String, dynamic> toJson() => {
     "code": code,
     "message": message,
-    "dataList": dataList == null ? [] : List<dynamic>.from(dataList!.map((x) => x.toJson())),
-    "paging": Map.from(paging!).map((k, v) => MapEntry<String, dynamic>(k, v)),
+    "dataList": List<dynamic>.from(dataList.map((x) => x.toJson())),
+    "paging": paging,
     "requestedTime": requestedTime?.toIso8601String(),
   };
 }
 
 class DataList {
-  int? id;
-  String? uuid;
-  String? title;
-  dynamic description;
-  String? slug;
-  String? editorContent;
-  String? thumbnail;
-  dynamic images;
-  ContentType? contentType;
-  List<int>? tagIds;
-  int? view;
-  DateTime? publishedAt;
-  PublishedBy? publishedBy;
-  dynamic updatedAt;
-  dynamic updatedBy;
-  dynamic isDeleted;
-  dynamic isDraft;
+  final int id;
+  final String uuid;
+  final String title;
+  final String? description;
+  final String slug;
+  final String editorContent;
+  final String thumbnail;
+  final String? images;
+  final ContentType contentType;
+  final List<int> tagIds;
+  final int view;
+  final DateTime publishedAt;
+  final String publishedBy;
+  final DateTime? updatedAt;
+  final String? updatedBy;
+  final bool? isDeleted;
+  final bool? isDraft;
 
   DataList({
-    this.id,
-    this.uuid,
-    this.title,
+    required this.id,
+    required this.uuid,
+    required this.title,
     this.description,
-    this.slug,
-    this.editorContent,
-    this.thumbnail,
+    required this.slug,
+    required this.editorContent,
+    required this.thumbnail,
     this.images,
-    this.contentType,
-    this.tagIds,
-    this.view,
-    this.publishedAt,
-    this.publishedBy,
+    required this.contentType,
+    required this.tagIds,
+    required this.view,
+    required this.publishedAt,
+    required this.publishedBy,
     this.updatedAt,
     this.updatedBy,
     this.isDeleted,
@@ -80,23 +86,29 @@ class DataList {
   });
 
   factory DataList.fromJson(Map<String, dynamic> json) => DataList(
-    id: json["id"],
-    uuid: json["uuid"],
-    title: json["title"],
+    id: json["id"] ?? 0,
+    uuid: json["uuid"] ?? "",
+    title: json["title"] ?? "Untitled",
     description: json["description"],
-    slug: json["slug"],
-    editorContent: json["editorContent"],
-    thumbnail: json["thumbnail"],
+    slug: json["slug"] ?? "",
+    editorContent: json["editorContent"] ?? "",
+    thumbnail: json["thumbnail"] ?? "",
     images: json["images"],
-    contentType: json["contentType"] == null ? null : ContentType.fromJson(json["contentType"]),
-    tagIds: json["tagIds"] == null ? [] : List<int>.from(json["tagIds"]!.map((x) => x)),
-    view: json["view"],
-    publishedAt: json["publishedAt"] == null ? null : DateTime.parse(json["publishedAt"]),
-    publishedBy: publishedByValues.map[json["publishedBy"]]!,
-    updatedAt: json["updatedAt"],
+    contentType: ContentType.fromJson(json["contentType"]),
+    tagIds: json["tagIds"] == null
+        ? []
+        : List<int>.from(json["tagIds"].map((x) => x)),
+    view: json["view"] ?? 0,
+    publishedAt: DateTime.parse(json["publishedAt"]),
+    publishedBy: json["publishedBy"] ?? "Unknown",
+    updatedAt: json["updatedAt"] == null
+        ? null
+        : DateTime.tryParse(json["updatedAt"]),
     updatedBy: json["updatedBy"],
-    isDeleted: json["isDeleted"],
-    isDraft: json["isDraft"],
+    isDeleted: json["isDeleted"] == null
+        ? null
+        : json["isDeleted"] as bool,
+    isDraft: json["isDraft"] == null ? null : json["isDraft"] as bool,
   );
 
   Map<String, dynamic> toJson() => {
@@ -108,12 +120,12 @@ class DataList {
     "editorContent": editorContent,
     "thumbnail": thumbnail,
     "images": images,
-    "contentType": contentType?.toJson(),
-    "tagIds": tagIds == null ? [] : List<dynamic>.from(tagIds!.map((x) => x)),
+    "contentType": contentType.toJson(),
+    "tagIds": List<dynamic>.from(tagIds.map((x) => x)),
     "view": view,
-    "publishedAt": publishedAt?.toIso8601String(),
-    "publishedBy": publishedByValues.reverse[publishedBy],
-    "updatedAt": updatedAt,
+    "publishedAt": publishedAt.toIso8601String(),
+    "publishedBy": publishedBy,
+    "updatedAt": updatedAt?.toIso8601String(),
     "updatedBy": updatedBy,
     "isDeleted": isDeleted,
     "isDraft": isDraft,
@@ -121,51 +133,21 @@ class DataList {
 }
 
 class ContentType {
-  int? id;
-  Type? type;
+  final int id;
+  final String type;
 
   ContentType({
-    this.id,
-    this.type,
+    required this.id,
+    required this.type,
   });
 
   factory ContentType.fromJson(Map<String, dynamic> json) => ContentType(
-    id: json["id"],
-    type: typeValues.map[json["type"]]!,
+    id: json["id"] ?? 0,
+    type: json["type"] ?? "Unknown Type",
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
-    "type": typeValues.reverse[type],
+    "type": type,
   };
-}
-
-enum Type {
-  BLOG,
-  JOB_ANNOUNCEMENT
-}
-
-final typeValues = EnumValues({
-  "Blog": Type.BLOG,
-  "Job Announcement": Type.JOB_ANNOUNCEMENT
-});
-
-enum PublishedBy {
-  BOSS
-}
-
-final publishedByValues = EnumValues({
-  "boss": PublishedBy.BOSS
-});
-
-class EnumValues<T> {
-  Map<String, T> map;
-  late Map<T, String> reverseMap;
-
-  EnumValues(this.map);
-
-  Map<T, String> get reverse {
-    reverseMap = map.map((k, v) => MapEntry(v, k));
-    return reverseMap;
-  }
 }

@@ -9,7 +9,6 @@ class JobvacancyRepository{
     try{
       final jobvacancyData = await apiService.getApiService(JobVocancyUrl.getJobvacancyByUrl);
       print("Job Vacancy Data: $jobvacancyData");
-
       return jobvacancyResponseFromJson(jobvacancyData);
     }catch (exception) {
       rethrow;
