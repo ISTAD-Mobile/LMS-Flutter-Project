@@ -7,7 +7,7 @@ class ItNewsCard extends StatelessWidget {
 
   ItNewsCard(this.jobvacancy);
 
-  final DataList jobvacancy;
+  final JobvacancyDataList jobvacancy;
 
   @override
   Widget build(BuildContext context) {

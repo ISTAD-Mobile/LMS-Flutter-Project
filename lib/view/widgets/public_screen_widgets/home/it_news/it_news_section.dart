@@ -66,7 +66,7 @@ class _ItNewsSectionState extends State<ItNewsSection> {
                   switch (status) {
                     case Status.LOADING:
                       return SizedBox(
-                        height: 135,
+                        height: 352,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: 10,
@@ -75,7 +75,7 @@ class _ItNewsSectionState extends State<ItNewsSection> {
                       );
 
                     case Status.COMPLETED:
-                      final jobvacancys = viewModel.jobvacancy.data?.dataList ?? [];
+                      final jobvacancys = viewModel.jobvacancy.data?.jobvacancydataList ?? [];
                       if (jobvacancys.isEmpty) {
                         return const Center(
                           child: Text('No jobvacancy available'),

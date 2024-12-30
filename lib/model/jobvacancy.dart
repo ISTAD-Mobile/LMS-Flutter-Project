@@ -9,14 +9,14 @@ String jobvacancyResponseToJson(JobvacancyResponse data) =>
 class JobvacancyResponse {
   final int code;
   final String message;
-  final List<DataList> dataList;
+  final List<JobvacancyDataList> jobvacancydataList;
   final Map<String, int>? paging;
   final DateTime? requestedTime;
 
   JobvacancyResponse({
     required this.code,
     required this.message,
-    required this.dataList,
+    required this.jobvacancydataList,
     this.paging,
     this.requestedTime,
   });
@@ -25,10 +25,10 @@ class JobvacancyResponse {
       JobvacancyResponse(
         code: json["code"] ?? 0,
         message: json["message"] ?? "No message provided",
-        dataList: json["dataList"] == null
+        jobvacancydataList: json["jobvacancydataList"] == null
             ? []
-            : List<DataList>.from(
-            json["dataList"].map((x) => DataList.fromJson(x))),
+            : List<JobvacancyDataList>.from(
+            json["jobvacancydataList"].map((x) => JobvacancyDataList.fromJson(x))),
         paging: json["paging"] == null
             ? null
             : Map<String, int>.from(json["paging"]),
@@ -40,13 +40,13 @@ class JobvacancyResponse {
   Map<String, dynamic> toJson() => {
     "code": code,
     "message": message,
-    "dataList": List<dynamic>.from(dataList.map((x) => x.toJson())),
+    "dataList": List<dynamic>.from(jobvacancydataList.map((x) => x.toJson())),
     "paging": paging,
     "requestedTime": requestedTime?.toIso8601String(),
   };
 }
 
-class DataList {
+class JobvacancyDataList {
   final int id;
   final String uuid;
   final String title;
@@ -65,7 +65,7 @@ class DataList {
   final bool? isDeleted;
   final bool? isDraft;
 
-  DataList({
+  JobvacancyDataList({
     required this.id,
     required this.uuid,
     required this.title,
@@ -85,7 +85,7 @@ class DataList {
     this.isDraft,
   });
 
-  factory DataList.fromJson(Map<String, dynamic> json) => DataList(
+  factory JobvacancyDataList.fromJson(Map<String, dynamic> json) => JobvacancyDataList(
     id: json["id"] ?? 0,
     uuid: json["uuid"] ?? "",
     title: json["title"] ?? "Untitled",

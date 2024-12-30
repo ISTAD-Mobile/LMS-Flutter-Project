@@ -14,15 +14,6 @@ class PreUniversityPage extends StatefulWidget {
 
 class _PreUniversityPageState extends State<PreUniversityPage> {
   int currentIndex = 0;
-
-  // List of screens for each tab
-  final List<Widget> screens = [
-     HomeScreen(),
-    const MyAcademicScreen(),
-    const HomeIstadScreen(),
-    const FirstLogInScreen(),
-  ];
-
   void onTabTapped(int index) {
     setState(() {
       currentIndex = index;

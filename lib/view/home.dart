@@ -1,6 +1,9 @@
+//
+//
 // import 'package:flutter/material.dart';
 // import 'package:lms_mobile/view/screen/academic/my_home_academic_screen.dart';
 // import 'package:lms_mobile/view/screen/lms/auth/log_in_screen.dart';
+// import 'package:lms_mobile/view/screen/lms/auth/login.dart';
 // import 'package:lms_mobile/view/widgets/public_screen_widgets/about_tapbar_navigation_widget.dart';
 // import 'package:lms_mobile/view/widgets/public_screen_widgets/home/academic_type_and_scholarship.dart';
 // import 'package:lms_mobile/view/widgets/public_screen_widgets/appbar_and_bottom_navigation_widgets.dart';
@@ -27,10 +30,11 @@
 //   final courseViewModel = CourseViewmodel();
 //   int _selectedIndex = 0;
 //
+//
 //   @override
 //   void initState() {
 //     super.initState();
-//     courseViewModel.fetchAllBlogs();
+//     courseViewModel.fetchAllBlogs(); // Fetch blogs
 //   }
 //
 //   final List<Map<String, dynamic>> _pages = [
@@ -62,7 +66,7 @@
 //     },
 //     {
 //       'title': 'LMS',
-//       'page': const LogInScreen(),
+//       'page': const LoginScreen(),
 //     },
 //   ];
 //
@@ -117,9 +121,14 @@
 //   }
 // }
 
+
+
+
+
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/view/screen/academic/my_home_academic_screen.dart';
 import 'package:lms_mobile/view/screen/lms/auth/log_in_screen.dart';
+import 'package:lms_mobile/view/screen/lms/profile/profile_view_screen.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/about_tapbar_navigation_widget.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/academic_type_and_scholarship.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/appbar_and_bottom_navigation_widgets.dart';
@@ -130,10 +139,13 @@ import 'package:lms_mobile/view/widgets/public_screen_widgets/home/istad_activit
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/it_news/it_news_section.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/project_archeivement_section.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/video_background.dart';
+import 'package:lms_mobile/view/widgets/studentsWidget/drawer.dart';
 import 'package:lms_mobile/viewModel/course_viewmodel.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../data/color/color_screen.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -146,44 +158,75 @@ class _HomeScreenState extends State<HomeScreen> {
   final courseViewModel = CourseViewmodel();
   int _selectedIndex = 0;
 
+
   @override
   void initState() {
     super.initState();
-    courseViewModel.fetchAllBlogs(); // Fetch blogs
+    courseViewModel.fetchAllBlogs();
   }
 
-  final List<Map<String, dynamic>> _pages = [
-    {
-      'title': 'Home',
-      'page': ListView(
-        children: [
-          const VideoBackground(),
-          const IstadActivity(),
-          const AcademicTypeAndScholarshipWidget(),
-          CourseSection(),
-          const ItNewsSection(),
-          ProjectArcheivementHome(),
-          BachelorProgramHome(),
-          Container(
-            height: 430,
-            child: const TestimonialPage(),
-          ),
-        ],
-      ),
-    },
-    {
-      'title': 'Academic',
-      'page': const MyAcademicScreen(),
-    },
-    {
-      'title': 'About',
-      'page': AboutTapbarNavigation(),
-    },
-    {
-      'title': 'LMS',
-      'page': const LogInScreen(),
-    },
-  ];
+  Future<Widget> _getLmsPage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('accessToken');
+    if (token != null && token.isNotEmpty) {
+      // Token exists, navigate to LMS content
+      return StudentScreen(accessToken: token, title: '',); // Use the retrieved token
+    } else {
+      // No token, navigate to LoginScreen
+      return const LoginScreen();
+    }
+  }
+
+  final List<Map<String, dynamic>> _pages = [];
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Initialize _pages with dynamic LMS page
+    _pages.addAll([
+      {
+        'title': 'Home',
+        'page': ListView(
+          children: [
+            const VideoBackground(),
+            const IstadActivity(),
+            const AcademicTypeAndScholarshipWidget(),
+            CourseSection(),
+            const ItNewsSection(),
+            ProjectArcheivementHome(),
+            BachelorProgramHome(),
+            Container(
+              height: 430,
+              child: const TestimonialPage(),
+            ),
+          ],
+        ),
+      },
+      {
+        'title': 'Academic',
+        'page': const MyAcademicScreen(),
+      },
+      {
+        'title': 'About',
+        'page': AboutTapbarNavigation(),
+      },
+      {
+        'title': 'LMS',
+        'page': FutureBuilder<Widget>(
+          future: _getLmsPage(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasData) {
+              return snapshot.data!;
+            }
+            return const Center(child: Text("Error loading LMS"));
+          },
+        ),
+      },
+    ]);
+  }
 
   void _onItemTapped(int index) {
     setState(() {
