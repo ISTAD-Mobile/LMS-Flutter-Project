@@ -19,7 +19,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => CurrentAddressViewModel()),
         ChangeNotifierProvider(create: (_) => UniversityViewModel()),
         ChangeNotifierProvider(create: (_) => CourseViewmodel()),
-        ChangeNotifierProvider(create: (_) => StudentProfileViewModel()),
+
       ],
       child: MyApp(),
     ),
