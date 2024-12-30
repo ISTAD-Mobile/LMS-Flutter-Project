@@ -4,7 +4,7 @@ import 'package:lms_mobile/model/student_profile.dart';
 import 'package:lms_mobile/repository/student_profile_repository.dart';
 
 class StudentProfileViewModel extends ChangeNotifier {
-  final _studentProfileRepo = StudentProfileRepository();
+  final _studentProfileRepo = StudentProfileRepository(accessToken: '');
 
   ApiResponse<StudentProfile> response = ApiResponse.loading();
 

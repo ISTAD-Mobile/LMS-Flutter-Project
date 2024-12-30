@@ -1,19 +1,32 @@
-import 'package:lms_mobile/data/network/api_service.dart';
-import 'package:lms_mobile/model/student_profile.dart';
-import '../resource/app_url.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:lms_mobile/model/student_profile_model.dart';
 
 class StudentProfileRepository {
-  final ApiService apiService = ApiService();
+  final String accessToken;
 
-  Future<StudentProfile> getStudentProfile() async {
+  StudentProfileRepository({required this.accessToken});
+
+  // Fetch user data from the API
+  Future<StudentProfileModel> fetchUserData() async {
+    Uri url = Uri.parse("https://dev-flutter.cstad.edu.kh/api/v1/students/achievement");
+
     try {
-      // Get the data from the API
-      dynamic response = await apiService.getApiService(StudentProfileUrl.getStudentProfileUrl);
+      var response = await http.get(
+        url,
+        headers: {
+          "Authorization": "Bearer $accessToken",
+        },
+      );
 
-      // Parse the response and return the StudentProfile object
-      return studentProfileFromJson(response);  // Pass the response directly
-    } catch (exception) {
-      rethrow; // Rethrow the exception for further handling
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        return StudentProfileModel.fromJson(jsonResponse); // Convert JSON to User object
+      } else {
+        throw Exception("Failed to fetch user data");
+      }
+    } catch (e) {
+      throw Exception("Error fetching user data: $e");
     }
   }
 }

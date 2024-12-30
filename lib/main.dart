@@ -14,7 +14,7 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => LoginViewModel()),
+        // ChangeNotifierProvider(create: (_) => LoginViewModel(_userRepository)),
         ChangeNotifierProvider(create: (_) => PlaceOfBirthViewModel()),
         ChangeNotifierProvider(create: (_) => CurrentAddressViewModel()),
         ChangeNotifierProvider(create: (_) => UniversityViewModel()),
@@ -37,7 +37,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    connectivityStream = Connectivity().onConnectivityChanged;  // Stream<List<ConnectivityResult>>
+    connectivityStream = Connectivity().onConnectivityChanged;
   }
 
   @override
@@ -64,7 +64,6 @@ class _MyAppState extends State<MyApp> {
         }
 
         if (snapshot.hasData) {
-          // Access the first connectivity result in the list
           ConnectivityResult connectivityResult = snapshot.data![0];
 
           if (connectivityResult == ConnectivityResult.none) {
