@@ -62,7 +62,6 @@ class _MyAppState extends State<MyApp> {
         }
 
         if (snapshot.hasData) {
-          // Access the first connectivity result in the list
           ConnectivityResult connectivityResult = snapshot.data![0];
 
           if (connectivityResult == ConnectivityResult.none) {
