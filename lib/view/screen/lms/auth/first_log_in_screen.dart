@@ -110,7 +110,7 @@ class _LogInScreenState extends State<FirstLogInScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    const StudentScreen(title: 'Course'),
+                                    const StudentScreen(title: 'Course', userName: '', profileUrl: '',),
                               ),
                             );
                           } else {

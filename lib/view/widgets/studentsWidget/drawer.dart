@@ -18,15 +18,22 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: appTitle,
-      home: StudentScreen(title: appTitle),
+      // home: StudentScreen(title: appTitle),
     );
   }
 }
 
 class StudentScreen extends StatefulWidget {
-  const StudentScreen({super.key, required this.title});
+  const StudentScreen({
+      super.key,
+      required this.title,
+      required this.userName,
+      required this.profileUrl
+  });
 
   final String title;
+  final String userName;
+  final String profileUrl;
 
   @override
   State<StudentScreen> createState() => _MyHomePageState();
@@ -99,8 +106,8 @@ class _MyHomePageState extends State<StudentScreen> {
           children: [
             GestureDetector(
               onTap: () => _scaffoldKey.currentState?.openDrawer(),
-              child: const CircleAvatar(
-                backgroundImage: AssetImage('assets/images/tevy.png'),
+              child: CircleAvatar(
+                backgroundImage: AssetImage(widget.profileUrl),
               ),
             ),
             const Spacer(),
@@ -130,11 +137,11 @@ class _MyHomePageState extends State<StudentScreen> {
               height: 115,
               padding: const EdgeInsets.fromLTRB(20, 45, 0, 0),
               color: AppColors.defaultWhiteColor,
-              child: const Row(
+              child: Row(
                 children: [
                   CircleAvatar(
                     radius: 22,
-                    backgroundImage: AssetImage('assets/images/tevy.png'),
+                    backgroundImage: AssetImage(widget.profileUrl),
                   ),
                   SizedBox(width: 16),
                   Column(
@@ -142,14 +149,14 @@ class _MyHomePageState extends State<StudentScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Mi sorakmony',
-                        style: TextStyle(
+                        widget.userName,
+                        style: const TextStyle(
                           color: AppColors.primaryColor,
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      Text(
+                      const Text(
                         'STUDENT',
                         style: TextStyle(color: Colors.grey, fontSize: 14),
                       ),
@@ -208,3 +215,5 @@ class _MyHomePageState extends State<StudentScreen> {
     );
   }
 }
+
+

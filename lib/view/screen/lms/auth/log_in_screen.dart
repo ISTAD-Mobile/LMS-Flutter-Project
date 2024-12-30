@@ -41,7 +41,7 @@ class _LogInScreenState extends State<LogInScreen> {
           onPressed: () {
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (context) => HomeScreen()),
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
               (route) => false,
             );
           },
@@ -111,7 +111,7 @@ class _LogInScreenState extends State<LogInScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    const StudentScreen(title: 'Course'),
+                                    const StudentScreen(title: 'Course', userName: 'Nhoem Tevy', profileUrl: 'https://dev-flutter.cstad.edu.kh/api/v1/medias/view/0cb1b75b-1e46-496f-bf00-0c66bc6b8db0.jpeg',),
                               ),
                             );
                           } else {
