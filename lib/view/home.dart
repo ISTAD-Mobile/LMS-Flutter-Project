@@ -11,8 +11,10 @@ import 'package:lms_mobile/view/widgets/public_screen_widgets/home/istad_activit
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/it_news/it_news_section.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/project_archeivement_section.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/video_background.dart';
+import 'package:lms_mobile/view/widgets/studentsWidget/drawer.dart';
 import 'package:lms_mobile/viewModel/course_viewmodel.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../../data/color/color_screen.dart';
 
@@ -26,11 +28,30 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final courseViewModel = CourseViewmodel();
   int _selectedIndex = 0;
+  final FlutterSecureStorage _storage = FlutterSecureStorage();
 
   @override
   void initState() {
     super.initState();
     courseViewModel.fetchAllBlogs(); // Fetch blogs
+  }
+
+  Future<void> _checkLoginStatus() async {
+    final accessToken = await _storage.read(key: 'accessToken');
+    if (accessToken == null || accessToken.isEmpty) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LogInScreen()),
+      );
+    } else {
+      // Token exists, check if it's valid
+      // You can add your token validation logic here (e.g., call an API to check token validity)
+      // For now, we'll assume the token is valid if it exists
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const StudentScreen(title: 'Course')),
+      );
+    }
   }
 
   // Method to open Telegram link
@@ -84,6 +105,10 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _selectedIndex = index;
     });
+
+    if (_selectedIndex == 3) { // LMS tab
+      _checkLoginStatus();
+    }
   }
 
   @override
@@ -111,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: AppColors.defaultWhiteColor,
                     fit: BoxFit.cover,
                   ),
-                ), // Updated to use the new method
+                ),
               ),
             ),
         ],
