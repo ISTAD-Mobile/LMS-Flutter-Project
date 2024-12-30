@@ -3,9 +3,10 @@ import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/model/jobvacancy.dart';
 
 class ItNewsCard extends StatelessWidget {
-  final JobVacancy jobVacancy;
 
-  const ItNewsCard({required this.jobVacancy});
+  ItNewsCard(this.jobvacancy);
+
+  final Jobvacancy jobvacancy;
 
   @override
   Widget build(BuildContext context) {
@@ -38,30 +39,9 @@ class ItNewsCard extends StatelessWidget {
                 top: Radius.circular(8),
                 bottom: Radius.zero,
               ),
-              child: jobVacancy.thumbnail != null
-                  ? Image.network(
-                jobVacancy.thumbnail!,
-                fit: BoxFit.cover,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) {
-                    return child;
-                  } else {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.expectedTotalBytes! > 0
-                            ? loadingProgress.cumulativeBytesLoaded /
-                            (loadingProgress.expectedTotalBytes ?? 1)
-                            : null
-                            : null,
-                      ),
-                    );
-                  }
-                },
-                errorBuilder: (context, error, stackTrace) =>
-                    Icon(Icons.broken_image),
-              )
-                  : Icon(Icons.image_not_supported), // Show a fallback icon if no thumbnail
+              child: Image.network(
+                '${jobvacancy.thumbnail}'
+              ),
             ),
           ),
           Padding(
@@ -74,27 +54,27 @@ class ItNewsCard extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // Text(
-                      //   jobVacancy.publishedAt,
-                      //   style: const TextStyle(
-                      //     fontSize: 12,
-                      //     color: AppColors.primaryColor,
-                      //   ),
-                      // ),
                       Text(
-                        jobVacancy.contentType.type,
+                        jobvacancy.updatedBy.toString(),
                         style: const TextStyle(
                           fontSize: 12,
                           color: AppColors.primaryColor,
                         ),
                       ),
-                    ],
+                      Text(
+                        jobvacancy.contentType.type.toString(),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                    ]
                   ),
                 ),
                 const SizedBox(height: 16),
                 // Title Section
                 Text(
-                  jobVacancy.title,
+                  jobvacancy.title.toString(),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(

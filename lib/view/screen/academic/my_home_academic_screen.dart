@@ -2,7 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/view/screen/academic/pre_university_screen.dart';
-import '../lms/profile/course_screen.dart';
+import '../homeScreen/course/course_screen.dart';
 import 'IT_expert_screen.dart';
 import 'associate_screen.dart';
 import 'bachelor_screen.dart';
@@ -114,11 +114,11 @@ class MyAcademicScreen extends StatelessWidget {
                         'https://cdn-icons-png.flaticon.com/128/10748/10748520.png',
                     page: AssociatePage(),
                   ),
-                  const _HoverCard(
+                  _HoverCard(
                     title: "Short Course",
                     imagePath:
                         'https://cdn-icons-png.flaticon.com/128/613/613307.png',
-                    page: CourseScreen(),
+                    page: ShortCoursePage(),
                   ),
                   const _HoverCard(
                     title: "IT Expert",

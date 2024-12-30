@@ -1,41 +1,42 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:lms_mobile/data/network/login_service.dart';
+import '../data/network/login_service.dart';
+import '../data/network/token_manager.dart';
 
 class LoginRepository {
   final LoginService _loginService = LoginService();
-  final FlutterSecureStorage _flutterSecureStorage =
-      const FlutterSecureStorage();
-
-  // to save token securely
-  Future<void> saveTokens(String accessToken, String refreshToken) async {
-    await _flutterSecureStorage.write(key: 'access_token', value: accessToken);
-    await _flutterSecureStorage.write(
-        key: 'refresh_token', value: refreshToken);
-  }
-
-  // to retrieve tokens
-  Future<String?> getAccessToken() async {
-    return await _flutterSecureStorage.read(key: 'access_token');
-  }
-
-  Future<String?> getRefreshToken() async {
-    return await _flutterSecureStorage.read(key: 'refresh_token');
-  }
 
   // to login and save tokens
   Future<void> login(String usernameOrEmail, String password) async {
-    final response = await _loginService.login(usernameOrEmail, password);
-    await saveTokens(response.accessToken, response.refreshToken);
+    try {
+      final response = await _loginService.login(usernameOrEmail, password);
+
+      // Save the tokens securely
+      final expirationTime = DateTime.now().millisecondsSinceEpoch +
+          3600 * 1000; // Set expiration time
+      await TokenManager.saveTokens(
+          response.accessToken, response.refreshToken, expirationTime);
+    } catch (e) {
+      print('Login failed: $e');
+      rethrow;
+    }
+  }
+
+  // to retrieve access token
+  Future<String?> getAccessToken() async {
+    return await TokenManager.getToken();
+  }
+
+  // to retrieve refresh token
+  Future<String?> getRefreshToken() async {
+    return await TokenManager.getRefreshToken();
   }
 
   // to refresh access token
   Future<void> refreshAccessToken() async {
-    final refreshToken = await getRefreshToken();
-    if (refreshToken == null) {
-      throw Exception('Refresh token not found');
+    try {
+      await TokenManager.refreshAccessToken();
+    } catch (e) {
+      print('Error refreshing access token: $e');
+      rethrow;
     }
-
-    final response = await _loginService.refreshToken(refreshToken);
-    await saveTokens(response.accessToken, refreshToken);
   }
 }

@@ -14,7 +14,7 @@ import 'package:lms_mobile/view/widgets/public_screen_widgets/home/video_backgro
 import 'package:lms_mobile/viewModel/course_viewmodel.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../data/color/color_screen.dart';
+import '../../../data/color/color_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -33,7 +33,20 @@ class _HomeScreenState extends State<HomeScreen> {
     courseViewModel.fetchAllBlogs(); // Fetch blogs
   }
 
-  final List<Map<String, dynamic>> _pages = [
+  // Method to open Telegram link
+  Future<void> _openTelegram() async {
+    const telegramUrl = "https://t.me/istadkh";
+    if (await canLaunch(telegramUrl)) {
+      await launch(telegramUrl);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not open Telegram')),
+      );
+    }
+  }
+
+  // Pages list
+  final List<Map<String, dynamic>> _tabs = [
     {
       'title': 'Home',
       'page': ListView(
@@ -66,6 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
     },
   ];
 
+  // Tab change handler
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -75,10 +89,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return AppLayout(
-      title: _pages[_selectedIndex]['title'] as String,
+      title: _tabs[_selectedIndex]['title'] as String,
       body: Stack(
         children: [
-          _pages[_selectedIndex]['page'] as Widget,
+          _tabs[_selectedIndex]['page'] as Widget,
           if (_selectedIndex == 0)
             Positioned(
               bottom: 16,
@@ -88,6 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(50),
                 ),
+                onPressed: _openTelegram,
                 child: ClipOval(
                   child: Image.network(
                     'https://cdn-icons-png.flaticon.com/256/2840/2840156.png',
@@ -96,17 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: AppColors.defaultWhiteColor,
                     fit: BoxFit.cover,
                   ),
-                ),
-                onPressed: () async {
-                  const telegramUrl = "https://t.me/istadkh";
-                  if (await canLaunch(telegramUrl)) {
-                    await launch(telegramUrl);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Could not open Telegram')),
-                    );
-                  }
-                },
+                ), // Updated to use the new method
               ),
             ),
         ],

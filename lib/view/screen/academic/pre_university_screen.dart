@@ -20,7 +20,7 @@ class _PreUniversityPageState extends State<PreUniversityPage> {
      HomeScreen(),
     const MyAcademicScreen(),
     const HomeIstadScreen(),
-    const FirstLogInScreen(),
+     FirstLogInScreen(),
   ];
 
   void onTabTapped(int index) {

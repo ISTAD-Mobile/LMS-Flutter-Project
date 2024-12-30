@@ -6,20 +6,21 @@ import 'package:lms_mobile/repository/jobvacancy_repository.dart';
 
 class JobvacancyViewModel extends ChangeNotifier {
   final JobvacancyRepository jobvacancyRepository = JobvacancyRepository();
-  ApiResponse<JobVacancyResponse> jobvacancy = ApiResponse.loading();
+  ApiResponse<JobvacancyResponse> jobvacancy = ApiResponse.loading();
 
-  setBlogList(ApiResponse<JobVacancyResponse> response){
+  setJobvacancyList(ApiResponse<JobvacancyResponse> response) {
     jobvacancy = response;
     notifyListeners();
   }
 
-  Future<dynamic> fetchAllJobvacancy() async {
+  Future<dynamic> getAllJobvacancy() async {
     await jobvacancyRepository.getAllJobvacancy()
-        .then((jobvacancy) => setBlogList(ApiResponse.completed(jobvacancy)))
+        .then((jobvacancy) => setJobvacancyList(ApiResponse.completed(jobvacancy)))
         .onError((error, stackTrace)=> ApiResponse.error(stackTrace.toString()))
     ;
   }
 }
+
 
 
 

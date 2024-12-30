@@ -4,6 +4,7 @@ import 'package:lms_mobile/view/home.dart';
 import 'package:lms_mobile/view/screen/lms/auth/first_log_in_screen.dart';
 import 'package:lms_mobile/view/widgets/studentsWidget/drawer.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../../../viewModel/login_view_model.dart';
 
 class LogInScreen extends StatefulWidget {
@@ -18,6 +19,7 @@ class _LogInScreenState extends State<LogInScreen> {
   final _formKey = GlobalKey<FormState>();
   final _identifierController = TextEditingController();
   final _passwordController = TextEditingController();
+  final FlutterSecureStorage _storage = FlutterSecureStorage();
 
   @override
   void dispose() {
@@ -98,6 +100,17 @@ class _LogInScreenState extends State<LogInScreen> {
                           );
 
                           if (success) {
+                            // Assuming your login response contains these tokens
+                            final String? accessToken = viewModel.accessToken;
+                            final String? refreshToken = viewModel.refreshToken;
+
+                            // Store tokens after successful login
+                            await _storage.write(
+                                key: 'accessToken', value: accessToken);
+                            await _storage.write(
+                                key: 'refreshToken', value: refreshToken);
+
+                            // Successful login, navigate to the next screen
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text(
@@ -117,9 +130,10 @@ class _LogInScreenState extends State<LogInScreen> {
                           } else {
                             // Login failed, show error message
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: const Text(
-                                  'Incorrect username/email or password',
+                              SnackBar(
+                                content: Text(
+                                  viewModel.errorMessage ??
+                                      'An error occurred. Please try again.',
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 backgroundColor: Colors.red, // Error color
@@ -160,22 +174,10 @@ class _LogInScreenState extends State<LogInScreen> {
     );
   }
 
-  // String? _validateIdentifier(String? value) {
-  //   if (value == null || value.isEmpty) return 'Email or Username is required';
-  //
-  //   final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-  //   final usernameRegExp = RegExp(r'^[a-zA-Z0-9_]{3,}$');
-  //
-  //   if (!emailRegExp.hasMatch(value) && !usernameRegExp.hasMatch(value)) {
-  //     return 'Enter a valid email or username';
-  //   }
-  //   return null;
-  // }
   String? _validateIdentifier(String? value) {
     if (value == null || value.isEmpty) return 'Email or Username is required';
 
     final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    // Updated username regex to allow numbers and common symbols like @, #, $, -, &.
     final usernameRegExp = RegExp(r'^[a-zA-Z0-9_@#$&\-]{3,}$');
 
     if (!emailRegExp.hasMatch(value) && !usernameRegExp.hasMatch(value)) {

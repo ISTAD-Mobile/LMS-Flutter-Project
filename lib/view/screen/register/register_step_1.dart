@@ -1,57 +1,170 @@
 import 'dart:io';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/view/screen/register/register_step_2.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:lms_mobile/viewModel/admission_viewmodel.dart';
 
 class RegisterStep1 extends StatefulWidget {
-  const RegisterStep1({Key? key}) : super(key: key);
-
+  const RegisterStep1({super.key});
   @override
   _StudentAdmissionFormState createState() => _StudentAdmissionFormState();
 }
 
 class _StudentAdmissionFormState extends State<RegisterStep1> {
-  final _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameKhController = TextEditingController();
-  final TextEditingController _nameEnController = TextEditingController();
-  final TextEditingController _dateOfBirthController = TextEditingController();
-  final TextEditingController _contactNumberController = TextEditingController();
-  final TextEditingController _contactEmailController = TextEditingController();
-  final TextEditingController _contactHighSchoolController = TextEditingController();
-  final TextEditingController _contactContactNumberController = TextEditingController();
-  final TextEditingController _contactGuardianContactController = TextEditingController();
-
 
   String? _selectedGender;
-  String? _selectedPlaceOfBirth;
-  String? _selectCurrentAddress;
-  String? _selectGuardianRelationship;
-  String? _selectGetToKnowIstad;
+  final List<String> genderOptions = ['Female', 'Male', 'Other'];
+  final bool _isFormSubmitted = false;
+  final _admissionViewModel = AdmissionViewmodel();
+  final _formKey = GlobalKey<FormState>();
+  final nameKhController = TextEditingController();
+  final nameEnController = TextEditingController();
+  final genderController = TextEditingController();
+  final dateOfBirthController = TextEditingController();
+  final contactNumberController = TextEditingController();
+  final contactEmailController = TextEditingController();
+  final contactHighSchoolController = TextEditingController();
+  final contactContactNumberController = TextEditingController();
+  final contactGuardianContactController = TextEditingController();
 
-  File? _selectedUploadIdentity;
-  final ImagePicker _pickerUploadIdentity = ImagePicker();
+  String result = '';
+  bool isLoading = false;
+  String? selectedGender;
+  String? selectedPlaceOfBirth;
+  String? selectCurrentAddress;
+  String? selectGuardianRelationship;
+  String? selectGetToKnowIstad;
+  File? _selectedUploadFormal;
 
-  Future<void> _pickImageUploadIndentity() async {
-    final XFile? pickedUploadIndentiry = await _pickerUploadIdentity.pickImage(source: ImageSource.gallery);
-    if (pickedUploadIndentiry != null) {
+  // Form fields
+  static const int _minAge = 16;
+  static const int _maxAge = 100;
+  DateTime? _selectedBirthDate;
+  void _showDatePicker() {
+    final now = DateTime.now();
+    final minDate = DateTime(now.year - _maxAge);
+    final maxDate = DateTime(now.year - _minAge);
+
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => Container(
+        height: 216,
+        padding: const EdgeInsets.only(top: 6.0),
+        margin: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        color: CupertinoColors.systemBackground.resolveFrom(context),
+        child: SafeArea(
+          top: false,
+          child: CupertinoDatePicker(
+            initialDateTime: _selectedBirthDate ?? maxDate,
+            mode: CupertinoDatePickerMode.date,
+            use24hFormat: true,
+            maximumDate: maxDate,
+            minimumDate: minDate,
+            onDateTimeChanged: (DateTime newDate) {
+              setState(() => _selectedBirthDate = newDate);
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  final ImagePicker _pickerUploadFormal = ImagePicker();
+  final String uploadFormalUrl = "https://dev-flutter.cstad.edu.kh/api/v1/medias/upload-single";
+
+  Future<void> _pickImageUploadFormal(ImageSource source) async {
+    final XFile? pickedImage = await _pickerUploadFormal.pickImage(source: source);
+    if (pickedImage != null) {
+      final pickedFile = File(pickedImage.path);
+      if (await pickedFile.length() > 10 * 1024 * 1024) {
+        setState(() {
+          result = 'File size should not exceed 10MB';
+        });
+      } else {
+        setState(() {
+          _selectedUploadFormal = pickedFile;
+          result = '';
+        });
+        _uploadImageFormal(_selectedUploadFormal!);
+      }
+    }
+  }
+
+  // Function to upload the image
+  Future<void> _uploadImageFormal(File imageFile) async {
+    try {
+      var uri = Uri.parse(uploadFormalUrl);
+      // Create a multipart request
+      var request = http.MultipartRequest('POST', uri)
+        ..headers['Content-Type'] = 'multipart/form-data'
+        ..files.add(await http.MultipartFile.fromPath('file', imageFile.path));
+
+      var response = await request.send();
+
+      if (response.statusCode == 201) {
+        setState(() {
+          result = 'Image uploaded successfully!';
+        });
+      } else {
+        setState(() {
+          result = 'Failed to upload image. Status code: ${response.statusCode}';
+        });
+      }
+    } catch (e) {
       setState(() {
-        _selectedUploadIdentity = File(pickedUploadIndentiry.path);
+        result = 'Error uploading image: $e';
       });
     }
   }
 
-  File? _selectedHighCertificate;
-  final ImagePicker _pickerCertificate = ImagePicker();
+  File? _uploadIdentity;
+  final ImagePicker _pickerSelectUploadIdentity = ImagePicker();
+  final String selectUploadIdentiryUrl = "https://dev-flutter.cstad.edu.kh/api/v1/medias/upload-single";
 
-  Future<void> _pickImageCertificate() async {
-    final XFile? pickedImageCertificate = await _pickerCertificate.pickImage(source: ImageSource.gallery);
-    if (pickedImageCertificate != null) {
+  Future<void> _pickUploadIdentity(ImageSource source) async {
+    final XFile? pickedImage = await _pickerSelectUploadIdentity.pickImage(source: source);
+    if (pickedImage != null) {
+      final pickedFile = File(pickedImage.path);
+      if (await pickedFile.length() > 10 * 1024 * 1024) {
+        setState(() {
+          result = 'File size should not exceed 10MB';
+        });
+      } else {
+        setState(() {
+          _uploadIdentity = pickedFile;
+          result = '';
+        });
+        _uploadImageIndentity(_uploadIdentity!);
+      }
+    }
+  }
+
+  Future<void> _uploadImageIndentity(File imageFile) async {
+    try {
+      var uri = Uri.parse(selectUploadIdentiryUrl);
+      var request = http.MultipartRequest('POST', uri)
+        ..headers['Content-Type'] = 'multipart/form-data'
+        ..files.add(await http.MultipartFile.fromPath('file', imageFile.path));
+
+      var response = await request.send();
+
+      if (response.statusCode == 201) {
+        setState(() {
+          result = 'Image uploaded successfully!';
+        });
+      } else {
+        setState(() {
+          result = 'Failed to upload image. Status code: ${response.statusCode}';
+        });
+      }
+    } catch (e) {
       setState(() {
-        _selectedHighCertificate = File(pickedImageCertificate.path);
+        result = 'Error uploading image: $e';
       });
     }
   }
@@ -59,14 +172,16 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.defaultWhiteColor,
       appBar: AppBar(
+        backgroundColor: AppColors.defaultWhiteColor,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: AppColors.defaultGrayColor),
+          icon: const Icon(Icons.arrow_back_ios, color: AppColors.defaultGrayColor),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: Text(
+        title: const Text(
           'Student Admission',
           style: TextStyle(color: AppColors.primaryColor, fontSize: 16),
         ),
@@ -91,7 +206,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                 const SizedBox(height: 16),
                 _buildTextField(
                   label: 'Name (KH) *',
-                  controller: _nameKhController,
+                  controller: nameKhController,
                   hintText: 'លាង ណៃគីម',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -107,70 +222,197 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                 ),
                 _buildTextField(
                   label: 'Name (EN) *',
-                  controller: _nameEnController,
+                  controller: nameEnController,
                   hintText: 'Leang Naikim',
                   validator: (value) {
+                    // Check if the value is empty
                     if (value == null || value.isEmpty) {
                       return 'This field is required';
                     }
+
+                    // Check if the value contains only alphabetic characters (no numbers or special chars)
+                    String pattern = r'^[a-zA-Z\s]+$'; // Allows alphabetic characters and spaces
+                    RegExp regex = RegExp(pattern);
+
+                    if (!regex.hasMatch(value)) {
+                      return 'Please enter a valid name (letters and spaces only)';
+                    }
+
                     return null;
                   },
                 ),
-                _buildDropdownField(
-                  label: 'Gender *',
-                  value: _selectedGender,
-                  hintText: 'Female',
-                  items: ['Female', 'Male', 'Other'],
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedGender = value;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'This field is required';
-                    }
-                    return null;
-                  },
+                // Gender Field
+                RichText(
+                  text: const TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Gender',
+                        style: TextStyle(
+                          color: AppColors.primaryColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      TextSpan(
+                        text: ' *',
+                        style: TextStyle(
+                          color: AppColors.secondaryColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                _buildDateField(
-                  label: 'Date of Birth *',
-                  controller: _dateOfBirthController,
-                  hintText: '30/08/2003',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'This field is required';
-                    }
-                    return null;
-                  },
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: double.infinity,
+                  child: DropdownMenu<String>(
+                    width: 398,
+                    hintText: 'Select Gender',
+                    errorText: _isFormSubmitted && _selectedGender == null ? 'Please select gender' : null,
+                    textStyle: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                    menuStyle: MenuStyle(
+                      backgroundColor: WidgetStateProperty.all(Colors.white),
+                      shape: WidgetStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                    controller: genderController,
+                    inputDecorationTheme: InputDecorationTheme(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Colors.grey,),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Colors.grey,),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: AppColors.primaryColor),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Colors.red),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Colors.red),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                    ),
+                    dropdownMenuEntries: genderOptions.map((e) =>
+                        DropdownMenuEntry(
+                          value: e,
+                          label: e,
+                          style: ButtonStyle(
+                            backgroundColor: WidgetStateProperty.all(Colors.transparent),
+                            foregroundColor: WidgetStateProperty.all(Colors.black),
+                            textStyle: WidgetStateProperty.resolveWith((states) {
+                              if (states.contains(WidgetState.hovered)) {
+                                return const TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w400,
+                                );
+                              }
+                              return const TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w400,
+                              );
+                            }),
+                          ),
+                        ),
+                    ).toList(),
+                    onSelected: (String? value) {
+                      setState(() {
+                        _selectedGender = value;
+                      });
+                      FocusManager.instance.primaryFocus?.unfocus();
+                    },
+                    enableSearch: true,
+                    requestFocusOnTap: true,
+                    enableFilter: true,
+                  ),
+                ),
+                const SizedBox(height: 15,),
+                _buildFormField(
+                  label: 'Date of Birth ',
+                  child: GestureDetector(
+                    onTap: _showDatePicker,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            _selectedBirthDate != null
+                                ? '${_selectedBirthDate!.year}-${_selectedBirthDate!.month.toString().padLeft(2, '0')}-${_selectedBirthDate!.day.toString().padLeft(2, '0')}'
+                                : 'Select Date of Birth',
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                          const Icon(CupertinoIcons.calendar, color: Colors.grey),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
                 _buildTextField(
                   label: 'Contact Number (Telegram) *',
-                  controller: _contactNumberController,
+                  controller: contactNumberController,
                   keyboardType: TextInputType.phone,
                   hintText: '092382489',
                   validator: (value) {
+                    // Check if the value is empty
                     if (value == null || value.isEmpty) {
                       return 'This field is required';
                     }
+
+                    // Check if the value matches a valid phone number pattern (e.g., 10 digits)
+                    String phonePattern = r'^[0-9]{9,15}$'; // Adjust for your specific phone format
+                    RegExp regex = RegExp(phonePattern);
+
+                    if (!regex.hasMatch(value)) {
+                      return 'Please enter a valid phone number';
+                    }
+
                     return null;
                   },
                 ),
                 _buildTextField(
                   label: 'Email *',
-                  controller: _contactEmailController,
-                  // keyboardType: TextInputType.phone,
+                  controller: contactEmailController,
                   hintText: 'student.istad@gmail.com',
                   validator: (value) {
+                    // Check if the value is empty
+                    keyboardType: TextInputType.emailAddress;
+                    (value) {
                     if (value == null || value.isEmpty) {
-                      return 'This field is required';
+                    return 'Please enter your email';
                     }
+                    const emailPattern = r'^[^@]+@[^@]+\.[^@]+';
+                    final regex = RegExp(emailPattern);
+                    if (!regex.hasMatch(value)) {
+                    return 'Please enter a valid email';
+                    }
+                    return null;
+                    };
                     return null;
                   },
                 ),
                 _buildTextField(
                   label: 'High School *',
-                  controller: _contactHighSchoolController,
+                  controller: contactHighSchoolController,
                   hintText: 'Bak Touk High School',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -181,8 +423,8 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                 ),
                 _buildDropdownField(
                   label: 'Place of Birth *',
-                  value: _selectedPlaceOfBirth,
-                  hintText: 'Phnom Penh',
+                  value: selectedPlaceOfBirth,
+                  hintText: 'Select a province',
                   items: [
                     'Select a province',
                     'Phnom Penh',
@@ -212,12 +454,11 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                   ],
                   onChanged: (value) {
                     setState(() {
-                      _selectedPlaceOfBirth = value;
+                      selectedPlaceOfBirth = value;
                     });
                   },
                   validator: (value) {
-                    if (value == null || value.isEmpty ||
-                        value == 'Select a province') {
+                    if (value == null || value.isEmpty) {
                       return 'This field is required';
                     }
                     return null;
@@ -225,7 +466,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                 ),
                 _buildDropdownField(
                   label: 'Current Address *',
-                  value: _selectCurrentAddress,
+                  value: selectCurrentAddress,
                   hintText: 'Phnom Penh',
                   items: [
                     'Select a province',
@@ -256,7 +497,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                   ],
                   onChanged: (value) {
                     setState(() {
-                      _selectCurrentAddress = value!;
+                      selectCurrentAddress = value!;
                     });
                   },
                   validator: (value) {
@@ -269,22 +510,32 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                 ),
                 _buildTextField(
                   label: 'Guardian Contact *',
-                  controller: _contactGuardianContactController,
+                  controller: contactGuardianContactController,
                   keyboardType: TextInputType.phone,
                   hintText: '092382489',
                   validator: (value) {
+                    // Check if the value is empty
                     if (value == null || value.isEmpty) {
                       return 'This field is required';
                     }
+
+                    // Check if the value matches a valid phone number pattern (e.g., 10 digits)
+                    String phonePattern = r'^[0-9]{9,15}$'; // Adjust for your specific phone format
+                    RegExp regex = RegExp(phonePattern);
+
+                    if (!regex.hasMatch(value)) {
+                      return 'Please enter a valid phone number';
+                    }
+
                     return null;
                   },
                 ),
                 _buildDropdownField(
                   label: 'Guardian Relationship *',
-                  value: _selectGuardianRelationship,
-                  hintText: 'Select a province',
+                  value: selectGuardianRelationship,
+                  hintText: 'Select Guardian Relationship',
                   items: [
-                    'Select a province',
+                    'Select Guardian Relationship',
                     'Mother',
                     'Father',
                     'Grandmother',
@@ -300,12 +551,12 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                   ],
                   onChanged: (value) {
                     setState(() {
-                      _selectGuardianRelationship = value!;
+                      selectGuardianRelationship = value!;
                     });
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty ||
-                        value == 'Select a province') {
+                        value == 'Select Guardian Relationship') {
                       return 'This field is required';
                     }
                     return null;
@@ -313,27 +564,29 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                 ),
                 _buildDropdownField(
                   label: 'Get to know ISTAD through: *',
-                  value: _selectGetToKnowIstad,
+                  value: selectGetToKnowIstad,
                   hintText: 'Select how you knew about ISTAD',
                   items: [
                     'Select how you knew about ISTAD',
                     'Ministry, Provincial Department',
                     'Teacher',
                     'Senior Student',
-                    'Social Media (Facebook)',
-                    'Friend',
-                    'Website',
-                    'Parents or Relative',
-                    'Other',
+                    'Friends',
+                    'Facebook',
+                    'Instagram',
+                    'YouTube',
+                    'Television',
+                    'Radio',
+                    'ISTAD Website',
+                    'Other'
                   ],
                   onChanged: (value) {
                     setState(() {
-                      _selectGetToKnowIstad = value!;
+                      selectGetToKnowIstad = value;
                     });
                   },
                   validator: (value) {
-                    if (value == null || value.isEmpty ||
-                        value == 'Select a province') {
+                    if (value == null || value.isEmpty || value == 'Select how you knew about ISTAD') {
                       return 'This field is required';
                     }
                     return null;
@@ -368,8 +621,8 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   'Upload Formal Picture',
                   style: TextStyle(
                     fontSize: 14,
@@ -377,9 +630,9 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                     color: AppColors.primaryColor,
                   ),
                 ),
-                SizedBox(height: 8,),
+                const SizedBox(height: 8),
                 GestureDetector(
-                  onTap: _pickImageCertificate,
+                  onTap: () => _pickImageUploadFormal(ImageSource.gallery),
                   child: Container(
                     width: double.infinity,
                     height: 200,
@@ -390,12 +643,15 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                       ),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: _selectedHighCertificate == null
+                    child: _selectedUploadFormal == null
                         ? const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.cloud_download_outlined,
-                            color: AppColors.primaryColor, size: 40),
+                        Icon(
+                          Icons.cloud_download_outlined,
+                          color: AppColors.primaryColor,
+                          size: 40,
+                        ),
                         SizedBox(height: 5),
                         Text(
                           'Avatar',
@@ -412,7 +668,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          "JPG,PNG or PDF,file size no more than 10MB",
+                          "JPG, PNG or PDF, file size no more than 10MB",
                           style: TextStyle(color: Colors.grey, fontSize: 12),
                           textAlign: TextAlign.center,
                         ),
@@ -421,14 +677,14 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                         : ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       child: Image.file(
-                        _selectedHighCertificate!,
+                        _selectedUploadFormal!,
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
                 ),
-                SizedBox(height: 16,),
-                Text(
+                const SizedBox(height: 16,),
+                const Text(
                   'Upload Identity (Optional)',
                   style: TextStyle(
                     fontSize: 14,
@@ -436,9 +692,9 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                     color: AppColors.primaryColor,
                   ),
                 ),
-                SizedBox(height: 8,),
+                const SizedBox(height: 8),
                 GestureDetector(
-                  onTap: _pickImageUploadIndentity,
+                  onTap: () => _pickUploadIdentity(ImageSource.gallery),
                   child: Container(
                     width: double.infinity,
                     height: 200,
@@ -449,12 +705,15 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                       ),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: _selectedUploadIdentity == null
+                    child: _uploadIdentity == null
                         ? const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.cloud_download_outlined,
-                            color: AppColors.primaryColor, size: 40),
+                        Icon(
+                          Icons.cloud_download_outlined,
+                          color: AppColors.primaryColor,
+                          size: 40,
+                        ),
                         SizedBox(height: 5),
                         Text(
                           'Select a file or drag and drop here',
@@ -462,7 +721,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          "JPG,PNG or PDF,file size no more than 10MB",
+                          "JPG, PNG or PDF, file size no more than 10MB",
                           style: TextStyle(color: Colors.grey, fontSize: 12),
                           textAlign: TextAlign.center,
                         ),
@@ -471,7 +730,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                         : ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       child: Image.file(
-                        _selectedUploadIdentity!,
+                        _uploadIdentity!,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -482,17 +741,25 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                   alignment: Alignment.centerRight,
                   child: SizedBox(
                     child: ElevatedButton(
-                      onPressed: () {
+                      // onPressed: _stepOneFormSubmit,
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Processing Data')),
                           );
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const RegisterStep2(),
-                            ),
-                          );
+                          try {
+                            // await _stepTwoFormSubmit();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RegisterStep2(),
+                              ),
+                            );
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Error processing data')),
+                            );
+                          }
                         }
                       },
                       child: const Text(
@@ -504,7 +771,6 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
-                          // side: BorderSide(color: Colors.grey.shade300, width: 1),
                         ),
                       ),
                     ),
@@ -516,6 +782,28 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildFormField({
+    required String label,
+    required Widget child,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            color: AppColors.primaryColor,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 8),
+        child,
+        const SizedBox(height: 15),
+      ],
     );
   }
 
@@ -566,19 +854,25 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(
                   color: Colors.grey.shade400,
-                  // width: 2,
                 ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(
                   color: Colors.grey.shade400,
-                  // width: 2,
                 ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: AppColors.primaryColor,width: 2),
+                borderSide: const BorderSide(color: AppColors.primaryColor),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Colors.red),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Colors.red),
               ),
               contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
             ),
@@ -587,7 +881,6 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
       ),
     );
   }
-
 
   Widget _buildDropdownField({
     required String label,
@@ -623,128 +916,76 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
             ),
           ),
           const SizedBox(height: 8),
-          DropdownButtonFormField<String>(
-            value: value,
-            items: items.map((String item) {
-              return DropdownMenuItem(
-                value: item,
-                child: Text(item),
-              );
-            }).toList(),
-            onChanged: onChanged,
-            validator: validator,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.transparent,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(
-                  color: Colors.grey.shade400,
-                  // width: 2,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(
-                  color: Colors.grey.shade400,
-                  // width: 2,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: AppColors.primaryColor,width: 2),
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 12, vertical: 16),
-            ),
-            hint: hintText != null ? Text(hintText, style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w400),) : null,
-          ),
-        ],
-      ),
-    );
-  }
-
-
-  Widget _buildDateField({
-    required String label,
-    required TextEditingController controller,
-    String? hintText,
-    String? Function(String?)? validator,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          RichText(
-            text: TextSpan(
-              text: label.endsWith('*') ? label.substring(0, label.length - 1) : label,
-              style: const TextStyle(
+          SizedBox(
+            width: double.infinity,
+            child: DropdownMenu<String>(
+              width: 398,
+              menuHeight: 400,
+              hintText: hintText,
+              textStyle: const TextStyle(
                 fontSize: 16,
-                color: AppColors.primaryColor,
-                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
-              children: [
-                if (label.endsWith('*'))
-                  const TextSpan(
-                    text: ' *',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
+              menuStyle: MenuStyle(
+                backgroundColor: MaterialStatePropertyAll(Colors.white),
+                shape: MaterialStatePropertyAll(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+              initialSelection: value,
+              inputDecorationTheme: InputDecorationTheme(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.grey),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.grey),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: AppColors.primaryColor),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.red),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.red),
+                ),
+                filled: true,
+                fillColor: Colors.white,
+              ),
+              dropdownMenuEntries: items.map((e) =>
+                  DropdownMenuEntry(
+                    value: e,
+                    label: e,
+                    style: ButtonStyle(
+                      backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
+                      foregroundColor: const WidgetStatePropertyAll(Colors.black),
+                      textStyle: WidgetStateProperty.resolveWith((states) {
+                        if (states.contains(WidgetState.hovered)) {
+                          return const TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w400,
+                          );
+                        }
+                        return const TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w400,
+                        );
+                      }),
                     ),
                   ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 8),
-          TextFormField(
-            controller: controller,
-            readOnly: true,
-            onTap: () async {
-              DateTime? pickedDate = await showDatePicker(
-                context: context,
-                initialDate: DateTime.now(),
-                firstDate: DateTime(1900),
-                lastDate: DateTime.now(),
-              );
-              if (pickedDate != null) {
-                String formattedDate = DateFormat('dd-MM-yyyy').format(
-                    pickedDate);
-                setState(() {
-                  controller.text = formattedDate;
-                });
-              }
-            },
-            validator: validator,
-            decoration: InputDecoration(
-              hintText: hintText,
-              hintStyle: const TextStyle(
-                  color: Colors.grey, fontWeight: FontWeight.w400
-              ),
-              // Add hintText here
-              filled: true,
-              fillColor: Colors.transparent,
-              suffixIcon: const Icon(Icons.calendar_today, color: Colors.grey),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(
-                  color: Colors.grey.shade400,
-                  // width: 2,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(
-                  color: Colors.grey.shade400,
-                  // width: 2,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: AppColors.primaryColor,width: 2),
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 12, vertical: 16),
+              ).toList(),
+              onSelected: onChanged,
+              enableSearch: true,
+              requestFocusOnTap: true,
+              enableFilter: true,
+              errorText: validator?.call(value),
             ),
           ),
         ],
@@ -752,174 +993,3 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
     );
   }
 }
-
-
-
-
-// import 'package:flutter/material.dart';
-// import 'package:lms_mobile/data/color/color_screen.dart';
-// import 'package:lms_mobile/view/screen/register/register_step_2.dart';
-//
-//
-// class RegisterStep1 extends StatefulWidget {
-//   const RegisterStep1({Key? key}) : super(key: key);
-//
-//   @override
-//   _StudentAdmissionFormState createState() => _StudentAdmissionFormState();
-// }
-//
-// class _StudentAdmissionFormState extends State<RegisterStep1> {
-//   final _formKey = GlobalKey<FormState>();
-//   String? _selectedProvince;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       // backgroundColor: AppColors.backgroundColor,
-//       body: SingleChildScrollView(
-//         child: Padding(
-//           padding: const EdgeInsets.all(16.0),
-//           child: Form(
-//             key: _formKey,
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Text(
-//                   'Personal Information',
-//                   style: TextStyle(
-//                     color: Colors.indigo[900],
-//                     fontSize: 24,
-//                     fontWeight: FontWeight.bold,
-//                   ),
-//                 ),
-//                 const SizedBox(height: 24),
-//                 // Phone Number Field
-//                 TextFormField(
-//                   decoration: InputDecoration(
-//                     labelText: 'Name (KH)',
-//                     border: OutlineInputBorder(),
-//                   ),
-//                   keyboardType: TextInputType.phone,
-//                   validator: (value) {
-//                     if (value == null || value.isEmpty) {
-//                       return 'Please enter your phone number';
-//                     }
-//                     return null;
-//                   },
-//                 ),
-//                 const SizedBox(height: 15),
-//                 TextFormField(
-//                   decoration: InputDecoration(
-//                     labelText: 'Name (EN)',
-//                     border: OutlineInputBorder(),
-//                   ),
-//                   keyboardType: TextInputType.phone,
-//                   validator: (value) {
-//                     if (value == null || value.isEmpty) {
-//                       return 'Please enter your phone number';
-//                     }
-//                     return null;
-//                   },
-//                 ),
-//
-//                 const SizedBox(height: 15),
-//
-//                 InputDecorator(
-//                   decoration: InputDecoration(
-//                     labelText: 'Province',
-//                     labelStyle: TextStyle(
-//                       color: Colors.grey[600],  // Lighter gray for the label
-//                       fontWeight: FontWeight.w500, // Lighter font weight for a sleeker look
-//                     ),
-//                     border: OutlineInputBorder(
-//                       borderRadius: BorderRadius.circular(6.0),  // Reduced border radius for a sleeker look
-//                     ),
-//                     focusedBorder: OutlineInputBorder(
-//                       borderRadius: BorderRadius.circular(6.0),
-//                       borderSide: BorderSide(color: Colors.grey, width: 1.5), // Slightly thinner border for a more compact look
-//                     ),
-//                     contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),  // Reduced vertical padding to make the input more compact
-//                   ),
-//                   child: DropdownButtonHideUnderline(
-//                     child: DropdownButton<String>(
-//                       hint: Text('Select Province'),
-//                       value: _selectedProvince,
-//                       isExpanded: true,
-//                       onChanged: (String? newValue) {
-//                         setState(() {
-//                           _selectedProvince = newValue!;
-//                         });
-//                       },
-//                       items: [
-//                         'Kompong Cham',
-//                         'Koh Kong',
-//                         'Kep',
-//                         'Kandal',
-//                         'Battambang',
-//                         'Banteay Meanchey'
-//                       ].map<DropdownMenuItem<String>>((String value) {
-//                         return DropdownMenuItem<String>(
-//                           value: value,
-//                           child: Container(
-//                             padding: const EdgeInsets.symmetric(vertical: 6.0),
-//                             child: Text(value),
-//                           ),
-//                         );
-//                       }).toList(),
-//                       dropdownColor: Colors.white,
-//                       iconSize: 26,  // Slightly smaller icon size for a more compact dropdown
-//                       icon: Icon(
-//                         Icons.arrow_drop_down,
-//                         color: Colors.grey[600],  // Matching the label color for a more cohesive design
-//                       ),
-//                       style: TextStyle(fontSize: 16, color: Colors.black),
-//                     ),
-//                   ),
-//                 ),
-//
-//
-//
-//                 const SizedBox(height: 24),
-//                 Align(
-//                   alignment: Alignment.centerRight,
-//                   child: SizedBox(
-//                     child: ElevatedButton(
-//                       onPressed: () {
-//                         if (_formKey.currentState!.validate()) {
-//                           ScaffoldMessenger.of(context).showSnackBar(
-//                             const SnackBar(content: Text('Processing Data')),
-//                           );
-//                           Navigator.push(
-//                             context,
-//                             MaterialPageRoute(
-//                               builder: (context) => const RegisterStep2(),
-//                             ),
-//                           );
-//                         }
-//                       },
-//                       child: const Text(
-//                         'Next',
-//                         style: TextStyle(fontSize: 16, color: AppColors
-//                             .defaultWhiteColor),
-//                       ),
-//                       style: ElevatedButton.styleFrom(
-//                         backgroundColor: AppColors.primaryColor,
-//                         padding: const EdgeInsets.symmetric(
-//                             vertical: 10, horizontal: 25),
-//                         shape: RoundedRectangleBorder(
-//                           borderRadius: BorderRadius.circular(8),
-//                         ),
-//                       ),
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-

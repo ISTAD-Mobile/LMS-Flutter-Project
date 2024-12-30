@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/data/response/status.dart';
 import 'package:lms_mobile/view/Skelaton/homepageSkeleton/courseCardSkeleton.dart';
+import 'package:lms_mobile/view/screen/homeScreen/course/course_screen.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/short_course_card.dart';
 import 'package:lms_mobile/viewModel/course_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -74,7 +75,7 @@ class _CourseSectionState extends State<CourseSection> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CourseScreen(),
+                      builder: (context) => ShortCoursePage(),
                     ),
                   );
                 },
@@ -106,7 +107,7 @@ class _CourseSectionState extends State<CourseSection> {
                       ),
                     );
                   case Status.COMPLETED:
-                    final courses = viewModel.course.data?.dataList ?? [];
+                    final courses = viewModel.course.data?.courseList ?? [];
                     return courses.isEmpty
                         ? Center(child: Text('No courses available'))
                         : SizedBox(
