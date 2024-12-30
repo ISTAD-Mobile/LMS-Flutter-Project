@@ -128,7 +128,6 @@
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/view/screen/academic/my_home_academic_screen.dart';
 import 'package:lms_mobile/view/screen/lms/auth/log_in_screen.dart';
-import 'package:lms_mobile/view/screen/lms/profile/profile_view_screen.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/about_tapbar_navigation_widget.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/academic_type_and_scholarship.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/appbar_and_bottom_navigation_widgets.dart';

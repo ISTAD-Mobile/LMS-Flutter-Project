@@ -327,9 +327,35 @@ class _MyHomePageState extends State<StudentScreen> {
           children: [
             GestureDetector(
               onTap: () => _scaffoldKey.currentState?.openDrawer(),
-              child: const CircleAvatar(
-                backgroundImage: AssetImage('assets/images/tevy.png'),
-              ),
+                child: ChangeNotifierProvider(
+                  create: (_) => StudenProfileDataViewModel(
+                    userRepository: StudentProfileRepository(accessToken: accessToken),
+                  ),
+                  child: Consumer<StudenProfileDataViewModel>(
+                    builder: (context, viewModel, _) {
+                      // Trigger fetch user data if needed
+                      if (viewModel.user == null && !viewModel.isLoading && viewModel.errorMessage == null) {
+                        viewModel.fetchUserData();
+                      }
+
+                      if (viewModel.isLoading) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (viewModel.errorMessage != null) {
+                        return Center(child: Text("Error: ${viewModel.errorMessage}"));
+                      } else if (viewModel.user == null) {
+                        return const Center(child: Text("No user data found"));
+                      } else {
+                        final user = viewModel.user!;
+                        return CircleAvatar(
+                          radius: 22, // Adjust the radius as needed
+                          backgroundImage: user.profileImage != null
+                              ? NetworkImage(user.profileImage!) // Load the dynamic profile image
+                              : const AssetImage('assets/images/tevy.png') as ImageProvider, // Fallback to local asset
+                        );
+                      }
+                    },
+                  ),
+                ),
             ),
             const Spacer(),
             GestureDetector(
@@ -359,41 +385,61 @@ class _MyHomePageState extends State<StudentScreen> {
         child: Column(
           children: [
             ChangeNotifierProvider(
-              create: (_) => LoginViewModel(LoginStudentRepository()),
-              child: Container(
-                height: 115,
-                padding: const EdgeInsets.fromLTRB(20, 45, 0, 0),
-                color: AppColors.defaultWhiteColor,
-                child: const Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 22,
-                      backgroundImage: AssetImage('assets/images/tevy.png'),
-                    ),
-                    SizedBox(width: 16),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Mi sorakmony',
-                          style: TextStyle(
-                            color: AppColors.primaryColor,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Text(
-                          'STUDENT',
-                          style: TextStyle(color: Colors.grey, fontSize: 14),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+            create: (_) => StudenProfileDataViewModel(userRepository: StudentProfileRepository(accessToken: accessToken)),
+              child: Consumer<StudenProfileDataViewModel>(
+              builder: (context, viewModel, _) {
+              // Trigger fetch user data if needed
+              if (viewModel.user == null && !viewModel.isLoading && viewModel.errorMessage == null) {
+              viewModel.fetchUserData();
+              }
+              if (viewModel.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+              } else if (viewModel.errorMessage != null) {
+              return Center(child: Text("Error: ${viewModel.errorMessage}"));
+              } else if (viewModel.user == null) {
+              return const Center(child: Text("No user data found"));
+              } else {
+              final user = viewModel.user!;
+              return Container(
+              height: 115,
+              padding: const EdgeInsets.fromLTRB(20, 45, 0, 0),
+              color: AppColors.defaultWhiteColor,
+              child: Row(
+              children: [
+              CircleAvatar(
+              radius: 22,
+              backgroundImage: user.profileImage != null
+              ? NetworkImage(user.profileImage!)
+                  : const AssetImage('assets/default_avatar.png') as ImageProvider, // Fallback image
+              ),
+              const SizedBox(width: 16),
+              Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+              Text(
+              user.nameEn,
+              style: const TextStyle(
+              color: AppColors.primaryColor,
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+              ),
+              ),
+              Text(
+                user.degree,
+              style: const TextStyle(color: Colors.grey, fontSize: 14),
+              ),
+              ],
+              ),
+              ],
+              ),
+              );
+              }
+              },
               ),
             ),
-            const Divider(color: AppColors.primaryColor, thickness: 0.3),
+
+          const Divider(color: AppColors.primaryColor, thickness: 0.3),
             Expanded(
               child: ListView(
                 padding: EdgeInsets.zero,
