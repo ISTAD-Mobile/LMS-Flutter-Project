@@ -61,8 +61,8 @@ class _EnrollStep3State extends State<EnrollStep3> {
             : null,
         textStyle: const TextStyle(fontSize: 16, color: Colors.black),
         menuStyle: MenuStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.white),
-          shape: MaterialStateProperty.all(
+          backgroundColor: WidgetStateProperty.all(Colors.white),
+          shape: WidgetStateProperty.all(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           ),
         ),
@@ -78,10 +78,22 @@ class _EnrollStep3State extends State<EnrollStep3> {
         dropdownMenuEntries: courses.map((course) => DropdownMenuEntry(
           value: course,
           label: course.title,
+          leadingIcon: Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(4),  // Set to 0 for sharp corners
+              child: Image.network(
+                course.thumbnailUri,
+                width: 40,
+                height: 40,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.transparent),
-            foregroundColor: MaterialStateProperty.all(Colors.black),
-            textStyle: MaterialStateProperty.resolveWith(
+            backgroundColor: WidgetStateProperty.all(Colors.transparent),
+            foregroundColor: WidgetStateProperty.all(Colors.black),
+            textStyle: WidgetStateProperty.resolveWith(
                   (_) => const TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
             ),
           ),
