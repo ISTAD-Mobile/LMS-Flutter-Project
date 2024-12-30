@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/model/jobvacancy.dart';
 
+
 class ItNewsCard extends StatelessWidget {
 
   ItNewsCard(this.jobvacancy);
 
-  final Jobvacancy jobvacancy;
+  final JobvacancyDataList jobvacancy;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +63,7 @@ class ItNewsCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        jobvacancy.contentType.type.toString(),
+                        jobvacancy.contentType!.type.toString(),
                         style: const TextStyle(
                           fontSize: 12,
                           color: AppColors.primaryColor,

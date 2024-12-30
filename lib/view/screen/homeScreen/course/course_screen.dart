@@ -29,52 +29,56 @@ class _HomeScreenState extends State<ShortCoursePage> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back,color: AppColors.primaryColor,),
         ),
-        title: const Text("Back",style: TextStyle(fontSize: 20,color: AppColors.defaultGrayColor)),
+        title: const Text("Courses variable",style: TextStyle(fontSize: 16,color: AppColors.primaryColor)),
+        centerTitle: true,
       ),
       body: Container(
         color: AppColors.backgroundColor,
-        child: ChangeNotifierProvider(
-          create: (context) => courseViewModel,
-          child: Consumer<CourseViewmodel>(
-            builder: (context, viewModel, _) {
-              switch (viewModel.course.status!) {
-                case Status.LOADING:
-                  return SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                    child: ListView.builder(
+        child: Padding(
+          padding: EdgeInsets.only(right: 16,left: 16),
+          child: ChangeNotifierProvider(
+            create: (context) => courseViewModel,
+            child: Consumer<CourseViewmodel>(
+              builder: (context, viewModel, _) {
+                switch (viewModel.course.status!) {
+                  case Status.LOADING:
+                    return SizedBox(
+                      height: MediaQuery.of(context).size.height,
+                      child: ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        itemCount: 10,
+                        itemBuilder: (context, index) => CourseScreenSkeleton(),
+                      ),
+                    );
+
+                  case Status.COMPLETED:
+                    final courses = viewModel.course.data?.courseList ?? [];
+                    return courses.isEmpty
+                        ? Center(child: Text('No courses available'))
+                        : ListView.builder(
                       scrollDirection: Axis.vertical,
-                      itemCount: 10,
-                      itemBuilder: (context, index) => Coursscreenskeleton(),
-                    ),
-                  );
+                      itemCount: courses.length,
+                      itemBuilder: (context, index) {
+                        final course = courses[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: ShortCourseScreen(course),
+                        );
+                      },
+                    );
 
-                case Status.COMPLETED:
-                  final courses = viewModel.course.data?.courseList ?? [];
-                  return courses.isEmpty
-                      ? Center(child: Text('No courses available'))
-                      : ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    itemCount: courses.length,
-                    itemBuilder: (context, index) {
-                      final course = courses[index];
-                      return Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: ShortCourseScreen(course),
-                      );
-                    },
-                  );
-
-                case Status.ERROR:
-                  return Center(
-                    child: Text(
-                      'An error occurred: ${viewModel.course.message}',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  );
-              }
-            },
+                  case Status.ERROR:
+                    return Center(
+                      child: Text(
+                        'An error occurred: ${viewModel.course.message}',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    );
+                }
+              },
+            ),
           ),
         ),
       ),

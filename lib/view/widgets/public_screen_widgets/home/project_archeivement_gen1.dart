@@ -48,6 +48,7 @@ class ProjectCard extends StatelessWidget {
     return Container(
       height: 350,
       decoration: BoxDecoration(
+        // color: AppColors.backgroundColor,
         border: Border.all(
           color: Colors.grey.shade300,
           width: 1,

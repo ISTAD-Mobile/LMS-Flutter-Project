@@ -23,4 +23,6 @@ class ApiUrl {
   static String baseUrl = 'https://dev-flutter.cstad.edu.kh/api/v1';
   static String login = '$baseUrl/auth/login';
   static String refreshToken = '$baseUrl/auth/refresh-token';
+
+  static String postImageByUrl = '$baseUrl/medias/upload-single';
 }

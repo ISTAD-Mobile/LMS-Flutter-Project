@@ -1,23 +1,38 @@
+// class LoginModel {
+//   late final String accessToken;
+//   late final String refreshToken;
+//
+//   LoginModel({required this.accessToken, required this.refreshToken});
+//
+//   // factory method to convert json to class object
+//   factory LoginModel.fromJson(Map<String, dynamic> json) {
+//     return LoginModel(
+//         accessToken: json['access_token'] ?? '',
+//         refreshToken: json['refresh_token'] ?? '');
+//   }
+// }
+
+
+// models/user_model.dart
+
 class LoginModel {
-  late final String accessToken;
-  late final String refreshToken;
+  final String emailOrUsername;
+  final String password;
 
-  // Constructor
-  LoginModel({required this.accessToken, required this.refreshToken});
+  LoginModel({required this.emailOrUsername, required this.password});
 
-  // Factory method to convert json to class object
+  // You can also create a factory constructor for easy JSON parsing if needed
   factory LoginModel.fromJson(Map<String, dynamic> json) {
-    // Using `??` to handle cases where keys might be missing or null
     return LoginModel(
-      accessToken: json['access_token'] ?? '',
-      refreshToken: json['refresh_token'] ?? '',
+      emailOrUsername: json['emailOrUsername'],
+      password: json['password'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'access_token': accessToken,
-      'refresh_token': refreshToken,
+      'emailOrUsername': emailOrUsername,
+      'password': password,
     };
   }
 }

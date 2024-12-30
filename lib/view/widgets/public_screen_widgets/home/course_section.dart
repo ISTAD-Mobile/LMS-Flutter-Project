@@ -98,7 +98,7 @@ class _CourseSectionState extends State<CourseSection> {
                 switch (viewModel.course.status!) {
                   case Status.LOADING:
                     return SizedBox(
-                      height: 170,
+                      height: 135,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemCount: 10,
@@ -111,7 +111,7 @@ class _CourseSectionState extends State<CourseSection> {
                     return courses.isEmpty
                         ? Center(child: Text('No courses available'))
                         : SizedBox(
-                      height: 170,
+                      height: 135,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: courses.length,

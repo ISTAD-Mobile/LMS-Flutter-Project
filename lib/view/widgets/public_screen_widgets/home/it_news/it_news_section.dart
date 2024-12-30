@@ -54,24 +54,35 @@ class _ItNewsSectionState extends State<ItNewsSection> {
               ),
             ],
           ),
-          SizedBox(height: 350,
-            child: ChangeNotifierProvider(
+          SizedBox(height: 16,),
+          ChangeNotifierProvider(
               create: (context) => jobvacancyViewModel,
               child: Consumer<JobvacancyViewModel>(
-                builder: (context ,viewModel,_){
-                  switch(viewModel.jobvacancy.status!){
+                builder: (context, viewModel, _) {
+                  final status = viewModel.jobvacancy.status;
+                  if (status == null) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  switch (status) {
                     case Status.LOADING:
-                      return ListView.builder(
+                      return SizedBox(
+                        height: 352,
+                        child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: 10,
-                          itemBuilder: (context,index ) => Jobvacancyskeleton()
+                          itemBuilder: (context, index) => Jobvacancyskeleton(),
+                        ),
                       );
+
                     case Status.COMPLETED:
-                      final jobvacancys = viewModel.jobvacancy.data?.jobvacancyList ?? [];
-                      return jobvacancys.isEmpty
-                          ? Center(child: Text('No jobvacancy available'))
-                          : SizedBox(
-                        height: 170,
+                      final jobvacancys = viewModel.jobvacancy.data?.jobvacancydataList ?? [];
+                      if (jobvacancys.isEmpty) {
+                        return const Center(
+                          child: Text('No jobvacancy available'),
+                        );
+                      }
+                      return SizedBox(
+                        height: 135,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: jobvacancys.length,
@@ -81,13 +92,18 @@ class _ItNewsSectionState extends State<ItNewsSection> {
                           },
                         ),
                       );
+
                     case Status.ERROR:
-                      return Center(child: Text("Error: ${viewModel.jobvacancy.message}"));
+                      return Center(
+                        child: Text(
+                          "Error: ${viewModel.jobvacancy.message}",
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      );
                   }
                 },
               ),
             ),
-          ),
         ],
       ),
     );
@@ -103,3 +119,9 @@ class _ItNewsSectionState extends State<ItNewsSection> {
     }
   }
 }
+
+
+
+
+
+

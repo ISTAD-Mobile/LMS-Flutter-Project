@@ -1,70 +1,82 @@
-import 'package:flutter/cupertino.dart';
-import '../repository/login_repo.dart';
+// import 'package:flutter/cupertino.dart';
+// import 'package:lms_mobile/repository/login_repo.dart';
+//
+// class LoginViewModel extends ChangeNotifier {
+//   final LoginRepository _loginRepository = LoginRepository();
+//
+//   bool _isLoading = false;
+//
+//   bool get isLoading => _isLoading;
+//
+//   String? _errorMessage;
+//
+//   String? get errorMessage => _errorMessage;
+//
+//   // login method
+//   Future<bool> login(String usernameOrEmail, String password) async {
+//     _isLoading = true;
+//     _errorMessage = null;
+//     notifyListeners();
+//
+//     try {
+//       await _loginRepository.login(usernameOrEmail, password);
+//       _isLoading = false;
+//       notifyListeners();
+//       return true;
+//     } catch (e) {
+//       _errorMessage = e.toString();
+//       _isLoading = false;
+//       notifyListeners();
+//       return false;
+//     }
+//   }
+//
+//   Future<bool> refreshAccessToken() async {
+//     try {
+//       await _loginRepository.refreshAccessToken();
+//       return true;
+//     } catch (e) {
+//       _errorMessage = e.toString();
+//       return false;
+//     }
+//   }
+// }
+
+
+
+
+import 'package:flutter/material.dart';
+import 'package:lms_mobile/repository/login_repo.dart';
 
 class LoginViewModel extends ChangeNotifier {
-  final LoginRepository _loginRepository = LoginRepository();
+  final LoginStudentRepository _userRepository;
 
-  bool _isLoading = false;
+  LoginViewModel(this._userRepository);
 
-  bool get isLoading => _isLoading;
+  String? accessToken;
+  bool isLoading = false;
+  String? errorMessage;
 
-  String? _errorMessage;
-
-  String? get errorMessage => _errorMessage;
-
-  String? _accessToken;
-  String? _refreshToken;
-
-  String? get accessToken => _accessToken;
-
-  String? get refreshToken => _refreshToken;
-
-  // Login method
-  Future<bool> login(String usernameOrEmail, String password) async {
-    _isLoading = true;
-    _errorMessage = null;
-    notifyListeners();
-
+  Future<void> login(String emailOrUsername, String password) async {
     try {
-      await _loginRepository.login(usernameOrEmail, password);
-
-      final accessToken = await _loginRepository.getAccessToken();
-      if (accessToken == null) {
-        throw Exception("Failed to retrieve access token");
-      }
-
-      _accessToken = accessToken;
-
-      final refreshToken = await _loginRepository.getRefreshToken();
-      _refreshToken = refreshToken;
-
-      _isLoading = false;
+      isLoading = true;
       notifyListeners();
-      return true;
-    } catch (e) {
-      _errorMessage = e.toString();
-      _isLoading = false;
-      notifyListeners();
-      return false;
-    }
-  }
 
-  // Refresh access token method
-  Future<bool> refreshAccessToken() async {
-    try {
-      await _loginRepository.refreshAccessToken();
+      // Call the login API
+      accessToken = await _userRepository.login(emailOrUsername, password);
 
-      final accessToken = await _loginRepository.getAccessToken();
-      if (accessToken == null) {
-        throw Exception("Failed to refresh access token");
+      if (accessToken != null) {
+        print("Login successful. Access Token: $accessToken"); // Debug: Check if accessToken is retrieved
+      } else {
+        errorMessage = "Failed to get access token.";
+        print(errorMessage); // Debug: Check the error message
       }
-
-      _accessToken = accessToken;
-
-      return true;
     } catch (e) {
-      _errorMessage = e.toString();
-      return false;
+      errorMessage = e.toString();
+      print("Error: $errorMessage"); // Debug: Check the error
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
   }
 }
