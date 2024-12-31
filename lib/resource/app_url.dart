@@ -14,6 +14,11 @@ class JobVocancyUrl {
   static String jobvacancybaseUrl = "https://api.istad.co/website/api/v1";
   static String getJobvacancyByUrl = '$jobvacancybaseUrl/contents';
 }
+class StudentProfileUrl {
+  static String baseUrl = "https://dev-flutter.cstad.edu.kh/api/v1";
+  static String getStudentProfileUrl = '$baseUrl/students';
+}
+
 
 class AdmissionUrl {
   static String admisionbaseUrl = "https://dev-flutter.cstad.edu.kh/api/v1";

@@ -7,6 +7,8 @@ import 'package:lms_mobile/viewModel/course_viewmodel.dart';
 import 'package:lms_mobile/viewModel/enroll/current_address_view_model.dart';
 import 'package:lms_mobile/viewModel/enroll/place_of_birth_view_model.dart';
 import 'package:lms_mobile/viewModel/enroll/university_view_model.dart';
+import 'package:lms_mobile/viewModel/login_view_model.dart';
+import 'package:lms_mobile/viewModel/student_profile_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:lms_mobile/view/widgets/sytem_screen/no_internet.dart';
 
