@@ -1,14 +1,13 @@
-
-import 'package:lms_mobile/data/network/api_service.dart';
-import 'package:lms_mobile/resource/app_url.dart';
-
+import '../../data/network/enrollment_service.dart';
 import '../../model/enrollmentRequest/enrollment_model.dart';
+import '../../resource/app_url.dart';
+
 
 class EnrollRepository {
-  var apiService = ApiService();
+  var enrollmentService = EnrollmentService();
 
   Future<dynamic> postEnrollment(data) async {
     var enrollmentRequest = enrollmentModelToJson(data);
-    dynamic response = await apiService.postEnrollment(AppUrl.postBlogUrl, enrollmentRequest);
+    dynamic enrollment = await enrollmentService.postEnrollment(AppUrl.postBlogRegisterUrl, enrollmentRequest);
     }
 }

@@ -4,10 +4,11 @@ import '../../../../data/color/color_screen.dart';
 import '../../../../data/response/status.dart';
 import '../../../../viewModel/course_viewmodel.dart';
 import '../../../../model/course.dart';
+import '../../../screen/enrollments/enrollment_provider.dart';
 import 'enroll_successful_screen.dart';
 
 class EnrollStep3 extends StatefulWidget {
-  const EnrollStep3({super.key});
+  const EnrollStep3({super.key, required EnrollmentFormData formData});
   @override
   State<EnrollStep3> createState() => _EnrollStep3State();
 }
@@ -59,10 +60,33 @@ class _EnrollStep3State extends State<EnrollStep3> {
         errorText: _formKey.currentState?.validate() == false && _selectedCourseData == null
             ? 'Please select a course'
             : null,
-        textStyle: const TextStyle(fontSize: 16, color: Colors.black),
+        leadingIcon: _selectedCourseData != null
+            ? Padding(
+          padding: const EdgeInsets.only(left: 12.0,),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.network(
+              _selectedCourseData!.thumbnailUri,
+              width: 10,
+              height: 10,
+              errorBuilder: (context, error, stackTrace) {
+                return const SizedBox(
+                  width: 10,
+                  height: 10,
+                  child: Icon(Icons.image_not_supported, size: 2, color: Colors.black),
+                );
+              },
+            ),
+          ),
+        )
+            : null,
+        textStyle: TextStyle(
+          fontSize: 16,
+          color: _selectedCourseData != null ? Colors.black : Colors.black,
+        ),
         menuStyle: MenuStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.white),
-          shape: MaterialStateProperty.all(
+          backgroundColor: WidgetStateProperty.all(Colors.white),
+          shape: WidgetStateProperty.all(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           ),
         ),
@@ -78,10 +102,33 @@ class _EnrollStep3State extends State<EnrollStep3> {
         dropdownMenuEntries: courses.map((course) => DropdownMenuEntry(
           value: course,
           label: course.title,
+          // Modify the leadingIcon to match the example
+          leadingIcon: Container(
+            margin: const EdgeInsets.only(right: 12.0),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.network(
+                course.thumbnailUri,
+                width: 32,
+                height: 32,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return const SizedBox(
+                    width: 32,
+                    height: 32,
+                    child: Icon(Icons.image_not_supported, size: 16, color: Colors.black),
+                  );
+                },
+              ),
+            ),
+          ),
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.transparent),
-            foregroundColor: MaterialStateProperty.all(Colors.black),
-            textStyle: MaterialStateProperty.resolveWith(
+            padding: WidgetStateProperty.all(
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            ),
+            backgroundColor: WidgetStateProperty.all(Colors.transparent),
+            foregroundColor: WidgetStateProperty.all(Colors.black),
+            textStyle: WidgetStateProperty.resolveWith(
                   (_) => const TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
             ),
           ),
