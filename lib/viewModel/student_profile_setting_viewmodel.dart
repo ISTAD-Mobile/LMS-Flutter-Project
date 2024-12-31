@@ -1,32 +1,33 @@
-import 'package:flutter/material.dart';
-import 'package:lms_mobile/model/student_profile_model.dart';
-import 'package:lms_mobile/repository/student_profile_repository.dart';
+import 'package:flutter/foundation.dart';
 
-class StudenProfileDataViewModel extends ChangeNotifier {
-  final StudentProfileRepository userRepository;
-  StudentProfileModel? _user;
+import '../model/student_profile_setting.dart';
+import '../repository/student_profile_setting_repository.dart';
+
+class StudentSettingViewModel extends ChangeNotifier {
+  final StudentSettingRepository _repository;
+  StudentSettingModel? _userData;
   bool _isLoading = false;
-  String? _errorMessage;
+  String _errorMessage = '';
 
-  StudenProfileDataViewModel({required this.userRepository});
+  StudentSettingViewModel({required StudentSettingRepository repository}) : _repository = repository;
 
-  StudentProfileModel? get user => _user;
+  StudentSettingModel? get userData => _userData;
   bool get isLoading => _isLoading;
-  String? get errorMessage => _errorMessage;
+  String get errorMessage => _errorMessage;
 
-  // Fetch user data
   Future<void> fetchUserData() async {
-    try {
-      _isLoading = true;
-      notifyListeners();
+    _isLoading = true;
+    _errorMessage = '';
+    notifyListeners();
 
-      _user = await userRepository.fetchUserData();
-      _errorMessage = null;
+    try {
+      _userData = await _repository.fetchUserData();
     } catch (e) {
-      _errorMessage = "Error: $e";
+      _errorMessage = e.toString();
     } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
 }
+
