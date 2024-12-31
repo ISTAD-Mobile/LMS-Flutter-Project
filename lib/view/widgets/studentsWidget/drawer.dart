@@ -213,13 +213,12 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:lms_mobile/repository/login_repo.dart';
 import 'package:lms_mobile/view/screen/lms/profile/course_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../data/color/color_screen.dart';
 import '../../../repository/student_profile_repository.dart';
-import '../../../viewModel/login_student_viewModel.dart';
+import '../../../viewModel/student_profile_viewModel.dart';
 import '../../../viewModel/login_view_model.dart';
 import '../../home.dart';
 import '../../screen/lms/profile/acheivement_screen.dart';
@@ -258,29 +257,33 @@ class _MyHomePageState extends State<StudentScreen> {
   late String accessToken;
 
 
-  late List<Map<String, dynamic>> _pages;
-
+  List<Map<String, dynamic>> _pages = [];
 
   @override
   void initState() {
     super.initState();
     accessToken = widget.accessToken;
-
-    // Initialize _pages dynamically
-    _pages = [
-      {'title': 'Profile', 'widget': ProfileScreen(accessToken: accessToken)},
-      {'title': 'Course', 'widget': CourseScreen(accessToken: accessToken)},
-      {'title': 'Achievement', 'widget': const AcheivementScreen()},
-      {'title': 'Setting', 'widget': const StaticProfileViewScreen()},
-    ];
+    _initializePages();
   }
+
+  void _initializePages() {
+    setState(() {
+      _pages = [
+        {'title': 'Profile', 'widget': ProfileScreen(accessToken: accessToken)},
+        {'title': 'Course', 'widget': CourseScreen(accessToken: accessToken)},
+        {'title': 'Achievement', 'widget': const AcheivementScreen()},
+        {'title': 'Setting', 'widget': StaticProfileViewScreen(accessToken: accessToken)},
+      ];
+    });
+  }
+
 
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
-    Navigator.pop(context); // Close the drawer on item tap
+    Navigator.pop(context);
   }
 
   Widget _buildDrawerListTile({
@@ -316,6 +319,10 @@ class _MyHomePageState extends State<StudentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_pages == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Scaffold(
       backgroundColor: AppColors.defaultWhiteColor,
       key: _scaffoldKey,
@@ -333,7 +340,7 @@ class _MyHomePageState extends State<StudentScreen> {
                   ),
                   child: Consumer<StudenProfileDataViewModel>(
                     builder: (context, viewModel, _) {
-                      // Trigger fetch user data if needed
+
                       if (viewModel.user == null && !viewModel.isLoading && viewModel.errorMessage == null) {
                         viewModel.fetchUserData();
                       }
@@ -347,10 +354,10 @@ class _MyHomePageState extends State<StudentScreen> {
                       } else {
                         final user = viewModel.user!;
                         return CircleAvatar(
-                          radius: 22, // Adjust the radius as needed
-                          backgroundImage: user.profileImage != null
-                              ? NetworkImage(user.profileImage!) // Load the dynamic profile image
-                              : const AssetImage('assets/images/tevy.png') as ImageProvider, // Fallback to local asset
+                          radius: 22,
+                          backgroundImage: user.profileImage != null && user.profileImage!.isNotEmpty
+                              ? NetworkImage(user.profileImage!)
+                              : const AssetImage('assets/images/placeholder.jpg'),
                         );
                       }
                     },
@@ -360,11 +367,10 @@ class _MyHomePageState extends State<StudentScreen> {
             const Spacer(),
             GestureDetector(
               onTap: () async {
-                // Save access token before navigating
+
                 final prefs = await SharedPreferences.getInstance();
                 await prefs.setString('accessToken', accessToken);
 
-                // Navigate to HomeScreen
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => HomeScreen()),
@@ -406,11 +412,11 @@ class _MyHomePageState extends State<StudentScreen> {
               color: AppColors.defaultWhiteColor,
               child: Row(
               children: [
-              CircleAvatar(
-              radius: 22,
-              backgroundImage: user.profileImage != null
-              ? NetworkImage(user.profileImage!)
-                  : const AssetImage('assets/default_avatar.png') as ImageProvider, // Fallback image
+                CircleAvatar(
+                radius: 22,
+                backgroundImage: user.profileImage != null  && user.profileImage!.isNotEmpty
+                    ? NetworkImage(user.profileImage!)
+                    : const AssetImage('assets/images/placeholder.jpg') as ImageProvider,
               ),
               const SizedBox(width: 16),
               Column(

@@ -110,7 +110,7 @@
 // import 'package:lms_mobile/repository/student_profile_repository.dart';
 // import 'package:provider/provider.dart';
 // import '../../../../data/color/color_screen.dart';
-// import '../../../../viewModel/login_student_viewModel.dart';
+// import '../../../../viewModel/student_profile_viewModel.dart';
 //
 // class ProfileScreen extends StatelessWidget {
 //   final String accessToken;
@@ -242,7 +242,7 @@ import 'package:flutter/material.dart';
 import 'package:lms_mobile/repository/student_profile_repository.dart';
 import 'package:provider/provider.dart';
 import '../../../../data/color/color_screen.dart';
-import '../../../../viewModel/login_student_viewModel.dart';
+import '../../../../viewModel/student_profile_viewModel.dart';
 
 class ProfileScreen extends StatelessWidget {
   final String accessToken;
@@ -298,13 +298,13 @@ class ProfileScreen extends StatelessWidget {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                CircleAvatar(
-                                  radius: 70,
-                                  backgroundImage: user.profileImage != null
-                                      ? NetworkImage(user.profileImage!)
-                                      : const AssetImage('assets/default_avatar.png') as ImageProvider, // Fallback image
-                                ),
-                                const SizedBox(height: 16),
+                              CircleAvatar(
+                                radius: 70,
+                                backgroundImage: user.profileImage != null  && user.profileImage!.isNotEmpty
+                                    ? NetworkImage(user.profileImage!)
+                                    : const AssetImage('assets/images/placeholder.jpg') as ImageProvider,
+                              ),
+                              const SizedBox(height: 16),
                                 Text(
                                   user.nameEn,
                                   style: TextStyle(
@@ -314,19 +314,19 @@ class ProfileScreen extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(height: 8),
-                                Text(
-                                  'Bio: ${user.major}', // You can change this to any bio or additional info
-                                  style: const TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                                const SizedBox(height: 40),
+                                // Text(
+                                //   'Bio: ${user.nameEn}',
+                                //   style: const TextStyle(
+                                //     color: Colors.grey,
+                                //     fontSize: 18,
+                                //   ),
+                                // ),
+                                const SizedBox(height: 20),
                                 _buildProfileDetail('Degree:', user.degree),
                                 const SizedBox(height: 16),
                                 _buildProfileDetail('Date of Birth:', user.dob),
                                 const SizedBox(height: 16),
-                                _buildProfileDetail('Avatar:', user.avatar ?? 'No Avatar'),
+                                _buildProfileDetail('Major:', user.major ),
                               ],
                             );
                           }

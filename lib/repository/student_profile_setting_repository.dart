@@ -1,14 +1,14 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:lms_mobile/model/student_profile_setting.dart';
 
-class StudentProfileSettingRepository {
+import '../model/student_profile_setting.dart';
+
+class StudentSettingRepository {
   final String accessToken;
 
-  StudentProfileSettingRepository({required this.accessToken});
+  StudentSettingRepository({required this.accessToken});
 
-  // Fetch user data from the API
-  Future<StudentProfileSettingModel> fetchUserData() async {
+  Future<StudentSettingModel> fetchUserData() async {
     Uri url = Uri.parse("https://dev-flutter.cstad.edu.kh/api/v1/students/setting");
 
     try {
@@ -20,13 +20,14 @@ class StudentProfileSettingRepository {
       );
 
       if (response.statusCode == 200) {
-        var jsonResponse = jsonDecode(response.body);
-        return StudentProfileSettingModel.fromJson(jsonResponse);
+        Map<String, dynamic> userData = jsonDecode(response.body);
+        return StudentSettingModel.fromJson(userData);
       } else {
-        throw Exception("Failed to fetch user data");
+        throw Exception("Failed to fetch user data: ${response.statusCode}");
       }
     } catch (e) {
       throw Exception("Error fetching user data: $e");
     }
   }
 }
+
