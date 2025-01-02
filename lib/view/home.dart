@@ -44,9 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
         MaterialPageRoute(builder: (context) => const LogInScreen()),
       );
     } else {
-      // Token exists, check if it's valid
-      // You can add your token validation logic here (e.g., call an API to check token validity)
-      // For now, we'll assume the token is valid if it exists
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const StudentScreen(title: 'Course')),
