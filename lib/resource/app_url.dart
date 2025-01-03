@@ -31,3 +31,9 @@ class ApiUrl {
 
   static String postImageByUrl = '$baseUrl/medias/upload-single';
 }
+class AchievementUrl{
+  static String baseUrl = "https://dev-flutter.cstad.edu.kh/api/v1";
+
+  static String getAchievementUrl = '$baseUrl/students/achievement';
+  static String getYearOfStudyAchievementUrl = '$baseUrl/students/year-of-study-achievement';
+}

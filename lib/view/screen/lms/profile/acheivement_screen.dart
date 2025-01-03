@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../data/color/color_screen.dart';
 
 class AcheivementScreen extends StatelessWidget {
-  const AcheivementScreen({super.key});
+  const AcheivementScreen({super.key, required String accessToken});
 
   @override
   Widget build(BuildContext context) {
@@ -73,20 +73,20 @@ class AcheivementScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                  Text('Nhoem Tevy',
-                    style: TextStyle(
-                      color: AppColors.primaryColor,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
+                Text('Nhoem Tevy',
+                  style: TextStyle(
+                    color: AppColors.primaryColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
                   ),
+                ),
                 SizedBox(height: 2),
                 Text(
                   '12 Course',
                   style: TextStyle(
-                    color: AppColors.defaultGrayColor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500
+                      color: AppColors.defaultGrayColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500
                   ),
                 ),
               ],
@@ -224,9 +224,9 @@ class AcheivementScreen extends StatelessWidget {
         const Text(
           'Total Course: 6     GPA: 0     Credit: 18',
           style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-            color: AppColors.primaryColor
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              color: AppColors.primaryColor
           ),
         ),
       ],

@@ -270,7 +270,7 @@ class _MyHomePageState extends State<StudentScreen> {
     _pages = [
       {'title': 'Profile', 'widget': ProfileScreen(accessToken: accessToken)},
       {'title': 'Course', 'widget': CourseScreen(accessToken: accessToken)},
-      {'title': 'Achievement', 'widget': const AcheivementScreen()},
+      {'title': 'Achievement', 'widget':  AcheivementScreen(accessToken: accessToken)},
       {'title': 'Setting', 'widget': const StaticProfileViewScreen()},
     ];
   }
