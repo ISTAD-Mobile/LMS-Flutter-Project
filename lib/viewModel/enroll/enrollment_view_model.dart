@@ -3,29 +3,12 @@ import 'package:lms_mobile/data/response/api_response.dart';
 
 import '../../repository/enroll/enroll_repository.dart';
 
-// class EnrollmentViewModel extends ChangeNotifier {
-//   final _enrollRepository = EnrollRepository();
-//   var response = ApiResponse();
-//
-//   setEnrollmentData(response) {
-//     this.response = response;
-//     notifyListeners();
-//
-//     Future<dynamic> postEnrollment(data) async {
-//       await _enrollRepository.postEnrollment(data)
-//           .then((value) => setEnrollmentData(ApiResponse.completed(value)))
-//           .onError((error, stackTrace) =>
-//           setEnrollmentData(ApiResponse.error(stackTrace.toString())));
-//     }
-//   }
-// }
-
 class EnrollmentViewModel extends ChangeNotifier {
   final _enrollRepository = EnrollRepository();
-  ApiResponse response = ApiResponse.loading();
+  ApiResponse enrollment = ApiResponse.loading();
 
-  void setEnrollmentData(ApiResponse newResponse) {
-    response = newResponse;
+  void setEnrollmentData(ApiResponse newEnrollment) {
+    enrollment = newEnrollment;
     notifyListeners();
   }
 
@@ -36,7 +19,6 @@ class EnrollmentViewModel extends ChangeNotifier {
       setEnrollmentData(ApiResponse.completed(value));
     } catch (error, stackTrace) {
       setEnrollmentData(ApiResponse.error(error.toString()));
-      // Optionally log stackTrace for debugging
     }
   }
 }

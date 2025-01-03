@@ -3,31 +3,32 @@ import 'package:lms_mobile/data/response/api_response.dart';
 import 'package:lms_mobile/model/achievement/achievement.dart';
 import '../../repository/achievement/achievement_repository.dart';
 
-
 class AchievementViewModel extends ChangeNotifier {
-  final AchievementRepository _achievementRepo;
+  final AchievementRepository achievementRepository;
+  final String accessToken;
 
-  ApiResponse<Achievement> response = ApiResponse.loading();
+  // Store API response
+  ApiResponse<Achievement> achievementResponse = ApiResponse.loading();
 
-  AchievementViewModel({required AchievementRepository achievementRepository, required String accessToken})
-      : _achievementRepo = achievementRepository;
-
-  get achievementResponse => null;
+  AchievementViewModel({
+    required this.achievementRepository,
+    required this.accessToken,
+  });
 
   // Update the response and notify listeners
-  void setAchievementList(ApiResponse<Achievement> response) {
-    this.response = response;
+  void setAchievementResponse(ApiResponse<Achievement> response) {
+    achievementResponse = response;
     notifyListeners();
   }
 
   // Fetch achievement data
-  Future<void> getAchievement() async {
-    setAchievementList(ApiResponse.loading()); // Set loading state
+  Future<void> fetchAchievement() async {
+    setAchievementResponse(ApiResponse.loading()); // Set loading state
     try {
-      final achievement = await _achievementRepo.fetchAchievement();
-      setAchievementList(ApiResponse.completed(achievement)); // On success
+      final achievement = await achievementRepository.fetchAchievement();
+      setAchievementResponse(ApiResponse.completed(achievement)); // On success
     } catch (error) {
-      setAchievementList(ApiResponse.error(error.toString())); // On error
+      setAchievementResponse(ApiResponse.error(error.toString())); // On error
     }
   }
 }

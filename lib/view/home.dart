@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const IstadActivity(),
           const AcademicTypeAndScholarshipWidget(),
           CourseSection(),
-          const ItNewsSection(),
+          // const ItNewsSection(),
           ProjectArcheivementHome(),
           BachelorProgramHome(),
           Container(

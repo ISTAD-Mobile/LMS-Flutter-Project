@@ -6,7 +6,8 @@ class AppUrl {
   static String getPlaceOfBirthUrl = '$baseUrl/provinces?location_type=p';
   static String getUniversityUrl = '$baseUrl/universities';
   static String getCurrentAddressUrl = '$baseUrl/provinces?location_type=k';
-  static String postBlogUrl = '$baseUrl/enrollments';
+  static String postBlogRegisterUrl = '$baseUrl/students';
+  static String postBlogEnrollmentUrl = '$baseUrl/enrollments';
 }
 
 class JobVocancyUrl {

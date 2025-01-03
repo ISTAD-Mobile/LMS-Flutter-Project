@@ -1,27 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:lms_mobile/data/response/api_response.dart';
-import 'package:lms_mobile/model/student_profile.dart';
+import 'package:lms_mobile/model/student_profile_model.dart';
 import 'package:lms_mobile/repository/student_profile_repository.dart';
 
-class StudentProfileViewModel extends ChangeNotifier {
-  final _studentProfileRepo = StudentProfileRepository(accessToken: '');
+import 'package:flutter/material.dart';
+import 'package:lms_mobile/model/student_profile_model.dart';
+import 'package:lms_mobile/repository/student_profile_repository.dart';
 
-  ApiResponse<StudentProfile> response = ApiResponse.loading();
 
-  // Update the response and notify listeners
-  void setStudentProfileList(ApiResponse<StudentProfile> response) {
-    this.response = response;
-    notifyListeners();
+import 'package:flutter/material.dart';
+import 'package:lms_mobile/model/student_profile_model.dart';
+import 'package:lms_mobile/repository/student_profile_repository.dart';
+
+class StudenProfileDataViewModel extends ChangeNotifier {
+  final StudentProfileRepository userRepository;
+  StudentProfileModel? _user;
+  bool _isLoading = false;
+  String? _errorMessage;
+
+  StudenProfileDataViewModel({required this.userRepository});
+
+  StudentProfileModel? get user => _user;
+  bool get isLoading => _isLoading;
+  String? get errorMessage => _errorMessage;
+
+  // Fetch user data
+  Future<void> fetchUserData() async {
+    _setLoading(true);
+
+    try {
+      _user = await userRepository.fetchUserData();
+      _errorMessage = null;
+    } catch (e) {
+      _errorMessage = "Error: $e";
+    }
+
+    _setLoading(false);
   }
 
-  // Fetch all student profiles
-  Future<void> getAllStudentProfile(StudentProfile? studentProfile) async {
-    setStudentProfileList(ApiResponse.loading()); // Set loading state
-    try {
-      // final studentProfile = await _studentProfileRepo.getStudentProfile();
-      setStudentProfileList(ApiResponse.completed(studentProfile));
-    } catch (error) {
-      setStudentProfileList(ApiResponse.error(error.toString()));
-    }
+  void _setLoading(bool value) {
+    _isLoading = value;
+    Future.microtask(() => notifyListeners());
   }
 }
+

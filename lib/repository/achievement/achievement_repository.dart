@@ -13,7 +13,8 @@ class AchievementRepository {
       final response = await http.get(
         Uri.parse('https://dev-flutter.cstad.edu.kh/api/v1/students/achievement'),
         headers: {
-          'Authorization': 'Bearer $accessToken',  // Add the access token to the request header
+          'Authorization': 'Bearer $accessToken', // Add the access token to the request header
+          'Content-Type': 'application/json',
         },
       );
 
@@ -22,7 +23,7 @@ class AchievementRepository {
         // Parse the JSON response
         return Achievement.fromJson(json.decode(response.body));
       } else {
-        throw Exception('Failed to load achievement');
+        throw Exception('Failed to load achievement. Status Code: ${response.statusCode}');
       }
     } catch (e) {
       throw Exception('Failed to load achievement: $e');

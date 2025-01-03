@@ -1,23 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/viewModel/enroll/current_address_view_model.dart';
 import 'package:lms_mobile/viewModel/enroll/university_view_model.dart';
-import 'package:provider/provider.dart';
-import '../../../../viewModel/enroll/place_of_birth_view_model.dart';
+import 'package:lms_mobile/viewModel/enroll/place_of_birth_view_model.dart';
+import '../../../screen/enrollments/enrollment_provider.dart';
+import 'enroll_step1.dart';
 import 'enroll_step3.dart';
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: EnrollStep2(),
-    );
-  }
-}
 
 class EnrollStep2 extends StatefulWidget {
   const EnrollStep2({super.key});
@@ -30,17 +21,14 @@ class _CourseEnrollForm extends State<EnrollStep2> {
   final _formKey = GlobalKey<FormState>();
   bool _isFormSubmitted = false;
 
-  // Form fields
   DateTime? _selectedBirthDate;
   String? _selectedBirthAddress;
   String? _selectedCurrentAddress;
   String? _selectedEducation;
   String? _selectedUniversity;
 
-  // Constants
   static const int _minAge = 16;
   static const int _maxAge = 100;
-  static const List<String> currentAddressOptions = ['Cambodia', 'English', 'Other'];
   static const List<String> educationOptions = [
     'Association',
     'Bachelor',
@@ -52,11 +40,32 @@ class _CourseEnrollForm extends State<EnrollStep2> {
   @override
   void initState() {
     super.initState();
+    _loadSavedData();
     Future.microtask(() {
       context.read<PlaceOfBirthViewModel>().fetchPlaceOfBlogs();
       context.read<CurrentAddressViewModel>().fetchCurrentAddressBlogs();
       context.read<UniversityViewModel>().fetchUniversityBlogs();
     });
+  }
+
+  Future<void> _loadSavedData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _selectedBirthDate = DateTime.tryParse(prefs.getString('birthDate') ?? '');
+      _selectedBirthAddress = prefs.getString('birthAddress');
+      _selectedCurrentAddress = prefs.getString('currentAddress');
+      _selectedEducation = prefs.getString('education');
+      _selectedUniversity = prefs.getString('university');
+    });
+  }
+
+  Future<void> _saveStep2Data() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('birthDate', _selectedBirthDate?.toIso8601String() ?? '');
+    prefs.setString('birthAddress', _selectedBirthAddress ?? '');
+    prefs.setString('currentAddress', _selectedCurrentAddress ?? '');
+    prefs.setString('education', _selectedEducation ?? '');
+    prefs.setString('university', _selectedUniversity ?? '');
   }
 
   void _showDatePicker() {
@@ -90,21 +99,6 @@ class _CourseEnrollForm extends State<EnrollStep2> {
     );
   }
 
-  String? _validateBirthDate() {
-    if (_selectedBirthDate == null) {
-      return 'Please select your date of birth';
-    }
-
-    final age = DateTime.now().year - _selectedBirthDate!.year;
-    if (age < _minAge) {
-      return 'You must be at least $_minAge years old';
-    }
-    if (age > _maxAge) {
-      return 'Please enter a valid birth date';
-    }
-    return null;
-  }
-
   Widget _buildDropdownMenu({
     required String hint,
     required List<String> options,
@@ -123,16 +117,11 @@ class _CourseEnrollForm extends State<EnrollStep2> {
         menuHeight: 250,
         hintText: hint,
         errorText: _isFormSubmitted && selectedValue == null ? 'Please $hint' : null,
-        textStyle: const TextStyle(
-          fontSize: 16,
-          color: Colors.black,
-        ),
+        textStyle: const TextStyle(fontSize: 16, color: Colors.black),
         menuStyle: MenuStyle(
           backgroundColor: WidgetStateProperty.all(Colors.white),
           shape: WidgetStateProperty.all(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           ),
         ),
         inputDecorationTheme: InputDecorationTheme(
@@ -141,45 +130,12 @@ class _CourseEnrollForm extends State<EnrollStep2> {
             borderSide: const BorderSide(color: Colors.grey),
           ),
         ),
-        dropdownMenuEntries: options
-            .map((e) => DropdownMenuEntry(value: e, label: e))
-            .toList(),
-        onSelected: (String? value) {
-          onSelected(value);
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
+        dropdownMenuEntries: options.map((e) =>
+            DropdownMenuEntry(value: e, label: e)
+        ).toList(),
+        onSelected: onSelected,
       ),
     );
-  }
-
-  Widget _buildFormField({
-    required String label,
-    required Widget child,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            color: AppColors.primaryColor,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        const SizedBox(height: 8),
-        child,
-        const SizedBox(height: 15),
-      ],
-    );
-  }
-
-  bool _validateForm() {
-    return _selectedBirthDate != null &&
-        _selectedBirthAddress != null &&
-        _selectedCurrentAddress != null &&
-        _selectedEducation != null &&
-        _selectedUniversity != null;
   }
 
   @override
@@ -207,33 +163,15 @@ class _CourseEnrollForm extends State<EnrollStep2> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildFormField(
-                  label: 'Date of Birth',
-                  child: GestureDetector(
+                  'Date of Birth',
+                  GestureDetector(
                     onTap: _showDatePicker,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            _selectedBirthDate != null
-                                ? '${_selectedBirthDate!.year}-${_selectedBirthDate!.month.toString().padLeft(2, '0')}-${_selectedBirthDate!.day.toString().padLeft(2, '0')}'
-                                : 'Select Date of Birth',
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                          const Icon(CupertinoIcons.calendar, color: Colors.grey),
-                        ],
-                      ),
-                    ),
+                    child: _buildDateField(),
                   ),
                 ),
                 _buildFormField(
-                  label: 'Place of birth',
-                  child: Consumer<PlaceOfBirthViewModel>(
+                  'Place of birth',
+                  Consumer<PlaceOfBirthViewModel>(
                     builder: (context, viewModel, _) => _buildDropdownMenu(
                       hint: 'Select place of birth',
                       options: viewModel.placeOfBirthList,
@@ -243,19 +181,19 @@ class _CourseEnrollForm extends State<EnrollStep2> {
                   ),
                 ),
                 _buildFormField(
-                  label: 'Current address',
-                  child: Consumer<CurrentAddressViewModel>(
-                    builder: (context, currentAddViewModel, _) => _buildDropdownMenu(
-                    hint: 'Select current address',
-                    options: currentAddViewModel.currentAddressList,
-                    selectedValue: _selectedCurrentAddress,
-                    onSelected: (value) => setState(() => _selectedCurrentAddress = value),
+                  'Current address',
+                  Consumer<CurrentAddressViewModel>(
+                    builder: (context, viewModel, _) => _buildDropdownMenu(
+                      hint: 'Select current address',
+                      options: viewModel.currentAddressList,
+                      selectedValue: _selectedCurrentAddress,
+                      onSelected: (value) => setState(() => _selectedCurrentAddress = value),
+                    ),
                   ),
                 ),
-                ),
                 _buildFormField(
-                  label: 'Education',
-                  child: _buildDropdownMenu(
+                  'Education',
+                  _buildDropdownMenu(
                     hint: 'Select education',
                     options: educationOptions,
                     selectedValue: _selectedEducation,
@@ -263,63 +201,118 @@ class _CourseEnrollForm extends State<EnrollStep2> {
                   ),
                 ),
                 _buildFormField(
-                  label: 'University',
-                  child: Consumer<UniversityViewModel>(
-                    builder: (context, universityViewModel, _) => _buildDropdownMenu(
+                  'University',
+                  Consumer<UniversityViewModel>(
+                    builder: (context, viewModel, _) => _buildDropdownMenu(
                       hint: 'Select University',
-                      options: universityViewModel.universityList,
+                      options: viewModel.universityList,
                       selectedValue: _selectedUniversity,
                       onSelected: (value) => setState(() => _selectedUniversity = value),
                     ),
                   ),
                 ),
-                const SizedBox(height: 11),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey[200],
-                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: const Text(
-                        'Previous',
-                        style: TextStyle(color: AppColors.defaultGrayColor, fontSize: 16),
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() => _isFormSubmitted = true);
-                        if (_formKey.currentState!.validate() && _validateForm()) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => EnrollStep3()),
-                          );
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primaryColor,
-                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: const Text(
-                        'Next',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                    ),
-                  ],
-                ),
+                const SizedBox(height: 24),
+                _buildNavigationButtons(),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildDateField() {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            _selectedBirthDate != null
+                ? '${_selectedBirthDate!.year}-${_selectedBirthDate!.month.toString().padLeft(2, '0')}-${_selectedBirthDate!.day.toString().padLeft(2, '0')}'
+                : 'Select Date of Birth',
+            style: const TextStyle(fontSize: 16),
+          ),
+          const Icon(CupertinoIcons.calendar, color: Colors.grey),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFormField(String label, Widget child) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            color: AppColors.primaryColor,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 8),
+        child,
+        const SizedBox(height: 15),
+      ],
+    );
+  }
+
+  Widget _buildNavigationButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        ElevatedButton(
+          onPressed: () => Navigator.pop(context),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.grey[200],
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          child: const Text(
+            'Previous',
+            style: TextStyle(color: AppColors.defaultGrayColor, fontSize: 16),
+          ),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            setState(() => _isFormSubmitted = true);
+            if (_formKey.currentState!.validate() && _validateForm()) {
+              await _saveStep2Data();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => EnrollStep3(formData: EnrollmentFormData()),
+               )
+              );
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primaryColor,
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          child: const Text(
+            'Next',
+            style: TextStyle(color: Colors.white, fontSize: 16),
+          ),
+        ),
+      ],
+    );
+  }
+
+  bool _validateForm() {
+    return _selectedBirthDate != null &&
+        _selectedBirthAddress != null &&
+        _selectedCurrentAddress != null &&
+        _selectedEducation != null &&
+        _selectedUniversity != null;
   }
 }

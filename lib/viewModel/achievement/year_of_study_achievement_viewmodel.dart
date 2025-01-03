@@ -6,17 +6,20 @@ import 'package:lms_mobile/repository/achievement/year_of_study_achievement_repo
 class YearOfStudyAchievementViewModel extends ChangeNotifier {
   final YearOfStudyAchievementRepository _yearOfStudyAchievementRepo;
 
-  ApiResponse<YearOfStudyAchievement> response = ApiResponse.loading();
+  ApiResponse<YearOfStudyAchievement> _response = ApiResponse.loading();
 
-  YearOfStudyAchievementViewModel({required YearOfStudyAchievementRepository yearOfStudyAchievementRepository})
-      : _yearOfStudyAchievementRepo = yearOfStudyAchievementRepository;
+  ApiResponse<YearOfStudyAchievement> get response => _response;
 
-  get yearOfStudyAchievementResponse => null;
+  YearOfStudyAchievementViewModel({
+    required YearOfStudyAchievementRepository yearOfStudyAchievementRepository,
+  }) : _yearOfStudyAchievementRepo = yearOfStudyAchievementRepository;
 
   // Update the response and notify listeners
-  void setYearOfStudyAchievementList(ApiResponse<YearOfStudyAchievement> response) {
-    this.response = response;
-    notifyListeners();
+  void setYearOfStudyAchievementList(ApiResponse<YearOfStudyAchievement> newResponse) {
+    if (_response != newResponse) {
+      _response = newResponse;
+      notifyListeners();
+    }
   }
 
   // Fetch year of study achievement data
