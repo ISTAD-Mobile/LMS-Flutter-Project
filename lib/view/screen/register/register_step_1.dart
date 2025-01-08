@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/view/screen/register/register_step_2.dart';
 import 'package:http/http.dart' as http;
-import 'package:lms_mobile/viewModel/admission_viewmodel.dart';
+import 'package:lms_mobile/viewModel/admission/admission_viewmodel.dart';
 
 class RegisterStep1 extends StatefulWidget {
   const RegisterStep1({super.key});
@@ -18,7 +18,6 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
   String? _selectedGender;
   final List<String> genderOptions = ['Female', 'Male', 'Other'];
   final bool _isFormSubmitted = false;
-  final _admissionViewModel = AdmissionViewmodel();
   final _formKey = GlobalKey<FormState>();
   final nameKhController = TextEditingController();
   final nameEnController = TextEditingController();
@@ -29,6 +28,9 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
   final contactHighSchoolController = TextEditingController();
   final contactContactNumberController = TextEditingController();
   final contactGuardianContactController = TextEditingController();
+
+
+  final _admissionViewModel = AdmissionViewmodel();
 
   String result = '';
   bool isLoading = false;
@@ -514,13 +516,11 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                   keyboardType: TextInputType.phone,
                   hintText: '092382489',
                   validator: (value) {
-                    // Check if the value is empty
                     if (value == null || value.isEmpty) {
                       return 'This field is required';
                     }
 
-                    // Check if the value matches a valid phone number pattern (e.g., 10 digits)
-                    String phonePattern = r'^[0-9]{9,15}$'; // Adjust for your specific phone format
+                    String phonePattern = r'^[0-9]{9,15}$';
                     RegExp regex = RegExp(phonePattern);
 
                     if (!regex.hasMatch(value)) {
@@ -762,7 +762,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                           }
                         }
                       },
-                      child: const Text(
+                      child: Text(
                         'Next',
                         style: TextStyle(fontSize: 16, color: AppColors.defaultWhiteColor),
                       ),
@@ -906,7 +906,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
               children: [
                 if (label.endsWith('*'))
                   const TextSpan(
-                    text: ' *',
+                    text: '*',
                     style: TextStyle(
                       color: Colors.red,
                       fontWeight: FontWeight.bold,

@@ -5,24 +5,6 @@ import 'package:lms_mobile/data/network/app_exception.dart';
 
 class ApiService {
 
-  //POST ENROLL
-  Future<dynamic> postEnrollment(url, data) async {
-    var headers = {
-      'Content-Type' : 'application/json'
-    };
-    var request = http.Request('POST', Uri.parse(url));
-    request.body = data;
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      print(await response.stream.bytesToString());
-    } else {
-      print(response.reasonPhrase);
-    }
-  }
-
   Future<dynamic> getApiService(url) async {
     http.StreamedResponse? response;
     try{
@@ -45,21 +27,40 @@ class ApiService {
   }
 
 
-  Future<dynamic> postAdmission(url , data) async {
+  Future<dynamic> postAdmission(url,data) async {
     var headers = {
       'Content-Type': 'application/json'
     };
-    var request = http.Request('POST',Uri.parse(url));
+    var request = http.Request('POST', Uri.parse(url));
     request.body = data;
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 201){
+    if (response.statusCode == 200) {
+      return true;
       print(await response.stream.bytesToString());
     }
-    else{
-      print(response.reasonPhrase);
+    else {
+      return false;
+    }
+
+  }
+
+  Future<dynamic> uploadImage(File image, String uri) async {
+    http.StreamedResponse? response;
+    try {
+      var request = http.MultipartRequest('POST', Uri.parse(uri));
+
+      // Add image to the multipart request
+      request.files.add(await http.MultipartFile.fromPath('files', image.path));
+
+      response = await request.send();
+
+      // Check if the response was successful
+      return await returnResponse(response);
+    } on Exception catch (e) {
+      throw FetchDataException("Error uploading image: $e");
     }
   }
 }

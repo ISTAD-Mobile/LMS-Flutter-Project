@@ -25,16 +25,6 @@ class ProjectListScreen extends StatelessWidget {
     ProjectGenerationOne(
       projects: [
         Project(
-          title: 'Developers Cambodia',
-          description: 'Developers community for Cambodian that developers...',
-            image: Image.asset('assets/images/project_developer_cambodia.png',width: 60,height: 60,),
-          features: ['E-Learning', 'Global Forum', 'Sharing Community'],
-          iconBgColor: Colors.blue,
-          label: '1st | Advanced',
-          textIcon: '',
-          textWithIcon: 'Khmer Community'
-        ),
-        Project(
           title: 'Live Hacking Demo',
           description: 'A tool to do the pentesting purpose on a website such...',
             image: Image.asset('assets/images/project_live-demo.png',width: 60,height: 60,),
@@ -46,7 +36,7 @@ class ProjectListScreen extends StatelessWidget {
             'Generating Reports',
           ],
           textIcon: '',
-          textWithIcon: 'Cybersecurity'
+          textWithIcon: 'Cybersecurity',
         ),
         Project(
           title: 'K-QuickSight',
@@ -146,6 +136,16 @@ class ProjectListScreen extends StatelessWidget {
             textIcon: '',
             textWithIcon: 'Productivity'
         ),
+        Project(
+            title: 'Developers Cambodia',
+            description: 'Developers community for Cambodian that developers...',
+            image: Image.asset('assets/images/project_developer_cambodia.png',width: 60,height: 60,),
+            features: ['E-Learning', 'Global Forum', 'Sharing Community'],
+            iconBgColor: Colors.blue,
+            label: '1st | Advanced',
+            textIcon: '',
+            textWithIcon: 'Khmer Community'
+        ),
       ],
     ),
   ];
@@ -241,35 +241,34 @@ class ProjectListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // backgroundColor: AppColors.backgroundColor,
         leading: IconButton(
           onPressed: () {
             if (Navigator.canPop(context)) {
               Navigator.pop(context);
             } else {
-              // Navigate to a specific screen if no screen to pop
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => HomeScreen()),
               );
             }
           },
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back,color: AppColors.primaryColor),
         ),
-        title: const Text(
-          "Back",
-          style: TextStyle(fontSize: 16, color: AppColors.primaryColor),
-        ),
+        // title: const Text(
+        //   "Back",
+        //   style: TextStyle(fontSize: 16, color: AppColors.primaryColor),
+        // ),
       ),
       body: Container(
-        decoration: BoxDecoration(
-          color: AppColors.backgroundColor,
-        ),
+        // decoration: BoxDecoration(
+        //   color: AppColors.backgroundColor,
+        // ),
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header for PROJECT 1st GENERATION
               const Text(
                 'PROJECT 1st GENERATION',
                 style: TextStyle(
@@ -294,7 +293,6 @@ class ProjectListScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              // Header for PROJECT 2nd GENERATION
               const Text(
                 'PROJECT 2nd GENERATION',
                 style: TextStyle(

@@ -3,7 +3,7 @@ import '../../../../data/color/color_screen.dart';
 import '../../../widgets/studentsWidget/widget_detail_card/course_detail_screen.dart';
 
 class CourseScreen extends StatelessWidget {
-  const CourseScreen({super.key});
+  const CourseScreen({super.key, required String accessToken});
 
   @override
   Widget build(BuildContext context) {

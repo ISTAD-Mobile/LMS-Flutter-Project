@@ -16,13 +16,6 @@ class ITExpertPage extends StatefulWidget {
 class _ITExpertPageState extends State<ITExpertPage> {
   int currentIndex = 0;
 
-  // List of screens for each tab
-  final List<Widget> screens = [
-     HomeScreen(),
-    const MyAcademicScreen(),
-    const HomeIstadScreen(),
-     FirstLogInScreen(),
-  ];
 
   void onTabTapped(int index) {
     setState(() {

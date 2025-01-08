@@ -17,7 +17,7 @@ class _VideoBackgroundState extends State<VideoBackground> {
   void initState() {
     super.initState();
     _controller = VideoPlayerController.network(
-        'https://rr2---sn-npoxu-2ois.googlevideo.com/videoplayback?expire=1735658028&ei=zLVzZ66cL8-M1d8Pk77m6QY&ip=136.228.158.126&id=o-ACoJiCoMbKfwmYgCb98bwrwsAyeX8sHYjGsNGG2xgM38&itag=18&source=youtube&requiressl=yes&xpc=EgVo2aDSNQ%3D%3D&met=1735636428%2C&mh=JD&mm=31%2C29&mn=sn-npoxu-2ois%2Csn-npoldn7d&ms=au%2Crdu&mv=m&mvi=2&pl=24&rms=au%2Cau&initcwndbps=1276250&bui=AfMhrI9b5cpsS_ipVMA5VbGblzqHh6ieGgXU2yokg-pDD7ldjy26tpOIx8ifsbi_p_XJBIH1kcb4f9Yd&vprv=1&svpuc=1&mime=video%2Fmp4&ns=3MTYG5dubCesvHCD3FbMMkcQ&rqh=1&gir=yes&clen=1704251&ratebypass=yes&dur=30.696&lmt=1730387521026597&mt=1735635928&fvip=3&fexp=51326932%2C51331020%2C51335594%2C51371294&c=MWEB&sefc=1&txp=5309224&n=3iv4bi6qzZNH4w&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cxpc%2Cbui%2Cvprv%2Csvpuc%2Cmime%2Cns%2Crqh%2Cgir%2Cclen%2Cratebypass%2Cdur%2Clmt&sig=AJfQdSswRQIhAJJK_wDQD0tZuKzBfu9OugVuCuJkiEqktWTwm4OvUhamAiAxE2UXJo67CMPkuLct2qBdVdc8VWUXXZjdwlfuS5krUQ%3D%3D&lsparams=met%2Cmh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Crms%2Cinitcwndbps&lsig=AGluJ3MwRgIhAOhw0AcSxhbYvZvOHTdCCMWKvBW2oTRQU8xigvU0e2BbAiEAsREJlMk_BOJX3duqwX9Ve37FGo9k98zPX7tSrvw4J6Q%3D')
+        'https://static.vecteezy.com/system/browse_category/video/140/Cityscapes.mp4')
       ..initialize().then((_) {
         _controller.setLooping(true);
         _controller.play();

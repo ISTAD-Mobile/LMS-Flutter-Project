@@ -1,18 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
-import 'package:lms_mobile/model/enrollmentRequest/enrollment_model.dart';
+import 'package:lms_mobile/view/screen/enrollments/enrollment_provider.dart';
 import 'package:lms_mobile/viewModel/enroll/enrollment_view_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../model/enrollmentRequest/enrollment_model.dart';
 import '../../../screen/homeScreen/course/course_details_screen.dart';
 import 'enroll_step2.dart';
 
 class EnrollStep1 extends StatefulWidget {
-  const EnrollStep1({super.key});
+  const EnrollStep1({super.key, required EnrollmentFormData formData});
 
   @override
   _EnrollStep1 createState() => _EnrollStep1();
 }
 
 class _EnrollStep1 extends State<EnrollStep1> {
+
+  String? fullName;
+  String? gender;
+  String? phone;
+  String? email;
+
+  bool _validateForm() {
+    return _fullNameController.text.isNotEmpty &&
+        _selectedGender != null &&
+        phoneNumberController.text.isNotEmpty &&
+        emailController.text.isNotEmpty;
+  }
 
   final _formKey = GlobalKey<FormState>();
   String? _selectedGender;
@@ -34,6 +48,14 @@ class _EnrollStep1 extends State<EnrollStep1> {
   void initState() {
     super.initState();
     _focusNode.addListener(_onFocusChange);
+  }
+
+  Future<void> _saveStep1Data() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('fullName', fullName?.toString() ?? '');
+    prefs.setString('gender', gender ?? '');
+    prefs.setString('phone', phone ?? '');
+    prefs.setString('email', email ?? '');
   }
 
   @override
@@ -368,21 +390,17 @@ class _EnrollStep1 extends State<EnrollStep1> {
                   alignment: Alignment.centerRight,
                   child: SizedBox(
                     child: ElevatedButton(
-                      onPressed: () {
-                        _saveStep1();
-                        setState(() {
-                          _isFormSubmitted = true;  // Add this line
-                        });
-
-                        if (_formKey.currentState!.validate() && _selectedGender != null) {  // Modified this line
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Processing Enroll')),
-                          );
+                      onPressed: () async {
+                        setState(() => _isFormSubmitted = true);
+                        if (_formKey.currentState!.validate() && _validateForm()) {
+                          await _saveStep1Data();
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => const EnrollStep2(),
-                            ),
+                            MaterialPageRoute(builder: (context) => const EnrollStep2()),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Please complete the form')),
                           );
                         }
                       },
