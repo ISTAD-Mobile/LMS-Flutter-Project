@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:lms_mobile/repository/achievement/achievement_repository.dart';
 import 'package:lms_mobile/repository/achievement/year_of_study_achievement_repository.dart';
+import 'package:lms_mobile/view/screen/academic/foundation_screen.dart';
 import 'package:lms_mobile/view/screen/enrollments/enrollment_provider.dart';
 import 'package:lms_mobile/repository/login_repo.dart';
 import 'package:lms_mobile/repository/student_profile_repository.dart';
 import 'package:lms_mobile/repository/student_profile_setting_repository.dart';
 import 'package:lms_mobile/view/screen/splashScreen/splash_screen.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/enrollments_widget/enroll_step2.dart';
-import 'package:lms_mobile/viewModel/achievement/achievement_viewmodel.dart';
 import 'package:lms_mobile/viewModel/achievement/year_of_study_achievement_viewmodel.dart';
+import 'package:lms_mobile/viewModel/admission/upload_image_viewmodel.dart';
 import 'package:lms_mobile/viewModel/course_viewmodel.dart';
 import 'package:lms_mobile/viewModel/enroll/current_address_view_model.dart';
 import 'package:lms_mobile/viewModel/enroll/place_of_birth_view_model.dart';
@@ -29,14 +29,19 @@ void main() {
         ChangeNotifierProvider(create: (_) => CurrentAddressViewModel()),
         ChangeNotifierProvider(create: (_) => UniversityViewModel()),
         ChangeNotifierProvider(create: (_) => CourseViewmodel()),
-        ChangeNotifierProvider(
-          create: (_) => AchievementViewModel(
-            achievementRepository: AchievementRepository(accessToken: ''),
-            accessToken: '',
+        // ChangeNotifierProvider(
+        //   create: (_) => AchievementViewModel(
+        //     achievementRepository: AchievementRepository(accessToken: ''),
+        //   ),
+        // ),
+        Provider<YearOfStudyAchievementRepository>(
+          create: (_) => YearOfStudyAchievementRepository(accessToken: ''),
+        ),
+        ChangeNotifierProvider<YearOfStudyAchievementViewmodel>(
+          create: (context) => YearOfStudyAchievementViewmodel(
+            userRepository: context.read<YearOfStudyAchievementRepository>(),
           ),
         ),
-        ChangeNotifierProvider(create: (_) => YearOfStudyAchievementViewModel(yearOfStudyAchievementRepository: YearOfStudyAchievementRepository(accessToken: ''),
-        )),
         Provider<StudentProfileRepository>(create: (_) => StudentProfileRepository(accessToken: '')), // Ensure you have a valid repository
         ChangeNotifierProvider(
           create: (context) => StudenProfileDataViewModel(userRepository: context.read<StudentProfileRepository>()),
@@ -44,8 +49,10 @@ void main() {
         Provider<StudentSettingRepository>(
           create: (_) => StudentSettingRepository(accessToken: ''),
         ),
-        
-      ],
+  ChangeNotifierProvider(create: (context) => ImageViewModel(), child: FoundationPage(),
+  )
+
+  ],
       child: MyApp(),
     ),
   );

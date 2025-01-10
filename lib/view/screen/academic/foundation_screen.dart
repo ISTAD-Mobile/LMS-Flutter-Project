@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:lms_mobile/view/screen/about/my_home_about_istad_screen.dart';
 import '../../../data/color/color_screen.dart';
 import '../../home.dart';
@@ -14,6 +15,7 @@ class FoundationPage extends StatefulWidget {
 
 class _ITExpertPageState extends State<FoundationPage> {
   int currentIndex = 0;
+  String? uploadedImageUrl;
 
   void onTabTapped(int index) {
     setState(() {
@@ -47,8 +49,8 @@ class _ITExpertPageState extends State<FoundationPage> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.asset(
-                  'assets/images/Foundation.jpg',
+                child: Image.network(
+                  'https://dev-flutter.cstad.edu.kh/api/v1/medias/view/c0a25d97-4a28-4b4a-9a3f-965f09078670.jpg',
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: 200,
