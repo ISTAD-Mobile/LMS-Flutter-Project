@@ -1,12 +1,12 @@
 class StudentSettingModel {
-  final String gender; // 'M' or 'F'
-  final String? profileImage; // Nullable, could be a URL or null
-  final String phoneNumber; // Phone numbers are stored as strings
-  final String familyPhoneNumber; // Same assumption as phoneNumber
-  final String guardianRelationShip; // Example values: 'parents', 'guardian', 'relative', 'other'
-  final String biography; // Freeform text
-  final String currentAddress; // Could be a detailed address or ID, depending on your context
-  final String birthPlace; // Could also represent a detailed address or ID
+  String gender;
+  String? profileImage;
+  final String phoneNumber;
+  final String familyPhoneNumber;
+  String guardianRelationShip;
+  final String biography;
+  final String currentAddress;
+  final String birthPlace;
 
   StudentSettingModel({
     required this.gender,
@@ -19,7 +19,6 @@ class StudentSettingModel {
     required this.birthPlace,
   });
 
-  // Factory constructor for creating a UserProfile instance from JSON
   factory StudentSettingModel.fromJson(Map<String, dynamic> json) {
     return StudentSettingModel(
       gender: json['gender'],
@@ -33,7 +32,6 @@ class StudentSettingModel {
     );
   }
 
-  // Method for converting a UserProfile instance to JSON
   Map<String, dynamic> toJson() {
     return {
       'gender': gender,

@@ -1,13 +1,15 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/view/screen/register/register_step_3.dart';
-import 'package:http/http.dart' as http;
+import 'package:lms_mobile/viewModel/admission/study_program_alas.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../model/admission/admission_form.dart';
+import '../../../viewModel/enroll/current_address_view_model.dart';
+import '../../../viewModel/enroll/place_of_birth_view_model.dart';
 
 class RegisterStep2 extends StatefulWidget {
-  const RegisterStep2({super.key});
 
   @override
   _StudentAdmissionFormState createState() => _StudentAdmissionFormState();
@@ -15,116 +17,145 @@ class RegisterStep2 extends StatefulWidget {
 
 class _StudentAdmissionFormState extends State<RegisterStep2> {
   final _formKey = GlobalKey<FormState>();
-  String? selectedClassStudent;
-  String? selectedGrade;
-  String? selectedDiplomaSession;
-  String result = '';
+
   bool isLoading = false;
-  String? _selectedClassStudent;
-  final List<String> classStudentOptions = ['Science Class',
-    'Social Science Class'];
-  final classStudentController = TextEditingController();
+  bool _isFormSubmitted = false;
+
+  final List<String> gradeOptions = ['Grade A','Grade B'];
+
   String? _selectedGrade;
-  final List<String> gradeOptions = [
-    'Grade A',
-    'Grade B',
-    'Grade C',
-    'Grade D',
-    'Grade E',
-    'Grade F',
-    'Grade Auto',
-    'Waiting for Results'];
-  final gradeController = TextEditingController();
-  String? _selectedDiplomaSession;
-  final List<String> diplomaSessionOptions = [
-    '2021',
-    '2022',
-    '2023',
-    '2024',
-    'Other'];
-  final diplomaSessionController = TextEditingController();
-  final bool _isFormSubmitted = false;
+  String? _selectedProvince;
+  String? _selectedCurrentAddress;
+  String? _selectedStudyProgramAlas;
 
-  File? _selectedHighCertificate;
-  final ImagePicker _pickerSelectedHighCertificate = ImagePicker();
-  final String selectHighCertificateUrl = "https://dev-flutter.cstad.edu.kh/api/v1/medias/upload-single";
+  String? fatherName;
+  String? fatherContactNumber;
+  String? motherName;
+  String? motherContactNumber;
+  String? nameOfHighSchool;
 
-  Future<void> _pickImageHighCertificate(ImageSource source) async {
-    final XFile? pickedImage = await _pickerSelectedHighCertificate.pickImage(source: source);
-    if (pickedImage != null) {
-      final pickedFile = File(pickedImage.path);
-      if (await pickedFile.length() > 10 * 1024 * 1024) {
-        setState(() {
-          result = 'File size should not exceed 10MB';
-        });
-      } else {
-        setState(() {
-          _selectedHighCertificate = pickedFile;
-          result = '';
-        });
-        _uploadImageHighCertificate(_selectedHighCertificate!);
-      }
-    }
+  final fatherController = TextEditingController();
+  final fatherNumberController = TextEditingController();
+  final motherController = TextEditingController();
+  final motherNumberController = TextEditingController();
+  final nameOfHighSchoolController = TextEditingController();
+
+
+  bool _validateForm() {
+    return fatherController.text.isNotEmpty &&
+        fatherNumberController.text.isNotEmpty &&
+        motherController.text.isNotEmpty &&
+        motherNumberController.text.isNotEmpty &&
+        nameOfHighSchoolController.text.isNotEmpty &&
+        _selectedGrade != null  &&
+        _selectedProvince != null &&
+        _selectedCurrentAddress != null &&
+        _selectedStudyProgramAlas != null
+    ;
   }
 
-  Future<void> _uploadImageHighCertificate(File imageFile) async {
-    try {
-      var uri = Uri.parse(selectHighCertificateUrl);
-      var request = http.MultipartRequest('POST', uri)
-        ..headers['Content-Type'] = 'multipart/form-data'
-        ..files.add(await http.MultipartFile.fromPath('file', imageFile.path));
-
-      var response = await request.send();
-
-      if (response.statusCode == 201) {
-        setState(() {
-          result = 'Image uploaded successfully!';
-        });
-      } else {
-        setState(() {
-          result = 'Failed to upload image. Status code: ${response.statusCode}';
-        });
-      }
-    } catch (e) {
-      setState(() {
-        result = 'Error uploading image: $e';
-      });
-    }
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedData();
+    Future.microtask(() {
+      context.read<CurrentAddressViewModel>().fetchCurrentAddressBlogs();
+      context.read<StudyProgramAlasViewModel>().fetchAllStudyPrograms();
+    });
   }
 
-  Future<void> _stepTwoFormSubmit() async {
-    try {
-      final response = await http.post(
-        Uri.parse('https://dev-flutter.cstad.edu.kh/api/v1/student-admissions'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, dynamic>{
-          'classStudent': selectedClassStudent,
-          'diplomaSession': selectedDiplomaSession,
-          'bacIiGrade': selectedGrade,
-        }),
-      );
+  Future<void> _loadSavedData() async {
+    final prefs = await SharedPreferences.getInstance();
 
-      // Print the raw response for debugging
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-      if (response.statusCode == 201) {
-        // Successful POST request, handle the response here
-        final responseData = jsonDecode(response.body);
-        setState(() {
-          result = 'ID: ${responseData['id']}\nName: ${responseData['name']}\nEmail: ${responseData['email']}';
-        });
-      } else {
-        // If the server returns an error response, throw an exception
-        throw Exception('Failed to post data');
-      }
-    } catch (e) {
-      setState(() {
-        result = 'Error: $e';
-      });
-    }
+    setState(() {
+      fatherController.text = prefs.getString('fatherName') ?? '';
+      fatherNumberController.text = prefs.getString('fatherContactNumber') ?? '';
+      motherController.text = prefs.getString('motherName') ?? '';
+      motherNumberController.text = prefs.getString('motherContactNumber') ?? '';
+      nameOfHighSchoolController.text = prefs.getString('nameOfHighSchool') ?? '';
+
+      _selectedGrade = prefs.getString('grade');
+      _selectedProvince = prefs.getString('province');
+      _selectedCurrentAddress = prefs.getString('currentAddress');
+      _selectedStudyProgramAlas = prefs.getString('studyProgramAlias');
+    });
+
+    debugPrint('Data Loaded Successfully!');
   }
+
+
+  Future<void> _saveStep2DataAdmission() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('currentAddress', _selectedCurrentAddress ?? '');
+    prefs.setString('province', _selectedProvince ?? '');
+    prefs.setString('grade', _selectedGrade ?? '');
+    prefs.setString('studyProgramAlias', _selectedStudyProgramAlas ?? '');
+    prefs.setString('fatherName', fatherName ?? '');
+    prefs.setString('fatherContactNumber', fatherContactNumber ?? '');
+    prefs.setString('motherName', motherName ?? '');
+    prefs.setString('motherContactNumber', motherContactNumber ?? '');
+    prefs.setString('nameOfHighSchool', nameOfHighSchool ?? '');
+    print(prefs);
+  }
+
+  Widget _buildDropdownMenu({
+    required String hint,
+    required List<String> options,
+    required String? selectedValue,
+    required void Function(String?) onSelected,
+    bool isLoading = false,
+  }) {
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return SizedBox(
+      width: double.infinity,
+      child: DropdownMenu<String>(
+        width: 398,
+        menuHeight: 250,
+        hintText: hint,
+        errorText: _isFormSubmitted && selectedValue == null ? 'Please $hint' : null,
+        textStyle: const TextStyle(fontSize: 16, color: Colors.black),
+        menuStyle: MenuStyle(
+          backgroundColor: WidgetStateProperty.all(Colors.white),
+          shape: WidgetStateProperty.all(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+        ),
+        dropdownMenuEntries: options.map((e) =>
+            DropdownMenuEntry(value: e, label: e)
+        ).toList(),
+        onSelected: onSelected,
+      ),
+    );
+  }
+
+  Widget _buildFormField(String label, Widget child) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            color: AppColors.primaryColor,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 8),
+        child,
+        const SizedBox(height: 15),
+      ],
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +187,7 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Education Information',
+                  'Additional Information',
                   style: TextStyle(
                     color: AppColors.primaryColor,
                     fontSize: 24,
@@ -164,366 +195,79 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                   ),
                 ),
                 const SizedBox(height: 20,),
-                // Gender Field
-                RichText(
-                  text: const TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'Class Student',
-                        style: TextStyle(
-                          color: AppColors.primaryColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      TextSpan(
-                        text: ' *',
-                        style: TextStyle(
-                          color: AppColors.secondaryColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
+                _buildTextField(
+                  label: 'Father Name *',
+                  controller: fatherController,
+                  hintText: 'Dara Phan'
+                ),
+                _buildTextField(
+                    label: 'Father Contact Number (Optional) *',
+                    controller: fatherNumberController,
+                    hintText: '0983728749',
+                  keyboardType: TextInputType.phone,
+                ),
+                _buildTextField(
+                    label: 'Mother Name *',
+                    controller: motherController,
+                    hintText: 'Sokchea Kim'
+                ),
+                _buildTextField(
+                    label: 'Mother Contact Number (Optional) *',
+                    controller: motherNumberController,
+                    hintText: '0963762849',
+                  keyboardType: TextInputType.phone,
+                ),
+                _buildTextField(
+                    label: 'Name of Your High School *',
+                    controller: nameOfHighSchoolController,
+                    hintText: 'Bak Touk High School'
+                ),
+                _buildFormField(
+                  'Province',
+                  Consumer<PlaceOfBirthViewModel>(
+                    builder: (context, viewModel, _) => _buildDropdownMenu(
+                      hint: 'Select a province',
+                      options: viewModel.placeOfBirthList,
+                      selectedValue: _selectedProvince,
+                      onSelected: (value) => setState(() => _selectedProvince = value),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 8),
-                SizedBox(
-                  width: double.infinity,
-                  child: DropdownMenu<String>(
-                    width: 398,
-                    hintText: 'Select Class ',
-                    errorText: _isFormSubmitted && _selectedClassStudent == null ? 'Please select class' : null,
-                    textStyle: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
+                _buildFormField(
+                  'StudyProgramAlias',
+                  Consumer<StudyProgramAlasViewModel>(
+                    builder: (context, viewModel, _) => _buildDropdownMenu(
+                      hint: 'Select a StudyProgramAlias',
+                      options: viewModel.studyProgramNames,
+                      selectedValue: _selectedStudyProgramAlas,
+                      onSelected: (value) => setState(() => _selectedStudyProgramAlas = value),
                     ),
-                    menuStyle: MenuStyle(
-                      backgroundColor: WidgetStateProperty.all(Colors.white),
-                      shape: WidgetStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    ),
-                    controller: classStudentController,
-                    inputDecorationTheme: InputDecorationTheme(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.grey,),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.grey,),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: AppColors.primaryColor),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.red),
-                      ),
-                      focusedErrorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.red),
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                    ),
-                    dropdownMenuEntries: classStudentOptions.map((e) =>
-                        DropdownMenuEntry(
-                          value: e,
-                          label: e,
-                          style: ButtonStyle(
-                            backgroundColor: WidgetStateProperty.all(Colors.transparent),
-                            foregroundColor: WidgetStateProperty.all(Colors.black),
-                            textStyle: WidgetStateProperty.resolveWith((states) {
-                              if (states.contains(WidgetState.hovered)) {
-                                return const TextStyle(
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.w400,
-                                );
-                              }
-                              return const TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w400,
-                              );
-                            }),
-                          ),
-                        ),
-                    ).toList(),
-                    onSelected: (String? value) {
-                      setState(() {
-                        _selectedClassStudent = value;
-                      });
-                      FocusManager.instance.primaryFocus?.unfocus();
-                    },
-                    enableSearch: true,
-                    requestFocusOnTap: true,
-                    enableFilter: true,
                   ),
                 ),
-                const SizedBox(height: 20,),
-                RichText(
-                  text: const TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'Grade (Optional)',
-                        style: TextStyle(
-                          color: AppColors.primaryColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      TextSpan(
-                        text: ' *',
-                        style: TextStyle(
-                          color: AppColors.secondaryColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
+                _buildFormField(
+                  'Current address',
+                  Consumer<PlaceOfBirthViewModel>(
+                    builder: (context, viewModel, _) => _buildDropdownMenu(
+                      hint: 'Select place of birth',
+                      options: viewModel.placeOfBirthList,
+                      selectedValue: _selectedCurrentAddress,
+                      onSelected: (value) => setState(() => _selectedCurrentAddress = value),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 8),
-                SizedBox(
-                  width: double.infinity,
-                  child: DropdownMenu<String>(
-                    width: 398,
-                    hintText: 'Select a grade ',
-                    errorText: _isFormSubmitted && _selectedGrade == null ? 'Please select a grade' : null,
-                    textStyle: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                    ),
-                    menuStyle: MenuStyle(
-                      backgroundColor: WidgetStateProperty.all(Colors.white),
-                      shape: WidgetStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    ),
-                    controller: gradeController,
-                    inputDecorationTheme: InputDecorationTheme(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.grey,),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.grey,),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: AppColors.primaryColor),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.red),
-                      ),
-                      focusedErrorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.red),
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                    ),
-                    dropdownMenuEntries: gradeOptions.map((e) =>
-                        DropdownMenuEntry(
-                          value: e,
-                          label: e,
-                          style: ButtonStyle(
-                            backgroundColor: WidgetStateProperty.all(Colors.transparent),
-                            foregroundColor: WidgetStateProperty.all(Colors.black),
-                            textStyle: WidgetStateProperty.resolveWith((states) {
-                              if (states.contains(WidgetState.hovered)) {
-                                return const TextStyle(
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.w400,
-                                );
-                              }
-                              return const TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w400,
-                              );
-                            }),
-                          ),
-                        ),
-                    ).toList(),
-                    onSelected: (String? value) {
-                      setState(() {
-                        _selectedGrade = value;
-                      });
-                      FocusManager.instance.primaryFocus?.unfocus();
-                    },
-                    enableSearch: true,
-                    requestFocusOnTap: true,
-                    enableFilter: true,
-                  ),
+                _buildDropdownField(
+                  label: 'Grade (Optional) *',
+                  value: _selectedGrade,
+                  items: gradeOptions,
+                  hintText: 'Select your Current Address',
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedGrade = value;
+                    });
+                  },
                 ),
-                const SizedBox(height: 20,),
-                RichText(
-                  text: const TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'Class Student',
-                        style: TextStyle(
-                          color: AppColors.primaryColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      TextSpan(
-                        text: ' *',
-                        style: TextStyle(
-                          color: AppColors.secondaryColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 8),
-                SizedBox(
-                  width: double.infinity,
-                  child: DropdownMenu<String>(
-                    width: 398,
-                    hintText: 'Select Diploma Session',
-                    errorText: _isFormSubmitted && _selectedDiplomaSession == null ? 'Please select diploma session' : null,
-                    textStyle: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                    ),
-                    menuStyle: MenuStyle(
-                      backgroundColor: WidgetStateProperty.all(Colors.white),
-                      shape: WidgetStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    ),
-                    controller: diplomaSessionController,
-                    inputDecorationTheme: InputDecorationTheme(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.grey,),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.grey,),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: AppColors.primaryColor),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.red),
-                      ),
-                      focusedErrorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.red),
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                    ),
-                    dropdownMenuEntries: diplomaSessionOptions.map((e) =>
-                        DropdownMenuEntry(
-                          value: e,
-                          label: e,
-                          style: ButtonStyle(
-                            backgroundColor: WidgetStateProperty.all(Colors.transparent),
-                            foregroundColor: WidgetStateProperty.all(Colors.black),
-                            textStyle: WidgetStateProperty.resolveWith((states) {
-                              if (states.contains(WidgetState.hovered)) {
-                                return const TextStyle(
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.w400,
-                                );
-                              }
-                              return const TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w400,
-                              );
-                            }),
-                          ),
-                        ),
-                    ).toList(),
-                    onSelected: (String? value) {
-                      setState(() {
-                        _selectedDiplomaSession = value;
-                      });
-                      FocusManager.instance.primaryFocus?.unfocus();
-                    },
-                    enableSearch: true,
-                    requestFocusOnTap: true,
-                    enableFilter: true,
-                  ),
-                ),
+
                 const SizedBox(height: 20),
-                const Text(
-                  'High Certificate (Optional)',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.primaryColor,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                GestureDetector(
-                  onTap: () => _showImageSourceOptions(context),
-                  child: Container(
-                    width: double.infinity,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey.shade400,
-                        width: 1.0,
-                      ),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: _selectedHighCertificate == null
-                        ? const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.cloud_download_outlined,
-                            color: AppColors.primaryColor, size: 40),
-                        SizedBox(height: 5),
-                        Text(
-                          'Select a file or drag and drop here',
-                          style: TextStyle(color: AppColors.defaultBlackColor),
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          "Please provide a BacII certificate (Cambodia National Exam Certificate), exam result or equivalent professional degree",
-                          style: TextStyle(
-                            color: AppColors.defaultBlackColor,
-                            fontSize: 13,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          "JPG, PNG or PDF, file size no more than 10MB",
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    )
-                        : ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.file(
-                        _selectedHighCertificate!,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
                 Align(
                   alignment: Alignment.centerRight,
                   child: Row(
@@ -549,23 +293,13 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                       const SizedBox(width: 20),
                       ElevatedButton(
                         onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Processing Data')),
+                          setState(() => _isFormSubmitted = true);
+                          if (_formKey.currentState!.validate() && _validateForm()) {
+                            await _saveStep2DataAdmission();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => RegisterStep3()),
                             );
-                            try {
-                              await _stepTwoFormSubmit();
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => RegisterStep3(),
-                                ),
-                              );
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Error processing data')),
-                              );
-                            }
                           }
                         },
                         style: ElevatedButton.styleFrom(
@@ -592,33 +326,6 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
     );
   }
 
-  void _showImageSourceOptions(BuildContext context) async {
-    final pickedSource = await showDialog<ImageSource>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Select Image Source'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                title: const Text('Camera'),
-                onTap: () => Navigator.of(context).pop(ImageSource.camera),
-              ),
-              ListTile(
-                title: const Text('Gallery'),
-                onTap: () => Navigator.of(context).pop(ImageSource.gallery),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-
-    if (pickedSource != null) {
-      _pickImageHighCertificate(pickedSource);
-    }
-  }
 
   Widget _buildDropdownField({
     required String label,
@@ -626,6 +333,96 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
     required List<String> items,
     String? hintText,
     required void Function(String?) onChanged,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          RichText(
+            text: TextSpan(
+              text: label.endsWith('*')
+                  ? label.substring(0, label.length - 1)
+                  : label,
+              style: const TextStyle(
+                fontSize: 16,
+                color: AppColors.primaryColor,
+                fontWeight: FontWeight.bold,
+              ),
+              children: [
+                if (label.endsWith('*'))
+                  const TextSpan(
+                    text: '*',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+
+          // Dropdown with validation
+          SizedBox(
+            width: double.infinity,
+            child: DropdownButtonFormField<String>(
+              value: value,
+              hint: Text(
+                hintText ?? '',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.grey,
+                ),
+              ),
+              items: items.map((String item) {
+                return DropdownMenuItem<String>(
+                  value: item,
+                  child: Text(item),
+                );
+              }).toList(),
+              onChanged: onChanged,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(
+                    color: Colors.grey.shade400,
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: Colors.grey.shade400),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: AppColors.primaryColor,width: 2.0),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.red),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.red,width: 2.0),
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 12, vertical: 16),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required String label,
+    required TextEditingController controller,
+    String? hintText,
+    TextInputType? keyboardType,
     String? Function(String?)? validator,
   }) {
     return Padding(
@@ -656,17 +453,16 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
             ),
           ),
           const SizedBox(height: 8),
-          DropdownButtonFormField<String>(
-            value: value,
-            items: items.map((String item) {
-              return DropdownMenuItem(
-                value: item,
-                child: Text(item),
-              );
-            }).toList(),
-            onChanged: onChanged,
+          TextFormField(
+            controller: controller,
+            keyboardType: keyboardType,
             validator: validator,
+            cursorColor: AppColors.primaryColor,
             decoration: InputDecoration(
+              hintText: hintText,
+              hintStyle: const TextStyle(color: Colors.grey,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'NotoSansKhmer'),
               filled: true,
               fillColor: Colors.transparent,
               border: OutlineInputBorder(
@@ -683,15 +479,23 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: AppColors.primaryColor, width: 2),
+                borderSide: const BorderSide(color: AppColors.primaryColor,width: 2.0),
               ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Colors.red),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Colors.red,width: 2.0),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 12, vertical: 16),
             ),
-            hint: hintText != null ? Text(hintText, style: const TextStyle(
-                color: Colors.grey, fontWeight: FontWeight.w400),) : null,
           ),
         ],
       ),
     );
   }
+
 }

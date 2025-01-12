@@ -13,7 +13,6 @@ class AdmissionViewmodel extends ChangeNotifier {
 
   Future<dynamic> postAdmission(data) async{
     print('Posting admission data: ${data}');
-    print('Posting ...');
     setAdmissionData(ApiResponse.loading());
     await _admissionRepository.postAdmission(data)
         .then((isPosted) => setAdmissionData(ApiResponse.completed(isPosted)))

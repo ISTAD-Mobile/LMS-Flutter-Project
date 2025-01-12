@@ -23,6 +23,10 @@ class StudentProfileUrl {
 class AdmissionUrl {
   static String admisionbaseUrl = "https://dev-flutter.cstad.edu.kh/api/v1";
   static String postAdmisionByUrl = '$admisionbaseUrl/student-admissions';
+
+  static String shiftUrl = "$admisionbaseUrl/portals/shifts";
+  static String degreeUrl = "$admisionbaseUrl/portals/degrees";
+  static String studyProgramAlasUrl = "$admisionbaseUrl/portals/study-programs";
 }
 
 class ApiUrl {
@@ -31,4 +35,9 @@ class ApiUrl {
   static String refreshToken = '$baseUrl/auth/refresh-token';
 
   static String postImageByUrl = '$baseUrl/medias/upload-single';
+}
+
+class UploadImageUrl {
+  static String uploadImagebaseUrl= "https://dev-flutter.cstad.edu.kh/api/v1";
+  static String getUploadImageUrl = '$uploadImagebaseUrl/portals/uploads';
 }

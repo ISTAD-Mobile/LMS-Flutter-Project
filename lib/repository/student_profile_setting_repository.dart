@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
 import '../model/student_profile_setting.dart';
 
 class StudentSettingRepository {
@@ -20,14 +19,20 @@ class StudentSettingRepository {
       );
 
       if (response.statusCode == 200) {
+        print('Response body: ${response.body}');
         Map<String, dynamic> userData = jsonDecode(response.body);
+
+        if (userData.isEmpty) {
+          throw Exception("No data available");
+        }
+
         return StudentSettingModel.fromJson(userData);
       } else {
         throw Exception("Failed to fetch user data: ${response.statusCode}");
       }
     } catch (e) {
+      print("Error: $e");
       throw Exception("Error fetching user data: $e");
     }
   }
 }
-

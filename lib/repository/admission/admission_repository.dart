@@ -1,16 +1,16 @@
-import 'package:lms_mobile/data/network/api_service.dart';
 import 'package:lms_mobile/model/admission/admission_form.dart';
 import 'package:lms_mobile/resource/app_url.dart';
+import '../../data/network/admission_service.dart';
 
 
 class AdmissionRepository {
 
-  var apiService = ApiService();
+  var admissionService = AdmissionService();
 
   Future<bool> postAdmission(data) async {
     var admissionRequest = admissionRequestToJson(data);
-    print('posting ...');
-    dynamic response = await apiService.postAdmission(AdmissionUrl.postAdmisionByUrl,admissionRequest);
+    print(admissionRequest);
+    dynamic response = await admissionService.postAdmission(AdmissionUrl.postAdmisionByUrl,admissionRequest);
     return response;
   }
 }

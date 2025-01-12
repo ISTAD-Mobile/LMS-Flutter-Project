@@ -3,8 +3,6 @@ import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/view/screen/enrollments/enrollment_provider.dart';
 import 'package:lms_mobile/viewModel/enroll/enrollment_view_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../../model/enrollmentRequest/enrollment_model.dart';
-import '../../../screen/homeScreen/course/course_details_screen.dart';
 import 'enroll_step2.dart';
 
 class EnrollStep1 extends StatefulWidget {
@@ -93,12 +91,12 @@ class _EnrollStep1 extends State<EnrollStep1> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: AppColors.defaultGrayColor),
           onPressed: () {
-            // Navigate to the screen detail
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => CourseDetailsPage(),
-              ),
-            );
+            // // Navigate to the screen detail
+            // Navigator.of(context).pushReplacement(
+            //   MaterialPageRoute(
+            //     builder: (context) => CourseDetailsPage(),
+            //   ),
+            // );
           },
         ),
         title: const Text(
@@ -429,42 +427,5 @@ class _EnrollStep1 extends State<EnrollStep1> {
       ),
     );
   }
-  void _saveStep1() {
-    // Construct the EnrollmentModel
-    var enrollmentRequest = EnrollmentModel(
-      id: 0,
-      uuid: "uuid_placeholder",
-      email: emailController.text,
-      nameEn: _fullNameController.text,
-      nameKh: null,
-      gender: genderController.text,
-      dob: DateTime.now(),
-      pob: CurrentAddress(
-        id: 0,
-        shortName: "PobShortName",
-        fullName: "PobFullName",
-      ),
-      currentAddress: CurrentAddress(
-        id: 0,
-        shortName: "CurrentAddressShortName",
-        fullName: "CurrentAddressFullName",
-      ),
-      phoneNumber: phoneNumberController.text,
-      photoUri: "photo_uri_placeholder",
-      universityInfo: CurrentAddress(
-        id: 0,
-        shortName: "UniversityShortName",
-        fullName: "UniversityFullName",
-      ),
-    );
 
-    // Send the data to the ViewModel
-    _enrollmentViewModel.postEnrollment(enrollmentRequest.toJson());
-
-    // Log the data for debugging
-    print('Name: ${_fullNameController.text}');
-    print('Email: ${emailController.text}');
-    print('Gender: ${genderController.text}');
-    print('Phone Number: ${phoneNumberController.text}');
-  }
 }
