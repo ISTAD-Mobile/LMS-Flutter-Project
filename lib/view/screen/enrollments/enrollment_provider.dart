@@ -134,4 +134,51 @@ class EnrollmentStateNotifier extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> updateStep2({
+    DateTime? birthDate,
+    String? birthAddress,
+    String? currentAddress,
+    String? education,
+    String? university,
+  }) async {
+    _formData.birthDate = birthDate ?? _formData.birthDate;
+    _formData.birthAddress = birthAddress ?? _formData.birthAddress;
+    _formData.currentAddress = currentAddress ?? _formData.currentAddress;
+    _formData.education = education ?? _formData.education;
+    _formData.university = university ?? _formData.university;
+
+    debugPrint('Step 2 Updated: ${_formData.toJson()}');
+    await _saveData();
+    notifyListeners();
+  }
+
+  bool validateStep2() {
+    return _formData.birthDate != null &&
+        _formData.birthAddress?.isNotEmpty == true &&
+        _formData.currentAddress?.isNotEmpty == true &&
+        _formData.education?.isNotEmpty == true &&
+        _formData.university?.isNotEmpty == true;
+  }
+
+  // Future<void> _saveStep2Data() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   if (_selectedBirthDate != null) {
+  //     prefs.setString('birthDate', _selectedBirthDate!.toIso8601String());
+  //   }
+  //   if (_selectedBirthAddress != null) {
+  //     prefs.setString('birthAddress', _selectedBirthAddress!);
+  //   }
+  //   if (_selectedCurrentAddress != null) {
+  //     prefs.setString('currentAddress', _selectedCurrentAddress!);
+  //   }
+  //   if (_selectedEducation != null) {
+  //     prefs.setString('education', _selectedEducation!);
+  //   }
+  //   if (_selectedUniversity != null) {
+  //     prefs.setString('university', _selectedUniversity!);
+  //   }
+  // }
+
+
 }

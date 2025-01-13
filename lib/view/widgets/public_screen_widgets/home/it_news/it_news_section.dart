@@ -100,6 +100,9 @@ class _ItNewsSectionState extends State<ItNewsSection> {
                           style: const TextStyle(color: Colors.red),
                         ),
                       );
+                    case Status.IDLE:
+                      // TODO: Handle this case.
+                      throw UnimplementedError();
                   }
                 },
               ),

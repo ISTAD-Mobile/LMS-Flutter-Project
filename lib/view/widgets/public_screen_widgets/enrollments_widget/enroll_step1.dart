@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/view/screen/enrollments/enrollment_provider.dart';
-import 'package:lms_mobile/viewModel/enroll/enrollment_view_model.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../../model/enrollmentRequest/enrollment_model.dart';
 import '../../../screen/homeScreen/course/course_details_screen.dart';
 import 'enroll_step2.dart';
 
 class EnrollStep1 extends StatefulWidget {
-  const EnrollStep1({super.key, required EnrollmentFormData formData});
+  final EnrollmentFormData formData;
+  const EnrollStep1({super.key, required this.formData, });
 
   @override
   _EnrollStep1 createState() => _EnrollStep1();
@@ -39,7 +39,6 @@ class _EnrollStep1 extends State<EnrollStep1> {
   final emailController = TextEditingController();
   final genderController = TextEditingController();
   final phoneNumberController = TextEditingController();
-  final _enrollmentViewModel = EnrollmentViewModel();
 
   final FocusNode _focusNode = FocusNode();
   bool _isExpanded = false;
@@ -48,14 +47,36 @@ class _EnrollStep1 extends State<EnrollStep1> {
   void initState() {
     super.initState();
     _focusNode.addListener(_onFocusChange);
+    _loadSavedData();
+  }
+
+  Future<void> _loadSavedData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _fullNameController.text = prefs.getString('fullName') ?? '';
+      _selectedGender = prefs.getString('gender');
+      phoneNumberController.text = prefs.getString('phone') ?? '';
+      emailController.text = prefs.getString('email') ?? '';
+    });
   }
 
   Future<void> _saveStep1Data() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('fullName', fullName?.toString() ?? '');
-    prefs.setString('gender', gender ?? '');
-    prefs.setString('phone', phone ?? '');
-    prefs.setString('email', email ?? '');
+    final enrollmentState = Provider.of<EnrollmentStateNotifier>(context, listen: false);
+
+    // Save to SharedPreferences
+    await prefs.setString('fullName', _fullNameController.text);
+    await prefs.setString('gender', _selectedGender ?? '');
+    await prefs.setString('phone', phoneNumberController.text);
+    await prefs.setString('email', emailController.text);
+
+    // Update enrollment state
+    await enrollmentState.updateStep1(
+      fullName: _fullNameController.text,
+      gender: _selectedGender,
+      phone: phoneNumberController.text,
+      email: emailController.text,
+    );
   }
 
   @override
@@ -82,7 +103,6 @@ class _EnrollStep1 extends State<EnrollStep1> {
       });
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -396,7 +416,7 @@ class _EnrollStep1 extends State<EnrollStep1> {
                           await _saveStep1Data();
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const EnrollStep2()),
+                            MaterialPageRoute(builder: (context) => EnrollStep2(formData: EnrollmentFormData(),)),
                           );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -404,6 +424,7 @@ class _EnrollStep1 extends State<EnrollStep1> {
                           );
                         }
                       },
+                      // onPressed: _handleNext,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryColor,
                         padding: const EdgeInsets.symmetric(
@@ -428,43 +449,5 @@ class _EnrollStep1 extends State<EnrollStep1> {
         ),
       ),
     );
-  }
-  void _saveStep1() {
-    // Construct the EnrollmentModel
-    var enrollmentRequest = EnrollmentModel(
-      id: 0,
-      uuid: "uuid_placeholder",
-      email: emailController.text,
-      nameEn: _fullNameController.text,
-      nameKh: null,
-      gender: genderController.text,
-      dob: DateTime.now(),
-      pob: CurrentAddress(
-        id: 0,
-        shortName: "PobShortName",
-        fullName: "PobFullName",
-      ),
-      currentAddress: CurrentAddress(
-        id: 0,
-        shortName: "CurrentAddressShortName",
-        fullName: "CurrentAddressFullName",
-      ),
-      phoneNumber: phoneNumberController.text,
-      photoUri: "photo_uri_placeholder",
-      universityInfo: CurrentAddress(
-        id: 0,
-        shortName: "UniversityShortName",
-        fullName: "UniversityFullName",
-      ),
-    );
-
-    // Send the data to the ViewModel
-    _enrollmentViewModel.postEnrollment(enrollmentRequest.toJson());
-
-    // Log the data for debugging
-    print('Name: ${_fullNameController.text}');
-    print('Email: ${emailController.text}');
-    print('Gender: ${genderController.text}');
-    print('Phone Number: ${phoneNumberController.text}');
   }
 }

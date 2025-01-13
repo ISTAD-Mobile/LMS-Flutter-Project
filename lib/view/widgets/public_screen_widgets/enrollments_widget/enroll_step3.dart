@@ -1,72 +1,141 @@
 import 'package:flutter/material.dart';
+import 'package:lms_mobile/viewModel/enroll/available_course_view_model.dart';
 import 'package:provider/provider.dart';
 import '../../../../data/color/color_screen.dart';
 import '../../../../data/response/status.dart';
-import '../../../../viewModel/course_viewmodel.dart';
-import '../../../../model/course.dart';
+import '../../../../model/enrollment_response/available_course_model.dart';
 import '../../../screen/enrollments/enrollment_provider.dart';
+import 'enroll_step2.dart';
 import 'enroll_successful_screen.dart';
 
 class EnrollStep3 extends StatefulWidget {
-  const EnrollStep3({super.key, required EnrollmentFormData formData});
+  final EnrollmentFormData formData;
+  final String uuid;
+  const EnrollStep3({super.key, required this.formData, required this.uuid});
+
   @override
   State<EnrollStep3> createState() => _EnrollStep3State();
 }
 
 class ClassOption {
-  final String title;
-  final String timeRange;
+  final String shift;
+  final String startTimeAsStr;
+  final String endTimeAsStr;
 
-  const ClassOption({
-    required this.title,
-    required this.timeRange,
-  });
+  ClassOption({
+    required this.shift,
+    required this.startTimeAsStr})
+      : endTimeAsStr = _calculateEndTime(startTimeAsStr);
+
+  static String _calculateEndTime(String startTimeAsStr) {
+    final times = startTimeAsStr.split(' - ');
+    if (times.length == 2) {
+      return times[1];
+    }
+    return 'Invalid Time Format';
+  }
 }
 
 class _EnrollStep3State extends State<EnrollStep3> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   // Selected state variables
-  Course? _selectedCourseData;
+  AvailableCourseDataList? _selectedAvailableCourseData;
   String? _selectedClass;
   String? _selectedShift;
   String? _selectedHour;
 
-  // Class options remain constant
-  static const List<ClassOption> classOptions = [
-    ClassOption(title: 'Evening-Weekday', timeRange: '06:00 PM - 08:00 PM'),
-    ClassOption(title: 'Morning-Weekday', timeRange: '08:00 AM - 10:00 AM'),
-    ClassOption(title: 'Afternoon-Weekend', timeRange: '12:00 PM - 05:00 PM'),
-    ClassOption(title: 'Morning-Weekend', timeRange: '08:00 AM - 12:00 PM'),
+  List<ClassOption> classOptions = [
+    ClassOption(shift: 'Evening-Weekday', startTimeAsStr: '06:00 PM - 08:00 PM'),
+    ClassOption(shift: 'Morning-Weekday', startTimeAsStr: '08:00 AM - 10:00 AM'),
+    ClassOption(shift: 'Afternoon-Weekend', startTimeAsStr: '12:00 PM - 05:00 PM'),
+    ClassOption(shift: 'Morning-Weekend', startTimeAsStr: '08:00 AM - 12:00 PM'),
   ];
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<CourseViewmodel>(context, listen: false).fetchAllBlogs();
+      print('Fetching available courses...');
+      Provider.of<AvailableCourseViewModel>(context, listen: false).fetchAvailableCourseAllBlogs();
+      if (widget.uuid != null && widget.uuid.isNotEmpty) {
+        print('Fetching course details for UUID: ${widget.uuid}');
+        Provider.of<AvailableCourseViewModel>(context, listen: false)
+            .fetchCourseDetail(widget.uuid);
+      } else {
+        print('Error: UUID is null or empty. UUID value: ${widget.uuid}');
+      }
     });
   }
 
-  Widget _buildCourseDropdown(CourseViewmodel viewModel) {
-    List<Course> courses = viewModel.getCourseData;
+  Widget _buildCourseDetails(AvailableCourseViewModel viewModel) {
+    if (viewModel.availableCourseDetail.status == Status.LOADING) {
+      return const Center(child: CircularProgressIndicator());
+    } else if (viewModel.availableCourseDetail.status == Status.ERROR) {
+      return Text('Error loading details: ${viewModel.availableCourseDetail.message}');
+    } else if (viewModel.availableCourseDetail.status == Status.COMPLETED &&
+        viewModel.getCourseDetail != null) {
+      final courseDetail = viewModel.getCourseDetail!.data;
 
+      // Update available class options based on API response
+      List<ClassOption> apiClassOptions = courseDetail.classes.map((classData) {
+        return ClassOption(
+            shift: classData.shift,
+            startTimeAsStr: '${classData.startTimeAsStr} - ${classData.endTimeAsStr}'
+        );
+      }).toList();
+
+      // Use API class options if available, otherwise fall back to default options
+      classOptions = apiClassOptions.isNotEmpty ? apiClassOptions : classOptions;
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            '* Please select the class:',
+            style: TextStyle(
+              color: Colors.red,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          GridView.count(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisCount: 2,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            children: classOptions
+                .map((option) => _buildClassCard(option))
+                .toList(),
+          ),
+        ],
+      );
+    }
+    return const SizedBox.shrink();
+  }
+
+
+  Widget _buildCourseDropdown(AvailableCourseViewModel viewModel) {
+    List<AvailableCourseDataList> availableCourses = viewModel.getAvailableCourseData;
+    print("Dropdown data: ${availableCourses.map((e) => e.title).toList()}");
     return SizedBox(
       width: double.infinity,
-      child: DropdownMenu<Course>(
+      child: DropdownMenu<AvailableCourseDataList>(
         width: 398,
         menuHeight: 450,
         hintText: 'Select Course',
-        errorText: _formKey.currentState?.validate() == false && _selectedCourseData == null
+        errorText: _formKey.currentState?.validate() == false && _selectedAvailableCourseData == null
             ? 'Please select a course'
             : null,
-        leadingIcon: _selectedCourseData != null
+        leadingIcon: _selectedAvailableCourseData != null
             ? Padding(
-          padding: const EdgeInsets.only(left: 12.0,),
+          padding: const EdgeInsets.only(left: 12.0),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: Image.network(
-              _selectedCourseData!.thumbnailUri,
+              _selectedAvailableCourseData!.thumbnailUri,
               width: 10,
               height: 10,
               errorBuilder: (context, error, stackTrace) {
@@ -82,7 +151,7 @@ class _EnrollStep3State extends State<EnrollStep3> {
             : null,
         textStyle: TextStyle(
           fontSize: 16,
-          color: _selectedCourseData != null ? Colors.black : Colors.black,
+          color: _selectedAvailableCourseData != null ? Colors.black : Colors.black,
         ),
         menuStyle: MenuStyle(
           backgroundColor: WidgetStateProperty.all(Colors.white),
@@ -99,47 +168,44 @@ class _EnrollStep3State extends State<EnrollStep3> {
           filled: true,
           fillColor: Colors.white,
         ),
-        dropdownMenuEntries: courses.map((course) => DropdownMenuEntry(
-          value: course,
-          label: course.title,
-          // Modify the leadingIcon to match the example
-          leadingIcon: Container(
-            margin: const EdgeInsets.only(right: 12.0),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                course.thumbnailUri,
-                width: 32,
-                height: 32,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return const SizedBox(
-                    width: 32,
-                    height: 32,
-                    child: Icon(Icons.image_not_supported, size: 16, color: Colors.black),
-                  );
-                },
+        dropdownMenuEntries: availableCourses.map((availableCourse) {
+          return DropdownMenuEntry(
+            value: availableCourse,
+            label: availableCourse.title,
+            leadingIcon: Container(
+              margin: const EdgeInsets.only(right: 12.0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  availableCourse.thumbnailUri,
+                  width: 32,
+                  height: 32,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const SizedBox(
+                      width: 32,
+                      height: 32,
+                      child: Icon(Icons.image_not_supported, size: 16, color: Colors.black),
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-          style: ButtonStyle(
-            padding: WidgetStateProperty.all(
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            ),
-            backgroundColor: WidgetStateProperty.all(Colors.transparent),
-            foregroundColor: WidgetStateProperty.all(Colors.black),
-            textStyle: WidgetStateProperty.resolveWith(
-                  (_) => const TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
-            ),
-          ),
-        )).toList(),
-        onSelected: (Course? course) {
+          );
+        }).toList(),
+        onSelected: (AvailableCourseDataList? availableCourse) {
           setState(() {
-            _selectedCourseData = course;
+            _selectedAvailableCourseData = availableCourse;
             _selectedClass = null;
             _selectedShift = null;
             _selectedHour = null;
+            print('Selected course updated: ${availableCourse?.uuid}');
           });
+          if (availableCourse != null) {
+            print('Fetching course details for UUID: ${availableCourse.uuid}');
+            Provider.of<AvailableCourseViewModel>(context, listen: false)
+                .fetchCourseDetail(availableCourse.uuid);
+          }
         },
         enableSearch: true,
         requestFocusOnTap: true,
@@ -156,7 +222,7 @@ class _EnrollStep3State extends State<EnrollStep3> {
   }
 
   Widget _buildSelectionSummary() {
-    if (_selectedCourseData == null || _selectedClass == null) {
+    if (_selectedAvailableCourseData == null || _selectedClass == null) {
       return const SizedBox.shrink();
     }
 
@@ -180,9 +246,9 @@ class _EnrollStep3State extends State<EnrollStep3> {
             ),
           ),
           const SizedBox(height: 16),
-          _buildSelectionRow(_selectedCourseData!.title, () {
+          _buildSelectionRow(_selectedAvailableCourseData!.title, () {
             setState(() {
-              _selectedCourseData = null;
+              _selectedAvailableCourseData = null;
               _selectedClass = null;
               _selectedShift = null;
               _selectedHour = null;
@@ -206,22 +272,22 @@ class _EnrollStep3State extends State<EnrollStep3> {
           const SizedBox(height: 15),
           // Display additional course information
           Text(
-            'Course Fee: \$${_selectedCourseData!.fee}',
+            'Course Fee: \$${_selectedAvailableCourseData!.fee}',
             style: const TextStyle(fontSize: 16, color: AppColors.primaryColor),
           ),
           const SizedBox(height: 12),
           Text(
-            'Total Hours: ${_selectedCourseData!.totalHour}',
+            'Total Hours: ${_selectedAvailableCourseData!.totalHour}',
             style: const TextStyle(fontSize: 16, color: AppColors.primaryColor),
           ),
           const SizedBox(height: 12),
           Text(
-            'Level: ${_selectedCourseData!.level}',
+            'Level: ${_selectedAvailableCourseData!.level}',
             style: const TextStyle(fontSize: 16, color: AppColors.primaryColor),
           ),
           const SizedBox(height: 12),
           Text(
-            'Total Lessons: ${_selectedCourseData!.totalLesson}',
+            'Total Lessons: ${_selectedAvailableCourseData!.totalLesson}',
             style: const TextStyle(fontSize: 16, color: AppColors.primaryColor),
           ),
         ],
@@ -253,7 +319,7 @@ class _EnrollStep3State extends State<EnrollStep3> {
   }
 
   Widget _buildClassCard(ClassOption classOption) {
-    bool isSelected = _selectedClass == classOption.title;
+    bool isSelected = _selectedClass == classOption.shift;
 
     return Card(
       elevation: isSelected ? 2 : 1,
@@ -268,9 +334,9 @@ class _EnrollStep3State extends State<EnrollStep3> {
       child: InkWell(
         onTap: () {
           setState(() {
-            _selectedClass = classOption.title;
-            _selectedShift = classOption.title.split('-')[0].trim();
-            _selectedHour = classOption.timeRange;
+            _selectedClass = classOption.shift;
+            _selectedShift = classOption.shift.split('-')[0].trim();
+            _selectedHour = classOption.startTimeAsStr;
           });
         },
         borderRadius: BorderRadius.circular(10),
@@ -284,7 +350,7 @@ class _EnrollStep3State extends State<EnrollStep3> {
                 const Icon(Icons.check, color: AppColors.successColor, size: 35),
               const SizedBox(height: 12),
               Text(
-                classOption.title,
+                classOption.shift,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
@@ -294,7 +360,7 @@ class _EnrollStep3State extends State<EnrollStep3> {
               ),
               const SizedBox(height: 8),
               Text(
-                classOption.timeRange,
+                classOption.startTimeAsStr,
                 style: TextStyle(
                   fontSize: 14,
                   color: isSelected ? Colors.white : Colors.grey[600],
@@ -311,12 +377,22 @@ class _EnrollStep3State extends State<EnrollStep3> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.defaultWhiteColor,
       appBar: AppBar(
         backgroundColor: AppColors.defaultWhiteColor,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.primaryColor),
-          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EnrollStep2(
+                  formData: widget.formData,
+                ),
+              ),
+            );
+          },
         ),
         title: const Text(
           'Enrollment Screen',
@@ -324,15 +400,24 @@ class _EnrollStep3State extends State<EnrollStep3> {
         ),
         centerTitle: true,
       ),
-      body: Consumer<CourseViewmodel>(
+      body: Consumer<AvailableCourseViewModel>(
         builder: (context, viewModel, _) {
-          switch (viewModel.course.status) {
+          switch (viewModel.availableCourse.status) {
             case Status.LOADING:
               return const Center(child: CircularProgressIndicator());
 
             case Status.ERROR:
               return Center(
-                child: Text('Error: ${viewModel.course.message}'),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Error: ${viewModel.availableCourse.message}'),
+                    ElevatedButton(
+                      onPressed: () => viewModel.fetchAvailableCourseAllBlogs(),
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
               );
 
             case Status.COMPLETED:
@@ -355,16 +440,8 @@ class _EnrollStep3State extends State<EnrollStep3> {
                           ),
                           const SizedBox(height: 8),
                           _buildCourseDropdown(viewModel),
-                          if (_selectedCourseData != null) ...[
+                          if (_selectedAvailableCourseData != null) ...[
                             const SizedBox(height: 16),
-                            const Text(
-                              '* Please select the class:',
-                              style: TextStyle(
-                                color: Colors.red,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
                             const SizedBox(height: 8),
                             GridView.count(
                               shrinkWrap: true,
@@ -372,10 +449,8 @@ class _EnrollStep3State extends State<EnrollStep3> {
                               crossAxisCount: 2,
                               crossAxisSpacing: 12,
                               mainAxisSpacing: 12,
-                              children: classOptions
-                                  .map((option) => _buildClassCard(option))
-                                  .toList(),
                             ),
+                            _buildCourseDetails(viewModel),
                             if (_selectedClass != null) _buildSelectionSummary(),
                           ],
                           const SizedBox(height: 26),
@@ -383,7 +458,16 @@ class _EnrollStep3State extends State<EnrollStep3> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               ElevatedButton(
-                                onPressed: () => Navigator.pop(context),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => EnrollStep2(
+                                        formData: widget.formData,
+                                      ),
+                                    ),
+                                  );
+                                },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.grey[200],
                                   padding: const EdgeInsets.symmetric(
@@ -411,10 +495,8 @@ class _EnrollStep3State extends State<EnrollStep3> {
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             EnrollSuccessfulScreen(
-                                              course:
-                                              _selectedCourseData!.title,
-                                              classTime:
-                                              _selectedHour ?? 'Unknown Time',
+                                              course: _selectedAvailableCourseData!.title,
+                                              classTime: _selectedHour ?? 'Unknown Time',
                                             ),
                                       ),
                                     );
@@ -449,6 +531,8 @@ class _EnrollStep3State extends State<EnrollStep3> {
                 ),
               );
             case null:
+              throw UnimplementedError();
+            case Status.IDLE:
               throw UnimplementedError();
           }
         },

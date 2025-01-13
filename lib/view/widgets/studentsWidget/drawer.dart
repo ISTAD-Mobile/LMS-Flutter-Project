@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/view/screen/lms/profile/course_screen.dart';
 import 'package:provider/provider.dart';
@@ -21,14 +20,14 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: appTitle,
-      home: StudentScreen(title: appTitle, accessToken: ''),
+      home: StudentScreen(title: appTitle, accessToken: '', userEmail: '',),
     );
   }
 }
 
 class StudentScreen extends StatefulWidget {
-  const StudentScreen({super.key, required this.title, required  this.accessToken});
-
+  const StudentScreen({super.key, required this.title, required  this.accessToken, required this.userEmail});
+  final String userEmail;
   final String title;
   final String accessToken;
 

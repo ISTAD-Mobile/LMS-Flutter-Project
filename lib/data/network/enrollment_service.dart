@@ -1,22 +1,23 @@
-
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class EnrollmentService {
-  //POST ENROLL
-  Future<dynamic> postEnrollment(url, data) async {
-    var headers = {
-      'Content-Type' : 'application/json'
-    };
-    var request = http.Request('POST', Uri.parse(url));
-    request.body = data;
-    request.headers.addAll(headers);
+  Future<dynamic> postEnrollment(String url, String body) async {
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: body,
+      );
 
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      print(await response.stream.bytesToString());
-    } else {
-      print(response.reasonPhrase);
+      if (response.statusCode == 200) {
+        // Return the response body as a Map
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Failed to enroll');
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 }

@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:lms_mobile/viewModel/enroll/current_address_view_model.dart';
 import 'package:lms_mobile/viewModel/enroll/place_of_birth_view_model.dart';
 import 'package:lms_mobile/viewModel/enroll/university_view_model.dart';
-import 'package:lms_mobile/model/enrollmentRequest/enrollment_model.dart';
+import '../../../../model/enrollmentRequest/register_model.dart';
 
 class EnrollmentStateNotifier extends ChangeNotifier {
   int _currentStep = 0;

@@ -934,68 +934,6 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
-                // const Text(
-                //   'Upload Formal Picture',
-                //   style: TextStyle(
-                //     fontSize: 14,
-                //     fontWeight: FontWeight.bold,
-                //     color: AppColors.primaryColor,
-                //   ),
-                // ),
-                // const SizedBox(height: 8),
-                // GestureDetector(
-                //   onTap: () => _pickImageUploadFormal(ImageSource.gallery),
-                //   child: Container(
-                //     width: double.infinity,
-                //     height: 200,
-                //     decoration: BoxDecoration(
-                //       border: Border.all(
-                //         color: Colors.grey.shade400,
-                //         width: 1.0,
-                //       ),
-                //       borderRadius: BorderRadius.circular(8),
-                //     ),
-                //     child: _selectedUploadFormal == null
-                //         ? const Column(
-                //       mainAxisAlignment: MainAxisAlignment.center,
-                //       children: [
-                //         Icon(
-                //           Icons.cloud_download_outlined,
-                //           color: AppColors.primaryColor,
-                //           size: 40,
-                //         ),
-                //         SizedBox(height: 5),
-                //         Text(
-                //           'Avatar',
-                //           style: TextStyle(color: AppColors.defaultBlackColor),
-                //         ),
-                //         SizedBox(height: 10),
-                //         Text(
-                //           "Select a file or drag and drop here",
-                //           style: TextStyle(
-                //             color: AppColors.defaultBlackColor,
-                //             fontSize: 13,
-                //           ),
-                //           textAlign: TextAlign.center,
-                //         ),
-                //         SizedBox(height: 10),
-                //         Text(
-                //           "JPG, PNG or PDF, file size no more than 10MB",
-                //           style: TextStyle(color: Colors.grey, fontSize: 12),
-                //           textAlign: TextAlign.center,
-                //         ),
-                //       ],
-                //     )
-                //         : ClipRRect(
-                //       borderRadius: BorderRadius.circular(8),
-                //       child: Image.file(
-                //         _selectedUploadFormal!,
-                //         fit: BoxFit.cover,
-                //       ),
-                //     ),
-                //   ),
-                // ),
                 const SizedBox(height: 16,),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -1070,6 +1008,8 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
                                 );
                               case Status.ERROR:
                                 return Text(viewModel.response.message!);
+                              case Status.IDLE:
+                                throw UnimplementedError();
                             }
                           },
                         ),
@@ -1377,65 +1317,6 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
                     enableFilter: true,
                   ),
                 ),
-                SizedBox(height: 10,),
-                // const Text(
-                //   'High Certificate (Optional)',
-                //   style: TextStyle(
-                //     fontSize: 14,
-                //     fontWeight: FontWeight.bold,
-                //     color: AppColors.primaryColor,
-                //   ),
-                // ),
-                // const SizedBox(height: 8),
-                // GestureDetector(
-                //   onTap: () => _showImageSourceOptions(context),
-                //   child: Container(
-                //     width: double.infinity,
-                //     height: 200,
-                //     decoration: BoxDecoration(
-                //       border: Border.all(
-                //         color: Colors.grey.shade400,
-                //         width: 1.0,
-                //       ),
-                //       borderRadius: BorderRadius.circular(8),
-                //     ),
-                //     child: _selectedHighCertificate == null
-                //         ? const Column(
-                //       mainAxisAlignment: MainAxisAlignment.center,
-                //       children: [
-                //         Icon(Icons.cloud_download_outlined,
-                //             color: AppColors.primaryColor, size: 40),
-                //         SizedBox(height: 5),
-                //         Text(
-                //           'Select a file or drag and drop here',
-                //           style: TextStyle(color: AppColors.defaultBlackColor),
-                //         ),
-                //         SizedBox(height: 10),
-                //         Text(
-                //           "Please provide a BacII certificate (Cambodia National Exam Certificate), exam result or equivalent professional degree",
-                //           style: TextStyle(
-                //             color: AppColors.defaultBlackColor,
-                //             fontSize: 13,
-                //           ),
-                //           textAlign: TextAlign.center,
-                //         ),
-                //         SizedBox(height: 10),
-                //         Text(
-                //           "JPG, PNG or PDF, file size no more than 10MB",
-                //           style: TextStyle(color: Colors.grey, fontSize: 12),
-                //           textAlign: TextAlign.center,
-                //         ),
-                //       ],
-                //     )
-                //         : ClipRRect(
-                //       borderRadius: BorderRadius.circular(8),
-                //       child: Image.file(
-                //         _selectedHighCertificate!,
-                //         fit: BoxFit.cover,
-                //       ),
-                //     ),
-                //   ),
-                // ),
                 SizedBox(height: 10,),
                 RichText(
                   text: const TextSpan(
@@ -1822,6 +1703,8 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
                                 case Status.ERROR:
                                   print('Error: ${viewModel.response.message}');
                                   return Text(viewModel.response.message!);
+                                case Status.IDLE:
+                                  throw UnimplementedError();
                               }
                             }
                           ),
@@ -2087,7 +1970,6 @@ Widget _buildDropdownField({
       ],
     ),
   );
-
 }
 
 

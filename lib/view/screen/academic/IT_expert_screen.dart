@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lms_mobile/view/screen/about/my_home_about_istad_screen.dart';
 import '../../../data/color/color_screen.dart';
-import '../../home.dart';
-import '../../widgets/public_screen_widgets/appbar_and_bottom_navigation_widgets.dart';
-import '../lms/auth/first_log_in_screen.dart';
-import 'my_home_academic_screen.dart';
 
 class ITExpertPage extends StatefulWidget {
   const ITExpertPage({Key? key}) : super(key: key);

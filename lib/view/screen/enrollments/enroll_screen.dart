@@ -22,8 +22,8 @@ class _EnrollScreenState extends State<EnrollScreen> {
     final formData = screen_provider.EnrollmentFormData();
     _steps = [
       EnrollStep1(formData: formData),
-      const EnrollStep2(),
-      EnrollStep3(formData: formData),
+      EnrollStep2(formData: screen_provider.EnrollmentFormData()),
+      EnrollStep3(formData: formData, uuid: '',),
     ];
   }
 

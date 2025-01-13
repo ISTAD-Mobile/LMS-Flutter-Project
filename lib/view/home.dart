@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final token = prefs.getString('accessToken');
     if (token != null && token.isNotEmpty) {
       // Token exists, navigate to LMS content
-      return StudentScreen(accessToken: token, title: '',); // Use the retrieved token
+      return StudentScreen(accessToken: token, title: '', userEmail: '',);
     } else {
       // No token, navigate to LoginScreen
       return const LoginScreen();

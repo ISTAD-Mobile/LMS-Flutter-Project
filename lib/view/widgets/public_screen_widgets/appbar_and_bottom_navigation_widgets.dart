@@ -29,7 +29,7 @@ class AppLayout extends StatelessWidget {
         MaterialPageRoute(
           builder: (context) => StudentScreen(
             accessToken: token,
-            title: '',
+            title: '', userEmail: '',
           ),
         ),
       );

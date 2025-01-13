@@ -17,11 +17,12 @@ class CourseResponse {
 
   factory CourseResponse.fromJson(Map<String, dynamic> json) {
     return CourseResponse(
-      code: json['code'],
-      message: json['message'],
-      courseList: (json['dataList'] as List)
-          .map((item) => Course.fromJson(item))
-          .toList(),
+      code: json['code'] ?? 0,  // Default to 0 if 'code' is missing
+      message: json['message'] ?? 'Unknown error', // Default message if 'message' is missing
+      courseList: (json['dataList'] as List?)
+          ?.map((item) => Course.fromJson(item))
+          .toList() ??
+          [],  // Ensure we return an empty list if 'dataList' is null or invalid
     );
   }
 
@@ -45,6 +46,7 @@ class Course {
   final String level;
   final int totalLesson;
   final String thumbnailUri;
+  final List<ClassOption> classOptions;
 
   Course({
     required this.id,
@@ -57,20 +59,27 @@ class Course {
     required this.level,
     required this.totalLesson,
     required this.thumbnailUri,
+    required this.classOptions,
   });
 
   factory Course.fromJson(Map<String, dynamic> json) {
+    var optionsList = (json['classOptions'] as List?)
+        ?.map((item) => ClassOption.fromJson(item))
+        .toList() ??
+        [];  // Ensure we return an empty list if 'classOptions' is null or invalid
+
     return Course(
-      id: json['id'],
-      uuid: json['uuid'],
-      title: json['title'],
-      description: json['description'],
-      fee: (json['fee'] as num).toDouble(),
-      totalHour: json['totalHour'],
+      id: json['id'] ?? 0, // Default to 0 if 'id' is missing
+      uuid: json['uuid'] ?? '',
+      title: json['title'] ?? '',
+      description: json['description'] ?? '',
+      fee: (json['fee'] as num?)?.toDouble() ?? 0.0, // Safely cast fee to double
+      totalHour: json['totalHour'] ?? 0, // Default to 0 if 'totalHour' is missing
       curriculumPdfUri: json['curriculumPdfUri'],
-      level: json['level'],
-      totalLesson: json['totalLesson'],
-      thumbnailUri: json['thumbnailUri'],
+      level: json['level'] ?? '',
+      totalLesson: json['totalLesson'] ?? 0, // Default to 0 if 'totalLesson' is missing
+      thumbnailUri: json['thumbnailUri'] ?? '',
+      classOptions: optionsList,
     );
   }
 
@@ -86,6 +95,31 @@ class Course {
       'level': level,
       'totalLesson': totalLesson,
       'thumbnailUri': thumbnailUri,
+      'classOptions': classOptions.map((option) => option.toJson()).toList(),
+    };
+  }
+}
+
+class ClassOption {
+  final String title;
+  final String timeRange;
+
+  ClassOption({
+    required this.title,
+    required this.timeRange,
+  });
+
+  factory ClassOption.fromJson(Map<String, dynamic> json) {
+    return ClassOption(
+      title: json['title'] ?? '',
+      timeRange: json['timeRange'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'timeRange': timeRange,
     };
   }
 }
