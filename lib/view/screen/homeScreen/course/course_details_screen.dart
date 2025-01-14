@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/viewModel/course_details_viewmodel.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../data/color/color_screen.dart';
 import '../../../../model/course_details_model.dart';
 import '../../enrollments/enroll_screen.dart';
@@ -32,7 +32,13 @@ class CourseDetailPage extends StatelessWidget {
         body: Consumer<CourseDetailsViewmodel>(
           builder: (context, viewModel, child) {
             if (viewModel.isLoading) {
-              return Center(child: CircularProgressIndicator());
+              return Center(
+                  child: Lottie.asset(
+                    'assets/animation/loading.json',
+                    width: 100,
+                    height: 100,
+                  ),
+              );
             }
 
             if (viewModel.errorMessage != null) {
@@ -98,7 +104,7 @@ class CourseDetailPage extends StatelessWidget {
                     const SizedBox(height: 16),
                     _buildResetButton(context),
                     const SizedBox(height: 16),
-                    _buildExpansionTile(course?.outline ?? []), // Fixed here to pass outline
+                    _buildExpansionTile(course?.outline ?? []),
                   ],
                 ),
               ),
@@ -198,7 +204,7 @@ class CourseDetailPage extends StatelessWidget {
                     ),
                     // Discounted price
                     TextSpan(
-                      text: '  /  \$${discountedFee.toStringAsFixed(3)}', // Display discounted price dynamically
+                      text: '  /  \$${discountedFee.toStringAsFixed(3)}',
                       style: TextStyle(
                         color: AppColors.defaultBlackColor,
                         fontWeight: FontWeight.w500,

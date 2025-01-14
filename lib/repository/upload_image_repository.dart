@@ -9,6 +9,5 @@ class ImageRepository{
     var response = await _apiService.uploadImage(image,UploadImageUrl.uploadImagebaseUrl);
     return uploadImageResponseFromJson(response);
   }
-
 }
 

@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
@@ -10,14 +9,12 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../data/network/upload_image.dart';
 import '../../../data/response/status.dart';
-
+import '../../widgets/sytem_screen/successfully_admission.dart';
 
 class RegisterStep3 extends StatefulWidget {
-
   @override
   _StudentAdmissionScreenState createState() => _StudentAdmissionScreenState();
 }
-
 class _StudentAdmissionScreenState extends State<RegisterStep3> {
   final _formKey = GlobalKey<FormState>();
 
@@ -25,25 +22,93 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
   final guardianRelationShipController = TextEditingController();
   final diplomaSessionController = TextEditingController();
   var imageFile;
+
   final admissionViewModel = AdmissionViewmodel();
 
-  String? getToKnowIstad;
-  String? whoGuideYou;
-  String? diplomaSession;
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedData();
+  }
 
-  Future<void> _saveStep3DataAdmission() async {
+  Future<void> _loadSavedData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      getToKnowIstadController.text = prefs.getString('knownIstad') ?? '';
+      guardianRelationShipController.text = prefs.getString('guardianRelationShip') ?? '';
+      diplomaSessionController.text = prefs.getString('diplomaSession') ?? '';
+    });
+  }
+
+  Future<Map<String, dynamic>?> _saveStep3DataAdmission() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    prefs.getKeys().forEach((key) {
+      print('$key: ${prefs.getString(key) ?? 'Not Found'}');
+    });
+
     var admissionRequest = AdmissionRequest(
       knownIstad: getToKnowIstadController.text,
       guardianRelationShip: guardianRelationShipController.text,
-      vocationTrainingIiiCertificate: imageFile.toString(),
+      diplomaSession: diplomaSessionController.text,
+      vocationTrainingIiiCertificate: imageFile ?? '',
+      gender: prefs.getString('gender') ?? '',
+      shiftAlias: prefs.getString('shiftAlias') ?? '',
+      degreeAlias: prefs.getString('degreeAlias') ?? '',
+      classStudent: prefs.getString('classStudent') ?? '',
+      email: prefs.getString('email') ?? '',
+      guardianContact: prefs.getString('guardianContact') ?? '',
+      nameEn: prefs.getString('nameEn') ?? '',
+      nameKh: prefs.getString('nameKh') ?? '',
+      dob: prefs.getString('dob') != null
+          ? DateTime.tryParse(prefs.getString('dob')!)
+          : null,
+      birthPlace: prefs.getString('birthPlace') ?? '',
+      studyProgramAlias: prefs.getString('studyProgramAlias') ?? '',
+      motherName: prefs.getString('motherName') ?? '',
+      motherPhoneNumber: prefs.getString('motherPhoneNumber') ?? '',
+      fatherName: prefs.getString('fatherName') ?? '',
+      fatherPhoneNumber: prefs.getString('fatherPhoneNumber') ?? '',
+      address: prefs.getString('address') ?? '',
+      bacIiGrade: prefs.getString('bacIiGrade') ?? '',
+      phoneNumber: prefs.getString('phoneNumber') ?? '',
+      highSchool: prefs.getString('highSchool') ?? '',
     );
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('getToKnowIstad', getToKnowIstad ?? '');
-    prefs.setString('whoGuideYou', whoGuideYou ?? '');
-    prefs.setString('Relationship', diplomaSession ?? '');
 
-    admissionViewModel.postAdmission(admissionRequest);
+    try {
+      final response = await admissionViewModel.postAdmission(admissionRequest);
+      if (response != null) {
+        final telegramLink = response['telegramLink'];
+        final studentName = response['studentName'];
+
+        print('Telegram Link: $telegramLink');
+        print('Student Name: $studentName');
+
+        await prefs.remove('knownIstad');
+        await prefs.remove('guardianRelationShip');
+        await prefs.remove('diplomaSession');
+
+        return {
+          'telegramLink': telegramLink,
+          'studentName': studentName,
+        };
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to submit the form.')),
+        );
+        return null;
+      }
+    } catch (e) {
+      print('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('An error occurred while submitting the form.'),
+        ),
+      );
+      return null;
+    }
   }
+
 
   bool _validateForm() {
     return getToKnowIstadController.text.isNotEmpty &&
@@ -69,10 +134,14 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
         isLoading = false;
       });
 
-      // Upload the image
       UploadApiImage().uploadImage(bytes, image.name).then((value) {
-        if (value != null && value.containsKey('uri')) {
-          print("Updated Successfully with link ${value['uri']}");
+        if (value != null && value.containsKey('name')) {
+          String uploadedImageUri = value['name'];
+          print("Image uploaded successfully: $uploadedImageUri");
+
+          setState(() {
+            imageFile = uploadedImageUri;
+          });
         } else {
           print('Image upload failed: No URI found');
         }
@@ -85,7 +154,7 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
     }
   }
 
-
+  bool _isSubmitting = false;
 
   String isImageUploade = "";
   bool isLoading = false;
@@ -131,10 +200,11 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
                 _buildTextField(
                   label: 'DiplomaSession *',
                   controller: diplomaSessionController,
-                  hintText: 'Uncle or Friends ...etc',
+                  hintText: '2025',
                 ),
+                SizedBox(height: 10,),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
                       children: [
@@ -160,98 +230,89 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
                         ),
                       ],
                     ),
+                    Row(
+                      children: [
+                        ChangeNotifierProvider(
+                          create: (_) => ImageViewModel(),
+                          child: Consumer<ImageViewModel>(
+                            builder: (context, viewModel, _) {
+                              final imageResponse = viewModel.response;
+
+                              if (imageResponse.status == Status.LOADING) {
+                                return const Center(child: CircularProgressIndicator());
+                              } else if (imageResponse.status == Status.ERROR) {
+                                return Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(Icons.error_outline, color: Colors.red, size: 50),
+                                      const SizedBox(height: 10),
+                                      Text(
+                                        "Error: ${imageResponse.message ?? 'Something went wrong'}",
+                                        style: const TextStyle(color: Colors.red),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: _pickImage,
+                                        child: const Text("Retry"),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              } else {
+                                return Center(
+                                  child: InkWell(
+                                    onTap: _pickImage,
+                                    child: Container(
+                                      height: 200,
+                                      width: 180,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.grey.shade300),
+                                        borderRadius: BorderRadius.circular(12),
+                                        image: _imageBytes != null
+                                            ? DecorationImage(
+                                          image: MemoryImage(_imageBytes!),
+                                          fit: BoxFit.cover,
+                                        )
+                                            : null,
+                                      ),
+                                      child: _imageBytes == null
+                                          ? const Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.cloud_upload_outlined,
+                                            size: 50,
+                                            color: AppColors.primaryColor,
+                                          ),
+                                          SizedBox(height: 5),
+                                          Text(
+                                            "Avatar",
+                                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                                          ),
+                                          SizedBox(height: 5),
+                                          Padding(
+                                            padding: EdgeInsets.all(5),
+                                            child: Text(
+                                              "JPG, PNG or PDF, file size no more than 10MB",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(color: Colors.grey, fontSize: 12),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                          : null,
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
-                const SizedBox(height: 25,),
-                ChangeNotifierProvider(
-                  create: (_) => ImageViewModel(),
-                  child: Consumer<ImageViewModel>(
-                    builder: (context, viewModel, _) {
-                      final imageResponse = viewModel.response;
-
-                      if (imageResponse.status == Status.LOADING) {
-                        // Show loading indicator
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (imageResponse.status == Status.ERROR) {
-                        // Show error message
-                        return Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(Icons.error_outline, color: Colors.red, size: 50),
-                              const SizedBox(height: 10),
-                              Text(
-                                "Error: ${imageResponse.message ?? 'Something went wrong'}",
-                                style: const TextStyle(color: Colors.red),
-                              ),
-                              ElevatedButton(
-                                onPressed: _pickImage,
-                                child: const Text("Retry"),
-                              ),
-                            ],
-                          ),
-                        );
-                      } else if (imageResponse.status == Status.COMPLETED) {
-                        return Center(
-                          child: Container(
-                            height: 230,
-                            width: 200,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey.shade300),
-                              borderRadius: BorderRadius.circular(12),
-                              image: DecorationImage(
-                                image: MemoryImage(_imageBytes!), // Assuming _imageBytes is set after upload
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                          ),
-                        );
-                      } else {
-                        // Default UI when no image is selected
-                        return Center(
-                          child: InkWell(
-                            onTap: _pickImage,
-                            child: Container(
-                              height: 230,
-                              width: 200,
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey.shade300),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: const Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.cloud_upload_outlined,
-                                    size: 50,
-                                    color: AppColors.primaryColor,
-                                  ),
-                                  SizedBox(height: 10),
-                                  Text(
-                                    "Avatar",
-                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(height: 5),
-                                  Text(
-                                    "Please upload a photo where your face is visible",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                  SizedBox(height: 10),
-                                  Text(
-                                    "JPG, PNG or PDF, file size no more than 10MB",
-                                    style: TextStyle(color: Colors.grey, fontSize: 12),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                ),
-                SizedBox(height: 20,),
+                SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -276,14 +337,41 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
                     ElevatedButton(
                       onPressed: () async {
                         setState(() => _isFormSubmitted = true);
+
                         if (_formKey.currentState!.validate() && _validateForm()) {
-                          await _saveStep3DataAdmission();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Form submitted successfully')),
-                          );
+                          setState(() {
+                            _isSubmitting = true;
+                          });
+
+                          final response = await _saveStep3DataAdmission();
+
+                          setState(() {
+                            _isSubmitting = false;
+                          });
+
+                          if (response != null) {
+                            final telegramLink = response['telegramLink'] ?? 'Default Telegram Link';
+                            final studentName = response['studentName'] ?? 'Unknown Student';
+
+                            print('Telegram Link: $telegramLink');
+                            print('Student Name: $studentName');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SuccessfullyAdmissionPage(
+                                  telegramLink: telegramLink,
+                                  studentName: studentName,
+                                ),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Submission failed. Please try again.')),
+                            );
+                          }
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Please complete the form')),
+                            const SnackBar(content: Text('Please fill out all required fields')),
                           );
                         }
                       },
@@ -292,12 +380,10 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
                         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
+                          side: BorderSide(color: AppColors.primaryColor, width: 1),
                         ),
                       ),
-                      child: const Text(
-                        'Submit',
-                        style: TextStyle(fontSize: 16, color: AppColors.defaultWhiteColor),
-                      ),
+                      child: const Text('Submit',style: TextStyle(color: AppColors.defaultWhiteColor),),
                     ),
                   ],
                 ),
@@ -353,7 +439,9 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
               hintText: hintText,
               hintStyle: const TextStyle(
                   color: Colors.grey,
-                  fontWeight: FontWeight.w400,),
+                  fontWeight: FontWeight.w400,
+                  fontSize: 15,
+              ),
               filled: true,
               fillColor: Colors.transparent,
               border: OutlineInputBorder(
@@ -389,6 +477,5 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
     );
   }
 }
-
 
 

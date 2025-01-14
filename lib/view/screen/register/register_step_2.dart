@@ -4,8 +4,6 @@ import 'package:lms_mobile/view/screen/register/register_step_3.dart';
 import 'package:lms_mobile/viewModel/admission/study_program_alas.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../../model/admission/admission_form.dart';
 import '../../../viewModel/enroll/current_address_view_model.dart';
 import '../../../viewModel/enroll/place_of_birth_view_model.dart';
 
@@ -24,15 +22,8 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
   final List<String> gradeOptions = ['Grade A','Grade B'];
 
   String? _selectedGrade;
-  String? _selectedProvince;
   String? _selectedCurrentAddress;
   String? _selectedStudyProgramAlas;
-
-  String? fatherName;
-  String? fatherContactNumber;
-  String? motherName;
-  String? motherContactNumber;
-  String? nameOfHighSchool;
 
   final fatherController = TextEditingController();
   final fatherNumberController = TextEditingController();
@@ -40,17 +31,16 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
   final motherNumberController = TextEditingController();
   final nameOfHighSchoolController = TextEditingController();
 
-
   bool _validateForm() {
-    return fatherController.text.isNotEmpty &&
+    return
+      _selectedGrade != null  &&
+          _selectedCurrentAddress != null &&
+          _selectedStudyProgramAlas != null &&
+      fatherController.text.isNotEmpty &&
         fatherNumberController.text.isNotEmpty &&
         motherController.text.isNotEmpty &&
         motherNumberController.text.isNotEmpty &&
-        nameOfHighSchoolController.text.isNotEmpty &&
-        _selectedGrade != null  &&
-        _selectedProvince != null &&
-        _selectedCurrentAddress != null &&
-        _selectedStudyProgramAlas != null
+        nameOfHighSchoolController.text.isNotEmpty
     ;
   }
 
@@ -66,37 +56,41 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
 
   Future<void> _loadSavedData() async {
     final prefs = await SharedPreferences.getInstance();
-
     setState(() {
       fatherController.text = prefs.getString('fatherName') ?? '';
-      fatherNumberController.text = prefs.getString('fatherContactNumber') ?? '';
+      fatherNumberController.text = prefs.getString('fatherPhoneNumber') ?? '';
       motherController.text = prefs.getString('motherName') ?? '';
-      motherNumberController.text = prefs.getString('motherContactNumber') ?? '';
-      nameOfHighSchoolController.text = prefs.getString('nameOfHighSchool') ?? '';
+      motherNumberController.text = prefs.getString('motherPhoneNumber') ?? '';
+      nameOfHighSchoolController.text = prefs.getString('highSchool') ?? '';
 
-      _selectedGrade = prefs.getString('grade');
-      _selectedProvince = prefs.getString('province');
-      _selectedCurrentAddress = prefs.getString('currentAddress');
+      _selectedGrade = prefs.getString('bacIiGrade');
+      _selectedCurrentAddress = prefs.getString('address');
       _selectedStudyProgramAlas = prefs.getString('studyProgramAlias');
+
     });
-
-    debugPrint('Data Loaded Successfully!');
   }
-
 
   Future<void> _saveStep2DataAdmission() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('currentAddress', _selectedCurrentAddress ?? '');
-    prefs.setString('province', _selectedProvince ?? '');
-    prefs.setString('grade', _selectedGrade ?? '');
+
+    prefs.setString('address', _selectedCurrentAddress ?? '');
+    prefs.setString('bacIiGrade', _selectedGrade ?? '');
     prefs.setString('studyProgramAlias', _selectedStudyProgramAlas ?? '');
-    prefs.setString('fatherName', fatherName ?? '');
-    prefs.setString('fatherContactNumber', fatherContactNumber ?? '');
-    prefs.setString('motherName', motherName ?? '');
-    prefs.setString('motherContactNumber', motherContactNumber ?? '');
-    prefs.setString('nameOfHighSchool', nameOfHighSchool ?? '');
-    print(prefs);
+
+    prefs.setString('fatherName', fatherController.text);
+    prefs.setString('fatherPhoneNumber', fatherNumberController.text);
+    prefs.setString('motherName', motherController.text);
+    prefs.setString('motherPhoneNumber', motherNumberController.text);
+    prefs.setString('highSchool', nameOfHighSchoolController.text);
+
+    // await prefs.remove('fatherName');
+    // await prefs.remove('fatherPhoneNumber');
+    // await prefs.remove('motherName');
+    // await prefs.remove('motherPhoneNumber');
+    // await prefs.remove('highSchool');
+
   }
+
 
   Widget _buildDropdownMenu({
     required String hint,
@@ -109,6 +103,7 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
       return const Center(child: CircularProgressIndicator());
     }
 
+    bool _isFormSubmitted = false;
     return SizedBox(
       width: double.infinity,
       child: DropdownMenu<String>(
@@ -128,25 +123,49 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
             borderRadius: BorderRadius.circular(10),
             borderSide: const BorderSide(color: Colors.grey),
           ),
+          hintStyle: const TextStyle(
+            fontSize: 15,
+            color: Colors.grey,
+            fontWeight: FontWeight.w400,
+          ),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
         ),
-        dropdownMenuEntries: options.map((e) =>
-            DropdownMenuEntry(value: e, label: e)
-        ).toList(),
+        dropdownMenuEntries: options.map((e) {
+          return DropdownMenuEntry(
+            value: e,
+            label: e,
+          );
+        }).toList(),
         onSelected: onSelected,
       ),
     );
   }
 
+
   Widget _buildFormField(String label, Widget child) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: const TextStyle(
-            color: AppColors.primaryColor,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
+        RichText(
+          text: TextSpan(
+            text: label.endsWith('*')
+                ? label.substring(0, label.length - 1)
+                : label,
+            style: const TextStyle(
+              fontSize: 17,
+              color: AppColors.primaryColor,
+              fontWeight: FontWeight.bold,
+            ),
+            children: [
+              if (label.endsWith('*'))
+                const TextSpan(
+                  text: ' *',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+            ],
           ),
         ),
         const SizedBox(height: 8),
@@ -223,21 +242,10 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                     hintText: 'Bak Touk High School'
                 ),
                 _buildFormField(
-                  'Province',
-                  Consumer<PlaceOfBirthViewModel>(
-                    builder: (context, viewModel, _) => _buildDropdownMenu(
-                      hint: 'Select a province',
-                      options: viewModel.placeOfBirthList,
-                      selectedValue: _selectedProvince,
-                      onSelected: (value) => setState(() => _selectedProvince = value),
-                    ),
-                  ),
-                ),
-                _buildFormField(
-                  'StudyProgramAlias',
+                  'StudyProgramAlias *',
                   Consumer<StudyProgramAlasViewModel>(
                     builder: (context, viewModel, _) => _buildDropdownMenu(
-                      hint: 'Select a StudyProgramAlias',
+                      hint: 'it-expert',
                       options: viewModel.studyProgramNames,
                       selectedValue: _selectedStudyProgramAlas,
                       onSelected: (value) => setState(() => _selectedStudyProgramAlas = value),
@@ -245,10 +253,10 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                   ),
                 ),
                 _buildFormField(
-                  'Current address',
+                  'Current address *',
                   Consumer<PlaceOfBirthViewModel>(
                     builder: (context, viewModel, _) => _buildDropdownMenu(
-                      hint: 'Select place of birth',
+                      hint: 'Phnom Penh',
                       options: viewModel.placeOfBirthList,
                       selectedValue: _selectedCurrentAddress,
                       onSelected: (value) => setState(() => _selectedCurrentAddress = value),
@@ -259,15 +267,15 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                   label: 'Grade (Optional) *',
                   value: _selectedGrade,
                   items: gradeOptions,
-                  hintText: 'Select your Current Address',
+                  isFormSubmitted: _isFormSubmitted,
+                  hintText: 'Grade A',
                   onChanged: (value) {
                     setState(() {
                       _selectedGrade = value;
                     });
                   },
                 ),
-
-                const SizedBox(height: 20),
+                const SizedBox(height: 5),
                 Align(
                   alignment: Alignment.centerRight,
                   child: Row(
@@ -331,14 +339,21 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
     required String label,
     required String? value,
     required List<String> items,
-    String? hintText,
     required void Function(String?) onChanged,
+    bool isLoading = false,
+    String? hintText,
+    required bool isFormSubmitted,
   }) {
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Label with asterisk for required fields
           RichText(
             text: TextSpan(
               text: label.endsWith('*')
@@ -363,62 +378,59 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
           ),
           const SizedBox(height: 8),
 
-          // Dropdown with validation
+          // Custom-styled dropdown
           SizedBox(
             width: double.infinity,
-            child: DropdownButtonFormField<String>(
-              value: value,
-              hint: Text(
-                hintText ?? '',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.grey,
-                ),
-              ),
-              items: items.map((String item) {
-                return DropdownMenuItem<String>(
+            child: DropdownMenu<String>(
+              width: double.infinity,
+              menuHeight: 250,
+              hintText: hintText ?? 'Select an option',
+              textStyle: const TextStyle(fontSize: 16, color: Colors.black),
+              dropdownMenuEntries: items.map((item) {
+                return DropdownMenuEntry(
                   value: item,
-                  child: Text(item),
+                  label: item,
                 );
               }).toList(),
-              onChanged: onChanged,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
+              inputDecorationTheme: InputDecorationTheme(
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(
-                    color: Colors.grey.shade400,
-                  ),
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.grey),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Colors.grey.shade400),
+                  borderSide: const BorderSide(color: Colors.grey),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: AppColors.primaryColor,width: 2.0),
+                  borderSide: const BorderSide(color: Colors.blue, width: 2),
                 ),
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: const BorderSide(color: Colors.red),
                 ),
-                focusedErrorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Colors.red,width: 2.0),
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 12, vertical: 16),
               ),
+              errorText: isFormSubmitted && value == null
+                  ? 'Please select an option'
+                  : null,
+              menuStyle: MenuStyle(
+                backgroundColor: WidgetStateProperty.all(Colors.white),
+                shape: WidgetStateProperty.all(
+                  RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+              ),
+              onSelected: onChanged,
             ),
           ),
         ],
       ),
     );
   }
+}
 
-  Widget _buildTextField({
+
+Widget _buildTextField({
     required String label,
     required TextEditingController controller,
     String? hintText,
@@ -497,5 +509,3 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
       ),
     );
   }
-
-}

@@ -15,6 +15,7 @@ class RegisterStep1 extends StatefulWidget {
 }
 
 class _StudentAdmissionFormState extends State<RegisterStep1> {
+  final _formKey = GlobalKey<FormState>();
 
   String? _selectedGender;
   String? _selectedShift;
@@ -29,22 +30,18 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
   String? classStudent;
 
   bool _isFormSubmitted = false;
+  String result = '';
+  bool isLoading = false;
+  final FocusNode _focusNode = FocusNode();
+  bool _isExpanded = false;
 
   final List<String> genderOptions = ['Female', 'Male', 'Other'];
-
-  final _formKey = GlobalKey<FormState>();
   final nameKhController = TextEditingController();
   final nameEnController = TextEditingController();
   final contactNumberController = TextEditingController();
   final emailController = TextEditingController();
   final guardianContactController = TextEditingController();
   final classStudentController = TextEditingController();
-
-  String result = '';
-  bool isLoading = false;
-
-  final FocusNode _focusNode = FocusNode();
-  bool _isExpanded = false;
 
   static const int _minAge = 16;
   static const int _maxAge = 100;
@@ -64,43 +61,48 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
   Future<void> _loadSavedData() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _selectedShift = prefs.getString('shift');
-      _selectedSpaceOfBirth = prefs.getString('Place of birth');
-      _selectedDegree = prefs.getString('Degree');
+      _selectedGender = prefs.getString('gender');
+      _selectedShift = prefs.getString('shiftAlias');
+      _selectedDegree = prefs.getString('degreeAlias');
+      _selectedSpaceOfBirth = prefs.getString('birthPlace');
+      String? birthDateString = prefs.getString('dob');
+      _selectedBirthDate =
+      birthDateString != null ? DateTime.tryParse(birthDateString) : null;
+
+      nameKhController.text = prefs.getString('nameKh') ?? '';
+      nameEnController.text = prefs.getString('nameEn') ?? '';
+      contactNumberController.text = prefs.getString('phoneNumber') ?? '';
+      emailController.text = prefs.getString('email') ?? '';
+      guardianContactController.text = prefs.getString('guardianContact') ?? '';
+      classStudentController.text = prefs.getString('classStudent') ?? '';
     });
   }
 
   Future<void> _saveStep1DataAdmission() async {
     final prefs = await SharedPreferences.getInstance();
 
-    // Save the data to SharedPreferences
-    prefs.setString('birthDate', _selectedBirthDate?.toIso8601String() ?? '');
+    prefs.setString('dob', _selectedBirthDate?.toIso8601String() ?? '');
     prefs.setString('gender', _selectedGender ?? '');
-    prefs.setString('shift', _selectedShift ?? '');
-    prefs.setString('degree', _selectedDegree ?? '');
-    prefs.setString('placeOfBirth', _selectedSpaceOfBirth ?? '');
-    prefs.setString('nameKhController', nameKh ?? '');
-    prefs.setString('nameEnController', nameEn ?? '');
-    prefs.setString('phone', phone ?? '');
-    prefs.setString('email', email ?? '');
-    prefs.setString('classStudent', classStudent ?? '');
-    prefs.setString('guardianContact', guardianContact ?? '');
+    prefs.setString('shiftAlias', _selectedShift ?? '');
+    prefs.setString('degreeAlias', _selectedDegree ?? '');
+    prefs.setString('birthPlace', _selectedSpaceOfBirth ?? '');
 
-    // Retrieve and print the saved data
-    print('Saved Data:');
-    print('birthDate: ${prefs.getString('birthDate')}');
-    print('gender: ${prefs.getString('gender')}');
-    print('shift: ${prefs.getString('shift')}');
-    print('degree: ${prefs.getString('degree')}');
-    print('placeOfBirth: ${prefs.getString('placeOfBirth')}');
-    print('nameKhController: ${prefs.getString('nameKhController')}');
-    print('nameEnController: ${prefs.getString('nameEnController')}');
-    print('phone: ${prefs.getString('phone')}');
-    print('email: ${prefs.getString('email')}');
-    print('classStudent: ${prefs.getString('classStudent')}');
-    print('guardianContact: ${prefs.getString('guardianContact')}');
+    prefs.setString('nameKh', nameKhController.text);
+    prefs.setString('nameEn', nameEnController.text);
+    prefs.setString('phoneNumber', contactNumberController.text);
+    prefs.setString('email', emailController.text);
+    prefs.setString('classStudent', classStudentController.text);
+    prefs.setString('guardianContact', guardianContactController.text);
+
+    // await prefs.remove('nameKh');
+    // await prefs.remove('nameEn');
+    // await prefs.remove('phoneNumber');
+    // await prefs.remove('email');
+    // await prefs.remove('classStudent');
+    // await prefs.remove('guardianContact');
+    // await prefs.remove('dob');
+    // await prefs.remove('phoneNumber');
   }
-
 
   @override
   void dispose() {
@@ -124,16 +126,20 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
 
 
   bool _validateForm() {
-    return nameKhController.text.isNotEmpty &&
-        _selectedGender != null &&
-        _selectedDegree != null &&
-        _selectedShift != null &&
-        _selectedSpaceOfBirth != null &&
-        nameEnController.text.isNotEmpty &&
-        contactNumberController.text.isNotEmpty &&
-        emailController.text.isNotEmpty &&
-        guardianContactController.text.isNotEmpty &&
-        classStudentController.text.isNotEmpty;
+    return
+      _selectedGender != null &&
+          _selectedDegree != null &&
+          _selectedShift != null &&
+          _selectedSpaceOfBirth != null &&
+          _selectedBirthDate != null &&
+
+          nameKhController.text.isNotEmpty &&
+          nameEnController.text.isNotEmpty &&
+          contactNumberController.text.isNotEmpty &&
+          emailController.text.isNotEmpty &&
+          guardianContactController.text.isNotEmpty &&
+          classStudentController.text.isNotEmpty &&
+          contactNumberController.text.isNotEmpty;
   }
 
 
@@ -254,7 +260,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                   },
                 ),
                 _buildFormField(
-                  label: 'Date of Birth ',
+                  label: 'Date of Birth *',
                   child: GestureDetector(
                     onTap: _showDatePicker,
                     child: Container(
@@ -274,7 +280,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                                 .padLeft(2, '0')}-${_selectedBirthDate!.day
                                 .toString().padLeft(2, '0')}'
                                 : 'Select Date of Birth',
-                            style: const TextStyle(fontSize: 16),
+                            style: const TextStyle(fontSize: 16 ),
                           ),
                           const Icon(CupertinoIcons.calendar,
                               color: Colors.grey),
@@ -336,72 +342,77 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                   },
                 ),
                 _buildFormFieldAddress(
-                  'Shift',
+                  'Shift *',
                   Consumer<ShiftViewModel>(
-                    builder: (context, viewModel, _) => _buildDropdownMenu(
-                      hint: 'Select a shift',
-                      options: viewModel.shiftNames,
-                      selectedValue: _selectedShift,
-                      onSelected: (value) => setState(() => _selectedShift = value),
-                    ),
+                    builder: (context, viewModel, _) =>
+                        _buildDropdownMenu(
+                          hint: 'weekday-morning',
+                          options: viewModel.shiftNames,
+                          selectedValue: _selectedShift,
+                          onSelected: (value) =>
+                              setState(() =>
+                              _selectedShift = value),
+                        ),
                   ),
                 ),
                 _buildFormFieldAddress(
-                  'Degree',
+                  'Degree *',
                   Consumer<DegreeViewModel>(
-                    builder: (context, viewModel, _) => _buildDropdownMenu(
-                      hint: 'Select a degree',
-                      options: viewModel.degreeNames,
-                      selectedValue: _selectedDegree,
-                      onSelected: (value) => setState(() => _selectedDegree = value),
-                    ),
+                    builder: (context, viewModel, _) =>
+                        _buildDropdownMenu(
+                          hint: 'master',
+                          options: viewModel.degreeNames,
+                          selectedValue: _selectedDegree,
+                          onSelected: (value) =>
+                              setState(() => _selectedDegree = value),
+                        ),
                   ),
                 ),
-                _buildDropdownField(
-                  label: 'Gender *',
-                  value: _selectedGender,
-                  items: genderOptions,
-                  hintText: 'Choose an gender',
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedGender = newValue;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'This field is required';
-                    }
-                    return null;
-                  },
-                ),
+                  _buildDropdownField(
+                    label: 'Gender *',
+                    value: _selectedGender,
+                    items: genderOptions,
+                    hintText: 'Female',
+                    isLoading: false,
+                    isFormSubmitted: _isFormSubmitted,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _selectedGender = newValue;
+                      });
+                    },
+                  ),
                 _buildFormFieldAddress(
-                  'Place of birth',
+                  'Place of birth *',
                   Consumer<PlaceOfBirthViewModel>(
-                    builder: (context, viewModel, _) => _buildDropdownMenu(
-                      hint: 'Select place of birth',
-                      options: viewModel.placeOfBirthList,
-                      selectedValue: _selectedSpaceOfBirth,
-                      onSelected: (value) => setState(() => _selectedSpaceOfBirth = value),
-                    ),
+                    builder: (context, viewModel, _) =>
+                        _buildDropdownMenu(
+                          hint: 'Phnom Penh',
+                          options: viewModel.placeOfBirthList,
+                          selectedValue: _selectedSpaceOfBirth,
+                          onSelected: (value) =>
+                              setState(() => _selectedSpaceOfBirth = value),
+                        ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 5),
                 Align(
                   alignment: Alignment.centerRight,
                   child: SizedBox(
                     child: ElevatedButton(
-                      // onPressed: _stepOneFormSubmit,
                       onPressed: () async {
                         setState(() => _isFormSubmitted = true);
-                        if (_formKey.currentState!.validate() && _validateForm()) {
+                        if (_formKey.currentState!.validate() &&
+                            _validateForm()) {
                           await _saveStep1DataAdmission();
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => RegisterStep2()),
+                            MaterialPageRoute(
+                                builder: (context) => RegisterStep2()),
                           );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Please complete the form')),
+                            const SnackBar(
+                                content: Text('Please complete the form')),
                           );
                         }
                       },
@@ -434,12 +445,26 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: const TextStyle(
-            color: AppColors.primaryColor,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
+        RichText(
+          text: TextSpan(
+            text: label.endsWith('*')
+                ? label.substring(0, label.length - 1)
+                : label,
+            style: const TextStyle(
+              fontSize: 17,
+              color: AppColors.primaryColor,
+              fontWeight: FontWeight.bold,
+            ),
+            children: [
+              if (label.endsWith('*'))
+                const TextSpan(
+                  text: ' *',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+            ],
           ),
         ),
         const SizedBox(height: 8),
@@ -456,12 +481,26 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: const TextStyle(
-            color: AppColors.primaryColor,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
+        RichText(
+          text: TextSpan(
+            text: label.endsWith('*')
+                ? label.substring(0, label.length - 1)
+                : label,
+            style: const TextStyle(
+              fontSize: 17,
+              color: AppColors.primaryColor,
+              fontWeight: FontWeight.bold,
+            ),
+            children: [
+              if (label.endsWith('*'))
+                const TextSpan(
+                  text: ' *',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+            ],
           ),
         ),
         const SizedBox(height: 8),
@@ -489,7 +528,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                   ? label.substring(0, label.length - 1)
                   : label,
               style: const TextStyle(
-                fontSize: 16,
+                fontSize: 17,
                 color: AppColors.primaryColor,
                 fontWeight: FontWeight.bold,
               ),
@@ -514,7 +553,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
             decoration: InputDecoration(
               hintText: hintText,
               hintStyle: const TextStyle(color: Colors.grey,
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w200,
                   fontFamily: 'NotoSansKhmer'),
               filled: true,
               fillColor: Colors.transparent,
@@ -532,7 +571,8 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: AppColors.primaryColor,width: 2.0),
+                borderSide: const BorderSide(
+                    color: AppColors.primaryColor, width: 2.0),
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -540,7 +580,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
               ),
               focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(color: Colors.red,width: 2.0),
+                borderSide: const BorderSide(color: Colors.red, width: 2.0),
               ),
               contentPadding: const EdgeInsets.symmetric(
                   horizontal: 12, vertical: 16),
@@ -555,23 +595,27 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
     required String label,
     required String? value,
     required List<String> items,
-    String? hintText,
     required void Function(String?) onChanged,
-    required String? Function(String?)? validator,
+    bool isLoading = false,
+    String? hintText,
+    required bool isFormSubmitted,
   }) {
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Label with optional '*' for required fields
           RichText(
             text: TextSpan(
               text: label.endsWith('*')
                   ? label.substring(0, label.length - 1)
                   : label,
               style: const TextStyle(
-                fontSize: 16,
+                fontSize: 17,
                 color: AppColors.primaryColor,
                 fontWeight: FontWeight.bold,
               ),
@@ -589,55 +633,54 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
           ),
           const SizedBox(height: 8),
 
-          // Dropdown with validation
+          // Custom-styled dropdown
           SizedBox(
             width: double.infinity,
-            child: DropdownButtonFormField<String>(
-              value: value,
-              hint: Text(
-                hintText ?? '',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.grey,
-                ),
-              ),
-              items: items.map((String item) {
-                return DropdownMenuItem<String>(
+            child: DropdownMenu<String>(
+              width: double.infinity,
+              menuHeight: 250,
+              hintText: hintText ?? 'Select an option',
+              textStyle: const TextStyle(fontSize: 16, color: Colors.black),
+              dropdownMenuEntries: items.map((item) {
+                return DropdownMenuEntry(
                   value: item,
-                  child: Text(item),
+                  label: item,
                 );
               }).toList(),
-              onChanged: onChanged,
-              validator: validator,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
+              inputDecorationTheme: InputDecorationTheme(
+                hintStyle: const TextStyle(
+                  fontSize: 15,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w400,
+                ),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(
-                    color: Colors.grey.shade400,
-                  ),
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.grey),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Colors.grey.shade400),
+                  borderSide: const BorderSide(color: Colors.grey),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: AppColors.primaryColor,width: 2.0),
+                  borderSide: const BorderSide(color: Colors.blue, width: 2),
                 ),
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: const BorderSide(color: Colors.red),
                 ),
-                focusedErrorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Colors.red,width: 2.0),
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 12, vertical: 16),
               ),
+              errorText: isFormSubmitted && value == null
+                  ? 'Please select an option'
+                  : null,
+              menuStyle: MenuStyle(
+                backgroundColor: WidgetStateProperty.all(Colors.white),
+                shape: WidgetStateProperty.all(
+                  RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+              ),
+              onSelected: onChanged,
             ),
           ),
         ],
@@ -677,10 +720,19 @@ Widget _buildDropdownMenu({
           borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(color: Colors.grey),
         ),
+        hintStyle: const TextStyle(
+          fontSize: 15,
+          color: Colors.grey,
+          fontWeight: FontWeight.w400,
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
       ),
-      dropdownMenuEntries: options.map((e) =>
-          DropdownMenuEntry(value: e, label: e)
-      ).toList(),
+      dropdownMenuEntries: options.map((e) {
+        return DropdownMenuEntry(
+          value: e,
+          label: e,
+        );
+      }).toList(),
       onSelected: onSelected,
     ),
   );
