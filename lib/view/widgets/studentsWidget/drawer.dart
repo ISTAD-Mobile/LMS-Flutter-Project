@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/view/screen/lms/profile/course_screen.dart';
 import 'package:provider/provider.dart';
@@ -11,26 +10,29 @@ import '../../screen/lms/profile/acheivement_screen.dart';
 import '../../screen/lms/profile/profile_view_screen.dart';
 import '../../screen/lms/profile/settings/static_profile_setting_screen.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  static const appTitle = 'Drawer Demo';
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: appTitle,
-      home: StudentScreen(title: appTitle, accessToken: ''),
-    );
-  }
-}
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
+//
+//   static const appTitle = 'Drawer Demo';
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return const MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       title: appTitle,
+//       home: StudentScreen(title: appTitle, accessToken: ''),
+//     );
+//   }
+// }
 
 class StudentScreen extends StatefulWidget {
-  const StudentScreen({super.key, required this.title, required  this.accessToken});
+  const StudentScreen(
+      {super.key, required this.title, required this.accessToken});
 
   final String title;
   final String accessToken;
+
+  // Object StudentCoursesModel
 
   @override
   State<StudentScreen> createState() => _MyHomePageState();
@@ -40,7 +42,6 @@ class _MyHomePageState extends State<StudentScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = 0;
   late String accessToken;
-
 
   List<Map<String, dynamic>> _pages = [];
 
@@ -55,14 +56,20 @@ class _MyHomePageState extends State<StudentScreen> {
     setState(() {
       _pages = [
         {'title': 'Profile', 'widget': ProfileScreen(accessToken: accessToken)},
-        {'title': 'Course', 'widget': CourseScreen(accessToken: accessToken)},
-        {'title': 'Achievement', 'widget': const AcheivementScreen()},
-        {'title': 'Setting', 'widget': StaticProfileViewScreen(accessToken: accessToken)},
+        {
+          'title': 'Course',
+          'widget': StudentCoursesScreen(
+            accessToken: accessToken,
+          )
+        },
+        {'title': 'Achievement', 'widget': const AchievementsScreen()},
+        {
+          'title': 'Setting',
+          'widget': StaticProfileViewScreen(accessToken: accessToken)
+        },
       ];
     });
   }
-
-
 
   void _onItemTapped(int index) {
     setState(() {
@@ -92,7 +99,9 @@ class _MyHomePageState extends State<StudentScreen> {
         style: TextStyle(
           color: isSignOut
               ? AppColors.secondaryColor
-              : (selected ? AppColors.primaryColor : AppColors.defaultGrayColor),
+              : (selected
+                  ? AppColors.primaryColor
+                  : AppColors.defaultGrayColor),
           fontSize: 18,
           fontWeight: FontWeight.w400,
         ),
@@ -119,40 +128,43 @@ class _MyHomePageState extends State<StudentScreen> {
           children: [
             GestureDetector(
               onTap: () => _scaffoldKey.currentState?.openDrawer(),
-                child: ChangeNotifierProvider(
-                  create: (_) => StudenProfileDataViewModel(
-                    userRepository: StudentProfileRepository(accessToken: accessToken),
-                  ),
-                  child: Consumer<StudenProfileDataViewModel>(
-                    builder: (context, viewModel, _) {
-
-                      if (viewModel.user == null && !viewModel.isLoading && viewModel.errorMessage == null) {
-                        viewModel.fetchUserData();
-                      }
-
-                      if (viewModel.isLoading) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (viewModel.errorMessage != null) {
-                        return Center(child: Text("Error: ${viewModel.errorMessage}"));
-                      } else if (viewModel.user == null) {
-                        return const Center(child: Text("No user data found"));
-                      } else {
-                        final user = viewModel.user!;
-                        return CircleAvatar(
-                          radius: 22,
-                          backgroundImage: user.profileImage != null && user.profileImage!.isNotEmpty
-                              ? NetworkImage(user.profileImage!)
-                              : const AssetImage('assets/images/placeholder.jpg'),
-                        );
-                      }
-                    },
-                  ),
+              child: ChangeNotifierProvider(
+                create: (_) => StudenProfileDataViewModel(
+                  userRepository:
+                      StudentProfileRepository(accessToken: accessToken),
                 ),
+                child: Consumer<StudenProfileDataViewModel>(
+                  builder: (context, viewModel, _) {
+                    if (viewModel.user == null &&
+                        !viewModel.isLoading &&
+                        viewModel.errorMessage == null) {
+                      viewModel.fetchUserData();
+                    }
+
+                    if (viewModel.isLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (viewModel.errorMessage != null) {
+                      return Center(
+                          child: Text("Error: ${viewModel.errorMessage}"));
+                    } else if (viewModel.user == null) {
+                      return const Center(child: Text("No user data found"));
+                    } else {
+                      final user = viewModel.user!;
+                      return CircleAvatar(
+                        radius: 22,
+                        backgroundImage: user.profileImage != null &&
+                                user.profileImage!.isNotEmpty
+                            ? NetworkImage(user.profileImage!)
+                            : const AssetImage('assets/images/placeholder.jpg'),
+                      );
+                    }
+                  },
+                ),
+              ),
             ),
             const Spacer(),
             GestureDetector(
               onTap: () async {
-
                 final prefs = await SharedPreferences.getInstance();
                 await prefs.setString('accessToken', accessToken);
 
@@ -176,61 +188,69 @@ class _MyHomePageState extends State<StudentScreen> {
         child: Column(
           children: [
             ChangeNotifierProvider(
-            create: (_) => StudenProfileDataViewModel(userRepository: StudentProfileRepository(accessToken: accessToken)),
+              create: (_) => StudenProfileDataViewModel(
+                  userRepository:
+                      StudentProfileRepository(accessToken: accessToken)),
               child: Consumer<StudenProfileDataViewModel>(
-              builder: (context, viewModel, _) {
-              // Trigger fetch user data if needed
-              if (viewModel.user == null && !viewModel.isLoading && viewModel.errorMessage == null) {
-              viewModel.fetchUserData();
-              }
-              if (viewModel.isLoading) {
-              return const Center(child: CircularProgressIndicator());
-              } else if (viewModel.errorMessage != null) {
-              return Center(child: Text("Error: ${viewModel.errorMessage}"));
-              } else if (viewModel.user == null) {
-              return const Center(child: Text("No user data found"));
-              } else {
-              final user = viewModel.user!;
-              return Container(
-              height: 115,
-              padding: const EdgeInsets.fromLTRB(20, 45, 0, 0),
-              color: AppColors.defaultWhiteColor,
-              child: Row(
-              children: [
-                CircleAvatar(
-                radius: 22,
-                backgroundImage: user.profileImage != null  && user.profileImage!.isNotEmpty
-                    ? NetworkImage(user.profileImage!)
-                    : const AssetImage('assets/images/placeholder.jpg') as ImageProvider,
-              ),
-              const SizedBox(width: 16),
-              Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-              Text(
-              user.nameEn,
-              style: const TextStyle(
-              color: AppColors.primaryColor,
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              ),
-              ),
-              Text(
-                user.degree,
-              style: const TextStyle(color: Colors.grey, fontSize: 14),
-              ),
-              ],
-              ),
-              ],
-              ),
-              );
-              }
-              },
+                builder: (context, viewModel, _) {
+                  // Trigger fetch user data if needed
+                  if (viewModel.user == null &&
+                      !viewModel.isLoading &&
+                      viewModel.errorMessage == null) {
+                    viewModel.fetchUserData();
+                  }
+                  if (viewModel.isLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (viewModel.errorMessage != null) {
+                    return Center(
+                        child: Text("Error: ${viewModel.errorMessage}"));
+                  } else if (viewModel.user == null) {
+                    return const Center(child: Text("No user data found"));
+                  } else {
+                    final user = viewModel.user!;
+                    return Container(
+                      height: 115,
+                      padding: const EdgeInsets.fromLTRB(20, 45, 0, 0),
+                      color: AppColors.defaultWhiteColor,
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 22,
+                            backgroundImage: user.profileImage != null &&
+                                    user.profileImage!.isNotEmpty
+                                ? NetworkImage(user.profileImage!)
+                                : const AssetImage(
+                                        'assets/images/placeholder.jpg')
+                                    as ImageProvider,
+                          ),
+                          const SizedBox(width: 16),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                user.nameEn,
+                                style: const TextStyle(
+                                  color: AppColors.primaryColor,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Text(
+                                user.degree,
+                                style: const TextStyle(
+                                    color: Colors.grey, fontSize: 14),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                },
               ),
             ),
-
-          const Divider(color: AppColors.primaryColor, thickness: 0.3),
+            const Divider(color: AppColors.primaryColor, thickness: 0.3),
             Expanded(
               child: ListView(
                 padding: EdgeInsets.zero,
@@ -273,17 +293,20 @@ class _MyHomePageState extends State<StudentScreen> {
                         // Navigate to the Login screen (or HomeScreen if you want)
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => const HomeScreen()), // Use LoginScreen instead of HomeScreen
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const HomeScreen()), // Use LoginScreen instead of HomeScreen
                         );
                       } catch (error) {
                         // If there is an error, show a snack bar
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Failed to sign out. Please try again.')),
+                          const SnackBar(
+                              content: Text(
+                                  'Failed to sign out. Please try again.')),
                         );
                       }
                     },
                   ),
-
                 ],
               ),
             ),

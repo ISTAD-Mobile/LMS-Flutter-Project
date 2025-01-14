@@ -1,103 +1,104 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import '../../../../data/color/color_screen.dart';
+import '../../../../data/network/student_role_services/student_course_service.dart';
+import '../../../../model/student_role_model/student_course_model.dart';
+import '../../../../repository/student_role_repos/student_course_repo.dart';
+import '../../../../viewModel/student_role_view_model/student_course_view_model.dart';
 import '../../../widgets/studentsWidget/widget_detail_card/course_detail_screen.dart';
 
-class CourseScreen extends StatelessWidget {
-  const CourseScreen({super.key, required String accessToken});
+class StudentCoursesScreen extends StatelessWidget {
+  final String accessToken;
+
+  const StudentCoursesScreen({super.key, required this.accessToken});
 
   @override
   Widget build(BuildContext context) {
+    final service = StudentCoursesService(accessToken: accessToken);
+    final repository = StudentCoursesRepository(service: service);
+    final viewModel = StudentCoursesViewModel(repository: repository);
+
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       body: SafeArea(
         child: Column(
           children: [
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  _buildWelcomeBanner(),
-                  _buildSearchBar(),
-                  _buildFilterSection(),
-                ],
+            // Use FutureBuilder to fetch the data and pass it to _buildWelcomeBannerWithData
+            FutureBuilder<StudentCoursesModel?>(
+              future: viewModel.fetchStudentData(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text(
+                      'Error occurred: Unable to load student data.\n${snapshot.error}',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  );
+                } else if (snapshot.hasData && snapshot.data != null) {
+                  final data = snapshot.data!;
+                  return _buildWelcomeBannerWithData(data);
+                } else {
+                  return const Center(
+                    child: Text('No data available'),
+                  );
+                }
+              },
+            ),
+            _buildSearchBar(),
+            _buildFilterSection(),
+            Expanded(
+              child: FutureBuilder<StudentCoursesModel?>(
+                future: viewModel.fetchStudentData(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        'Error occurred: Unable to load courses.\n${snapshot.error}',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    );
+                  } else if (snapshot.hasData && snapshot.data != null) {
+                    final data = snapshot.data!;
+                    if (data.courses.isEmpty) {
+                      return const Center(
+                        child: Text('No courses available at the moment.'),
+                      );
+                    }
+
+                    return ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: data.courses.length,
+                      itemBuilder: (context, index) {
+                        final course = data.courses[index];
+                        return CourseCard(
+                          title: course.title,
+                          description: course.description,
+                          year: course.year.toString(),
+                          semester: course.semester.toString(),
+                          credits: course.credit.toString(),
+                          thumbnailUrl: course.logo,
+                          userProfileUrl:
+                              data.profileImage, // Use student's avatar
+                        );
+                      },
+                    );
+                  } else {
+                    return const Center(
+                      child: Text('No data available'),
+                    );
+                  }
+                },
               ),
             ),
-            _buildCourseList(),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildWelcomeBanner() {
-    return Container(
-      margin: const EdgeInsets.all(20.0),
-      padding: const EdgeInsets.fromLTRB(0, 16, 15, 20),
-      decoration: BoxDecoration(
-        color: AppColors.primaryColor,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: const Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: 130.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Welcome back, Nhoem Tevy',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  'Passionate about literature and creative writing.',
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Positioned(
-            top: 20,
-            left: 0.0,
-            child: CircleAvatar(
-              radius: 60,
-              backgroundImage: AssetImage('assets/images/tevy.png'),
-            ),
-          ),
-          Positioned(
-            top: 95,
-            left: 130.0,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Nhoem Tevy',
-                  style: TextStyle(
-                    color: AppColors.primaryColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                SizedBox(height: 2),
-                Text(
-                  '12 Course',
-                  style: TextStyle(
-                    color: AppColors.defaultGrayColor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -108,9 +109,7 @@ class CourseScreen extends StatelessWidget {
       child: TextField(
         decoration: InputDecoration(
           hintText: 'Search',
-          hintStyle: const TextStyle(
-              color: Colors.grey
-          ),
+          hintStyle: const TextStyle(color: Colors.grey),
           prefixIcon: const Icon(Icons.search, color: Colors.grey),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
@@ -126,7 +125,8 @@ class CourseScreen extends StatelessWidget {
           ),
           filled: true,
           fillColor: AppColors.defaultWhiteColor,
-          contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         ),
       ),
     );
@@ -148,8 +148,9 @@ class CourseScreen extends StatelessWidget {
               icon: const Icon(Icons.filter_list),
               label: const Text('Filter by semester'),
               style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                foregroundColor: AppColors.primaryColor, // Text and icon color
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                foregroundColor: AppColors.primaryColor,
               ),
             ),
           ),
@@ -161,44 +162,9 @@ class CourseScreen extends StatelessWidget {
             ),
             child: const Text(
               '25',
-              style: TextStyle(color: AppColors.primaryColor),
+              style: TextStyle(
+                  color: AppColors.primaryColor, fontWeight: FontWeight.bold),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCourseList() {
-    return Expanded(
-      child: ListView(
-        padding: const EdgeInsets.all(16),
-        children: const [
-          CourseCard(
-            number: '11',
-            title: 'MATHEMATICS (DISCRETE MATH)',
-            description: 'This course provides an introduction to the mathematical concepts and techniques that are fundamental to ...',
-            year: '1',
-            semester: '2',
-            credits: '3', theory: '3', practice: '3',
-          ),
-          SizedBox(height: 16),
-          CourseCard(
-            number: '10',
-            title: 'INTENSIVE ENGLISH PROGRAM II',
-            description: 'This course provides an introduction to the mathematical concepts and techniques that are fundamental to ...',
-            year: '1',
-            semester: '2',
-            credits: '3', theory: '3', practice: '3',
-          ),
-          SizedBox(height: 16),
-          CourseCard(
-            number: '4',
-            title: 'ACADEMIC SKILL DEVELOPMENT',
-            description: 'This course provides an introduction to the mathematical concepts and techniques that are fundamental to ...',
-            year: '1',
-            semester: '2',
-            credits: '3', theory: '3', practice: '3',
           ),
         ],
       ),
@@ -206,26 +172,99 @@ class CourseScreen extends StatelessWidget {
   }
 }
 
+Widget _buildWelcomeBannerWithData(StudentCoursesModel data) {
+  return Container(
+    margin: const EdgeInsets.all(12.0),
+    // Reduced margin
+    padding: const EdgeInsets.symmetric(horizontal: 64, vertical: 40),
+    // Reduced padding
+    decoration: BoxDecoration(
+      color: AppColors.primaryColor,
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 80.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Welcome back, ${data.nameEn}',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16, // Reduced font size
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Ready to take on ${data.courses.length} courses.',
+                style: const TextStyle(
+                  color: Colors.white70,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Positioned(
+          top: 12, // Reduced top offset
+          left: -35,
+          child: CircleAvatar(
+            radius: 50, // Reduced avatar size
+            backgroundImage: NetworkImage(data.profileImage),
+          ),
+        ),
+        Positioned(
+          top: 95, // Adjusted position to fit shorter height
+          left: 80.0,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${data.nameEn}',
+                style: const TextStyle(
+                  color: AppColors.primaryColor,
+                  fontSize: 16, // Reduced font size
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Text(
+                '${data.courses.length} Courses',
+                style: const TextStyle(
+                  color: AppColors.defaultGrayColor,
+                  fontSize: 12, // Reduced font size
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 class CourseCard extends StatelessWidget {
-  final String number;
   final String title;
   final String description;
   final String year;
   final String semester;
   final String credits;
-  final String theory;
-  final String practice;
+  final String thumbnailUrl;
+  final String userProfileUrl;
 
   const CourseCard({
     super.key,
-    required this.number,
     required this.title,
     required this.description,
     required this.year,
     required this.semester,
     required this.credits,
-    required this.theory,
-    required this.practice,
+    required this.thumbnailUrl,
+    required this.userProfileUrl,
   });
 
   @override
@@ -240,10 +279,29 @@ class CourseCard extends StatelessWidget {
               description: description,
               year: year,
               semester: semester,
-              credits: credits, theory: theory, practice: practice,
+              credits: credits,
+              theory: '',
+              practice: '',
             ),
           ),
         );
+
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => CourseDetailScreen(
+        //       title: title,
+        //       description: description,
+        //       year: year,
+        //       semester: semester,
+        //       credits: credits,
+        //       theory: '', // Replace with actual data if available
+        //       practice: '', // Replace with actual data if available
+        //       thumbnailUrl: thumbnailUrl, // Pass the course image URL
+        //     ),
+        //   ),
+        // );
+
       },
       child: Card(
         color: Colors.white,
@@ -251,27 +309,21 @@ class CourseCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  Text(
-                    '$number.',
-                    style: const TextStyle(
-                      color: AppColors.primaryColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                          fontSize: 16,
                           color: AppColors.primaryColor),
                     ),
                   ),
@@ -280,32 +332,22 @@ class CourseCard extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 description,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   color: AppColors.defaultGrayColor,
-                  fontSize: 16,
+                  fontSize: 14, // Reduced font size
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundImage: AssetImage('assets/images/tevy.png'),
-                      ),
-                      Positioned(
-                        left: 25,
-                        child: CircleAvatar(
-                          radius: 20,
-                          backgroundImage: AssetImage('assets/images/tevy.png'),
-                        ),
-                      ),
-                    ],
+                  CircleAvatar(
+                    radius: 16,
+                    backgroundImage: NetworkImage(userProfileUrl),
                   ),
-                  const SizedBox(width: 50),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -316,7 +358,7 @@ class CourseCard extends StatelessWidget {
                               'Year: $year',
                               style: TextStyle(
                                 color: Colors.grey[700],
-                                fontSize: 14,
+                                fontSize: 12,
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -324,37 +366,19 @@ class CourseCard extends StatelessWidget {
                               'Semester: $semester',
                               style: TextStyle(
                                 color: Colors.grey[700],
-                                fontSize: 14,
+                                fontSize: 12,
                               ),
                             ),
                           ],
                         ),
                         const SizedBox(height: 4),
-                        Text(
-                          'Credit: $credits credits',
-                          style: TextStyle(
-                            color: Colors.grey[700],
-                            fontSize: 14,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
                         Row(
                           children: [
                             Text(
-                              'Progress:',
+                              'Credits: $credits',
                               style: TextStyle(
                                 color: Colors.grey[700],
-                                fontSize: 14,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: LinearProgressIndicator(
-                                value: 0.7,
-                                backgroundColor: Colors.grey[200],
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                    Colors.grey[700]!),
-                                minHeight: 8,
+                                fontSize: 12,
                               ),
                             ),
                           ],
@@ -364,23 +388,21 @@ class CourseCard extends StatelessWidget {
                   ),
                 ],
               ),
+              const SizedBox(height: 12),
+              Container(
+                width: double.infinity,
+                height: 150,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  image: DecorationImage(
+                    image: NetworkImage(thumbnailUrl),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildInfoChip({required String label}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        label,
-        style: const TextStyle(fontSize: 12),
       ),
     );
   }

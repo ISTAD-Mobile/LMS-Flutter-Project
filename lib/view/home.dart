@@ -30,7 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final courseViewModel = CourseViewmodel();
   int _selectedIndex = 0;
 
-
   @override
   void initState() {
     super.initState();
@@ -42,7 +41,10 @@ class _HomeScreenState extends State<HomeScreen> {
     final token = prefs.getString('accessToken');
     if (token != null && token.isNotEmpty) {
       // Token exists, navigate to LMS content
-      return StudentScreen(accessToken: token, title: '',); // Use the retrieved token
+      return StudentScreen(
+        accessToken: token,
+        title: '',
+      ); // Use the retrieved token
     } else {
       // No token, navigate to LoginScreen
       return const LoginScreen();

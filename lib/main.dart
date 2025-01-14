@@ -19,15 +19,22 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => EnrollmentStateNotifier(),child: const EnrollStep2(),),
-        ChangeNotifierProvider(create: (_) => LoginViewModel(LoginStudentRepository())),
+        ChangeNotifierProvider(
+          create: (context) => EnrollmentStateNotifier(),
+          child: const EnrollStep2(),
+        ),
+        ChangeNotifierProvider(
+            create: (_) => LoginViewModel(LoginStudentRepository())),
         ChangeNotifierProvider(create: (_) => PlaceOfBirthViewModel()),
         ChangeNotifierProvider(create: (_) => CurrentAddressViewModel()),
         ChangeNotifierProvider(create: (_) => UniversityViewModel()),
         ChangeNotifierProvider(create: (_) => CourseViewmodel()),
-        Provider<StudentProfileRepository>(create: (_) => StudentProfileRepository(accessToken: '')), // Ensure you have a valid repository
+        Provider<StudentProfileRepository>(
+            create: (_) => StudentProfileRepository(accessToken: '')),
+        // Ensure you have a valid repository
         ChangeNotifierProvider(
-          create: (context) => StudenProfileDataViewModel(userRepository: context.read<StudentProfileRepository>()),
+          create: (context) => StudenProfileDataViewModel(
+              userRepository: context.read<StudentProfileRepository>()),
         ),
         Provider<StudentSettingRepository>(
           create: (_) => StudentSettingRepository(accessToken: ''),
@@ -103,3 +110,6 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+
+
+

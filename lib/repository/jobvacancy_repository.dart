@@ -7,7 +7,7 @@ class JobvacancyRepository{
 
   Future<JobvacancyResponse> getAllJobvacancy() async {
     try{
-      final jobvacancyData = await apiService.getApiService(JobVocancyUrl.getJobvacancyByUrl);
+      final jobvacancyData = await apiService.getApiService(JobVacancyUrl.getJobvacancyByUrl);
       print("Job Vacancy Data: $jobvacancyData");
       return jobvacancyResponseFromJson(jobvacancyData);
     }catch (exception) {
