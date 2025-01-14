@@ -37,8 +37,8 @@ void main() {
         Provider<YearOfStudyAchievementRepository>(
           create: (_) => YearOfStudyAchievementRepository(accessToken: ''),
         ),
-        ChangeNotifierProvider<YearOfStudyAchievementViewmodel>(
-          create: (context) => YearOfStudyAchievementViewmodel(
+        ChangeNotifierProvider< YearOfStudyAchievementViewmodel >(
+          create: (context) =>  YearOfStudyAchievementViewmodel (
             userRepository: context.read<YearOfStudyAchievementRepository>(),
           ),
         ),

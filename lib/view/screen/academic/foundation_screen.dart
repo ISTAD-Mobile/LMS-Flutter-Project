@@ -50,7 +50,7 @@ class _ITExpertPageState extends State<FoundationPage> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.network(
-                  'https://dev-flutter.cstad.edu.kh/api/v1/medias/view/c0a25d97-4a28-4b4a-9a3f-965f09078670.jpg',
+                  'https://dev-flutter.cstad.edu.kh/api/v1/medias/view/9d783fa5-e8ff-4666-a054-a5fc45367729.jpg',
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: 200,

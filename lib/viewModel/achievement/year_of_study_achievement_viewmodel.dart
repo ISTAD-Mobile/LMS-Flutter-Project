@@ -1,84 +1,24 @@
-// import 'package:flutter/foundation.dart';
-// import 'package:http/http.dart' as http;
-// import 'package:lms_mobile/model/achievement/year_of_study_achievement.dart';
-//
-//
-// class YearOfStudyAchievementViewModel extends ChangeNotifier {
-//   YearOfStudyAchievement? yearOfStudyAchievement;
-//   bool isLoading = false;
-//   String? errorMessage;
-//
-//   Future<void> fetchYearOfStudyData(String accessToken) async {
-//     isLoading = true;
-//     notifyListeners();
-//
-//     try {
-//       final response = await http.get(
-//         Uri.parse('https://your-api-endpoint.com/api/achievements'),
-//         headers: {'Authorization': 'Bearer $accessToken'},
-//       );
-//
-//       if (response.statusCode == 200) {
-//         yearOfStudyAchievement = yearOfStudyAchievementFromJson(response.body);
-//       } else {
-//         errorMessage = "Failed to fetch data: ${response.statusCode}";
-//       }
-//     } catch (e) {
-//       errorMessage = "An error occurred: $e";
-//     } finally {
-//       isLoading = false;
-//       notifyListeners();
-//     }
-//   }
-//
-//   // Utility methods for getting data (e.g., total courses, GPA, etc.)
-//   String getYearSemester(int index) {
-//     final content = yearOfStudyAchievement?.content[index];
-//     return "Year ${content?.year} - Semester ${content?.semester}";
-//   }
-//
-//   int getTotalCourses(int index) {
-//     return yearOfStudyAchievement?.content[index].course.length ?? 0;
-//   }
-//
-//   int? getTotalCredits(int index) {
-//     return yearOfStudyAchievement?.content[index].course.fold(0, (sum, course) => sum! + course.credit);
-//   }
-//
-//   double getGPA(int index) {
-//     final courses = yearOfStudyAchievement?.content[index].course ?? [];
-//     if (courses.isEmpty) return 0.0;
-//
-//     final totalScore = courses.fold(0, (sum, course) => sum + course.score);
-//     return totalScore / courses.length;
-//   }
-// }
-
 // import 'package:flutter/material.dart';
-// import 'package:lms_mobile/model/achievement/year_of_study_achievement.dart';
-// import 'package:lms_mobile/model/student_profile_model.dart';
-// import 'package:lms_mobile/repository/student_profile_repository.dart';
-//
-//
+// import 'package:lms_mobile/repository/achievement/year_of_study_achievement_repository.dart';
+// import '../../model/achievement/year_of_study_achievement.dart';
 //
 // class YearOfStudyAchievementViewmodel extends ChangeNotifier {
-//   final StudentProfileRepository userRepository;
-//   StudentProfileModel? _user;
+//   final YearOfStudyAchievementRepository userRepository;
+//   List<YearOfStudyAchievement>? _achievements;
 //   bool _isLoading = false;
 //   String? _errorMessage;
 //
 //   YearOfStudyAchievementViewmodel({required this.userRepository});
 //
-//   StudentProfileModel? get user => _user;
+//   List<YearOfStudyAchievement>? get achievements => _achievements;
 //   bool get isLoading => _isLoading;
 //   String? get errorMessage => _errorMessage;
 //
-//   // Fetch user data
-//   Future<void> fetchUserData() async {
+//   Future<void> fetchAchievements() async {
 //     _setLoading(true);
 //
 //     try {
-//       _user = await userRepository.fetchUserData();
+//       _achievements = await userRepository.fetchYearOfStudyAchievement();
 //       _errorMessage = null;
 //     } catch (e) {
 //       _errorMessage = "Error: $e";
@@ -93,34 +33,59 @@
 //   }
 // }
 
+
+
 import 'package:flutter/material.dart';
-import 'package:lms_mobile/model/achievement/year_of_study_achievement.dart';
+import 'dart:convert';  // To decode the JSON response
 import 'package:lms_mobile/repository/achievement/year_of_study_achievement_repository.dart';
+import '../../model/achievement/year_of_study_achievement.dart';
 
 class YearOfStudyAchievementViewmodel extends ChangeNotifier {
   final YearOfStudyAchievementRepository userRepository;
-  List<YearOfStudyAchievement>? _achievements;
+  List<Content>? _content;  // List of Content
   bool _isLoading = false;
   String? _errorMessage;
 
   YearOfStudyAchievementViewmodel({required this.userRepository});
 
-  List<YearOfStudyAchievement>? get achievements => _achievements;
+  List<Content>? get content => _content;  // Getter for content
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
-  // Fetch year of study achievements
   Future<void> fetchAchievements() async {
     _setLoading(true);
 
     try {
-      _achievements = (await userRepository.fetchYearOfStudyAchievement()) as List<YearOfStudyAchievement>?;
-      _errorMessage = null;
+      // Fetching achievements from the repository (This should return a String containing JSON)
+      final response = await userRepository.fetchYearOfStudyAchievement();
+
+      // Check if the response is empty or null
+      if (response == null || response.isEmpty) {
+        _errorMessage = "No achievements data found.";
+      } else {
+        // Parse the JSON response into YearOfStudyAchievement object
+        final yearOfStudyAchievement = yearOfStudyAchievementFromJson(response as String);
+
+        // Check if content is empty
+        if (yearOfStudyAchievement.content == null || yearOfStudyAchievement.content!.isEmpty) {
+          _errorMessage = "No achievements found.";
+        } else {
+          _content = yearOfStudyAchievement.content;  // Assigning content directly
+          _errorMessage = null;  // Clear error message on successful data fetch
+        }
+      }
     } catch (e) {
       _errorMessage = "Error: $e";
+      print('Error fetching achievements: $e'); // Debugging error message
     }
 
     _setLoading(false);
+  }
+
+  // Helper function to parse the JSON response (String) into YearOfStudyAchievement object
+  YearOfStudyAchievement yearOfStudyAchievementFromJson(String str) {
+    final jsonData = json.decode(str);  // Decode the String to Map
+    return YearOfStudyAchievement.fromJson(jsonData);  // Parse the Map into the model
   }
 
   void _setLoading(bool value) {

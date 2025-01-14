@@ -21,7 +21,7 @@ class AcheivementScreen extends StatelessWidget {
         ),
       ),
       ChangeNotifierProvider(
-        create: (_) => YearOfStudyAchievementViewmodel(
+        create: (_) =>  YearOfStudyAchievementViewmodel (
           userRepository: YearOfStudyAchievementRepository(accessToken: accessToken),
         ), // Fetch data immediately
       ),
@@ -35,7 +35,7 @@ class AcheivementScreen extends StatelessWidget {
                 _buildWelcomeBanner(),
                 _buildTranscript(),
                 _buildStudentInfo(),
-                _buildSemesterSection(0),
+                _buildSemesterSection(),
                 // _buildSemesterSection(1),
               ],
             ),
@@ -328,64 +328,125 @@ class AcheivementScreen extends StatelessWidget {
   //     },
   //   );
   // }
-  Widget _buildSemesterSection(int index) {
-    return Consumer<YearOfStudyAchievementViewmodel>(
-      builder: (context, viewModel, child) {
-        if (viewModel.achievements == null && !viewModel.isLoading && viewModel.errorMessage == null) {
-          viewModel.fetchAchievements();
-        }
-
-        if (viewModel.isLoading) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (viewModel.errorMessage != null) {
-          return Center(child: Text("Error: ${viewModel.errorMessage}"));
-        } else if (viewModel.achievements == null || viewModel.achievements!.isEmpty) {
-          return const Center(child: Text("No achievements data found."));
-        } else {
-          final achievement = viewModel.achievements![index];
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Year ${achievement.content![0].year} - Semester ${achievement.content![0].semester}",
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primaryColor,
-                ),
-              ),
-              const SizedBox(height: 24),
-              _buildGradesTable(achievement),
-              const SizedBox(height: 12),
-              Text(
-                'Total Course: ${achievement.content![0].course}     GPA: ${achievement}     Credit: ${achievement.content![0].course![0].credit}',
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.primaryColor,
-                ),
-              ),
-            ],
-          );
-        }
-      },
-    );
-  }
-
-
-
-  // Widget _buildGradesTable(YearOfStudyAchievementViewModel viewModel, int index) {
-  //   // Get the relevant content for the specified year/semester
-  //   final content = viewModel.yearOfStudyAchievement?.content[index];
+  // Widget _buildSemesterSection(int index) {
+  //   return Consumer< YearOfStudyAchievementViewModel>(
+  //     builder: (context, viewModel, child) {
+  //       if (viewModel.achievements == null && !viewModel.isLoading && viewModel.errorMessage == null) {
+  //         viewModel.fetchAchievements();
+  //       }
   //
-  //   if (content == null) {
-  //     return const Center(child: Text("No courses available."));
-  //   }
+  //       if (viewModel.isLoading) {
+  //         return const Center(child: CircularProgressIndicator());
+  //       } else if (viewModel.errorMessage != null) {
+  //         return Center(child: Text("Error: ${viewModel.errorMessage}"));
+  //       } else if (viewModel.achievements == null || viewModel.achievements!.isEmpty) {
+  //         return const Center(child: Text("No achievements data found."));
+  //       } else {
+  //         final achievement = viewModel.achievements![index];
+  //         return Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [
+  //             Text(
+  //               "Year ${achievement.year} - Semester ${achievement.semester}",
+  //               style: const TextStyle(
+  //                 fontSize: 16,
+  //                 fontWeight: FontWeight.bold,
+  //                 color: AppColors.primaryColor,
+  //               ),
+  //             ),
+  //             const SizedBox(height: 24),
+  //             _buildGradesTable(achievement as YearOfStudyAchievement),
+  //             const SizedBox(height: 12),
+  //             // Text(
+  //             //   'Total Course: ${achievement.course}     GPA: ${achievement}     Credit: ${achievement.credit}',
+  //             //   style: const TextStyle(
+  //             //     fontSize: 14,
+  //             //     fontWeight: FontWeight.w400,
+  //             //     color: AppColors.primaryColor,
+  //             //   ),
+  //             // ),
+  //           ],
+  //         );
+  //       }
+  //     },
+  //   );
+  // }
   //
+  //
+  //
+  // // Widget _buildGradesTable(YearOfStudyAchievementViewModel viewModel, int index) {
+  // //   // Get the relevant content for the specified year/semester
+  // //   final content = viewModel.yearOfStudyAchievement?.content[index];
+  // //
+  // //   if (content == null) {
+  // //     return const Center(child: Text("No courses available."));
+  // //   }
+  // //
+  // //   final headers = ['NO', 'Title', 'Score', 'Credit', 'Grade'];
+  // //   final courses = content.course.map((course) {
+  // //     return [
+  // //       content.course.indexOf(course) + 1, // Course number (index + 1)
+  // //       course.title,
+  // //       course.score.toString(),
+  // //       course.credit.toString(),
+  // //       course.grade,
+  // //     ];
+  // //   }).toList();
+  // //
+  // //   return Table(
+  // //     border: TableBorder.all(
+  // //       color: Colors.grey.shade300,
+  // //       width: 1,
+  // //     ),
+  // //     columnWidths: const {
+  // //       0: FlexColumnWidth(0.5),
+  // //       1: FlexColumnWidth(2.5),
+  // //       2: FlexColumnWidth(1),
+  // //       3: FlexColumnWidth(0.8),
+  // //       4: FlexColumnWidth(0.8),
+  // //     },
+  // //     children: [
+  // //       TableRow(
+  // //         decoration: BoxDecoration(
+  // //           color: Colors.grey.shade100,
+  // //         ),
+  // //         children: headers.map((header) {
+  // //           return Padding(
+  // //             padding: const EdgeInsets.all(8.0),
+  // //             child: Text(
+  // //               header,
+  // //               style: const TextStyle(
+  // //                 fontWeight: FontWeight.bold,
+  // //                 fontSize: 12,
+  // //               ),
+  // //             ),
+  // //           );
+  // //         }).toList(),
+  // //       ),
+  // //       ...courses.map((course) {
+  // //         return TableRow(
+  // //           children: course.map((cell) {
+  // //             return Padding(
+  // //               padding: const EdgeInsets.all(8.0),
+  // //               child: Text(
+  // //                 cell.toString(),
+  // //                 style: const TextStyle(fontSize: 12),
+  // //               ),
+  // //             );
+  // //           }).toList(),
+  // //         );
+  // //       }).toList(),
+  // //     ],
+  // //   );
+  // // }
+  // Widget _buildGradesTable(YearOfStudyAchievement achievement) {
+  //   // Define Table Headers
   //   final headers = ['NO', 'Title', 'Score', 'Credit', 'Grade'];
-  //   final courses = content.course.map((course) {
+  //
+  //   // Convert Course Data to Table Rows
+  //   final courses = achievement.content![0].course!.map((course) {
   //     return [
-  //       content.course.indexOf(course) + 1, // Course number (index + 1)
+  //       achievement.content![0].course!.indexOf(course) + 1, // Course number (index + 1)
   //       course.title,
   //       course.score.toString(),
   //       course.credit.toString(),
@@ -393,6 +454,7 @@ class AcheivementScreen extends StatelessWidget {
   //     ];
   //   }).toList();
   //
+  //   // Build the Table Widget
   //   return Table(
   //     border: TableBorder.all(
   //       color: Colors.grey.shade300,
@@ -406,6 +468,7 @@ class AcheivementScreen extends StatelessWidget {
   //       4: FlexColumnWidth(0.8),
   //     },
   //     children: [
+  //       // Table Headers Row
   //       TableRow(
   //         decoration: BoxDecoration(
   //           color: Colors.grey.shade100,
@@ -423,6 +486,7 @@ class AcheivementScreen extends StatelessWidget {
   //           );
   //         }).toList(),
   //       ),
+  //       // Table Rows for Courses
   //       ...courses.map((course) {
   //         return TableRow(
   //           children: course.map((cell) {
@@ -439,14 +503,37 @@ class AcheivementScreen extends StatelessWidget {
   //     ],
   //   );
   // }
-  Widget _buildGradesTable(YearOfStudyAchievement achievement) {
-    // Define Table Headers
-    final headers = ['NO', 'Title', 'Score', 'Credit', 'Grade'];
+  Widget _buildSemesterSection() {
+    return Consumer<YearOfStudyAchievementViewmodel>(
+      builder: (context, viewModel, child) {
+        if (viewModel.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (viewModel.errorMessage != null) {
+          return Center(child: Text("Error: ${viewModel.errorMessage}"));
+        } else if (viewModel.content == null || viewModel.content!.isEmpty) {
+          return const Center(child: Text("No achievements data found."));
+        } else {
+          final achievement = viewModel.content?.first;
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Year ${achievement!.year} - Semester ${achievement.semester}",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              _buildGradesTable(context as YearOfStudyAchievement),
+            ],
+          );
+        }
+      },
+    );
+  }
 
-    // Convert Course Data to Table Rows
+  Widget _buildGradesTable(YearOfStudyAchievement achievement) {
+    final headers = ['NO', 'Title', 'Score', 'Credit', 'Grade'];
     final courses = achievement.content![0].course!.map((course) {
       return [
-        achievement.content![0].course!.indexOf(course) + 1, // Course number (index + 1)
+        achievement.content![0].course!.indexOf(course) + 1,
         course.title,
         course.score.toString(),
         course.credit.toString(),
@@ -454,12 +541,8 @@ class AcheivementScreen extends StatelessWidget {
       ];
     }).toList();
 
-    // Build the Table Widget
     return Table(
-      border: TableBorder.all(
-        color: Colors.grey.shade300,
-        width: 1,
-      ),
+      border: TableBorder.all(),
       columnWidths: const {
         0: FlexColumnWidth(0.5),
         1: FlexColumnWidth(2.5),
@@ -468,34 +551,24 @@ class AcheivementScreen extends StatelessWidget {
         4: FlexColumnWidth(0.8),
       },
       children: [
-        // Table Headers Row
         TableRow(
-          decoration: BoxDecoration(
-            color: Colors.grey.shade100,
-          ),
+          decoration: BoxDecoration(color: Colors.grey.shade100),
           children: headers.map((header) {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 header,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
             );
           }).toList(),
         ),
-        // Table Rows for Courses
         ...courses.map((course) {
           return TableRow(
             children: course.map((cell) {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  cell.toString(),
-                  style: const TextStyle(fontSize: 12),
-                ),
+                child: Text(cell.toString()),
               );
             }).toList(),
           );
@@ -503,6 +576,4 @@ class AcheivementScreen extends StatelessWidget {
       ],
     );
   }
-
-
 }
