@@ -1,48 +1,43 @@
 import 'dart:convert';
 
+/// Convert JSON to JobvacancyResponse
 JobvacancyResponse jobvacancyResponseFromJson(String str) =>
     JobvacancyResponse.fromJson(json.decode(str));
 
+/// Convert JobvacancyResponse to JSON
 String jobvacancyResponseToJson(JobvacancyResponse data) =>
     json.encode(data.toJson());
 
 class JobvacancyResponse {
   final int code;
   final String message;
-  final List<JobvacancyDataList> jobvacancydataList;
-  final Map<String, int>? paging;
-  final DateTime? requestedTime;
+  final List<JobvacancyDataList> dataList;
+  final Paging paging;
+  final DateTime requestedTime;
 
   JobvacancyResponse({
     required this.code,
     required this.message,
-    required this.jobvacancydataList,
-    this.paging,
-    this.requestedTime,
+    required this.dataList,
+    required this.paging,
+    required this.requestedTime,
   });
 
-  factory JobvacancyResponse.fromJson(Map<String, dynamic> json) =>
-      JobvacancyResponse(
-        code: json["code"] ?? 0,
-        message: json["message"] ?? "No message provided",
-        jobvacancydataList: json["jobvacancydataList"] == null
-            ? []
-            : List<JobvacancyDataList>.from(
-            json["jobvacancydataList"].map((x) => JobvacancyDataList.fromJson(x))),
-        paging: json["paging"] == null
-            ? null
-            : Map<String, int>.from(json["paging"]),
-        requestedTime: json["requestedTime"] == null
-            ? null
-            : DateTime.tryParse(json["requestedTime"]),
-      );
+  factory JobvacancyResponse.fromJson(Map<String, dynamic> json) => JobvacancyResponse(
+    code: json["code"],
+    message: json["message"],
+    dataList: List<JobvacancyDataList>.from(
+        json["dataList"].map((x) => JobvacancyDataList.fromJson(x))),
+    paging: Paging.fromJson(json["paging"]),
+    requestedTime: DateTime.parse(json["requestedTime"]),
+  );
 
   Map<String, dynamic> toJson() => {
     "code": code,
     "message": message,
-    "dataList": List<dynamic>.from(jobvacancydataList.map((x) => x.toJson())),
-    "paging": paging,
-    "requestedTime": requestedTime?.toIso8601String(),
+    "dataList": List<dynamic>.from(dataList.map((x) => x.toJson())),
+    "paging": paging.toJson(),
+    "requestedTime": requestedTime.toIso8601String(),
   };
 }
 
@@ -86,29 +81,23 @@ class JobvacancyDataList {
   });
 
   factory JobvacancyDataList.fromJson(Map<String, dynamic> json) => JobvacancyDataList(
-    id: json["id"] ?? 0,
-    uuid: json["uuid"] ?? "",
-    title: json["title"] ?? "Untitled",
+    id: json["id"],
+    uuid: json["uuid"],
+    title: json["title"],
     description: json["description"],
-    slug: json["slug"] ?? "",
-    editorContent: json["editorContent"] ?? "",
-    thumbnail: json["thumbnail"] ?? "",
+    slug: json["slug"],
+    editorContent: json["editorContent"],
+    thumbnail: json["thumbnail"],
     images: json["images"],
     contentType: ContentType.fromJson(json["contentType"]),
-    tagIds: json["tagIds"] == null
-        ? []
-        : List<int>.from(json["tagIds"].map((x) => x)),
-    view: json["view"] ?? 0,
+    tagIds: List<int>.from(json["tagIds"].map((x) => x)),
+    view: json["view"],
     publishedAt: DateTime.parse(json["publishedAt"]),
-    publishedBy: json["publishedBy"] ?? "Unknown",
-    updatedAt: json["updatedAt"] == null
-        ? null
-        : DateTime.tryParse(json["updatedAt"]),
+    publishedBy: json["publishedBy"],
+    updatedAt: json["updatedAt"] == null ? null : DateTime.tryParse(json["updatedAt"]),
     updatedBy: json["updatedBy"],
-    isDeleted: json["isDeleted"] == null
-        ? null
-        : json["isDeleted"] as bool,
-    isDraft: json["isDraft"] == null ? null : json["isDraft"] as bool,
+    isDeleted: json["isDeleted"],
+    isDraft: json["isDraft"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -142,12 +131,64 @@ class ContentType {
   });
 
   factory ContentType.fromJson(Map<String, dynamic> json) => ContentType(
-    id: json["id"] ?? 0,
-    type: json["type"] ?? "Unknown Type",
+    id: json["id"],
+    type: json["type"],
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
     "type": type,
+  };
+}
+
+class Paging {
+  final int page;
+  final int limit;
+  final int nextPage;
+  final int previousPage;
+  final int totalCount;
+  final int totalPages;
+  final int pagesToShow;
+  final int startPage;
+  final int endPage;
+  final int offset;
+
+  Paging({
+    required this.page,
+    required this.limit,
+    required this.nextPage,
+    required this.previousPage,
+    required this.totalCount,
+    required this.totalPages,
+    required this.pagesToShow,
+    required this.startPage,
+    required this.endPage,
+    required this.offset,
+  });
+
+  factory Paging.fromJson(Map<String, dynamic> json) => Paging(
+    page: json["page"],
+    limit: json["limit"],
+    nextPage: json["nextPage"],
+    previousPage: json["previousPage"],
+    totalCount: json["totalCount"],
+    totalPages: json["totalPages"],
+    pagesToShow: json["pagesToShow"],
+    startPage: json["startPage"],
+    endPage: json["endPage"],
+    offset: json["offset"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "page": page,
+    "limit": limit,
+    "nextPage": nextPage,
+    "previousPage": previousPage,
+    "totalCount": totalCount,
+    "totalPages": totalPages,
+    "pagesToShow": pagesToShow,
+    "startPage": startPage,
+    "endPage": endPage,
+    "offset": offset,
   };
 }

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/model/jobvacancy.dart';
 
-
 class ItNewsCard extends StatelessWidget {
-
   ItNewsCard(this.jobvacancy);
 
   final JobvacancyDataList jobvacancy;
 
   @override
   Widget build(BuildContext context) {
+    String formattedDate = DateFormat('dd MMM yyyy').format(jobvacancy.publishedAt);
     return Container(
-      width: 300,
-      margin: const EdgeInsets.only(right: 20),
+      width: 310,
+      margin: const EdgeInsets.only(right: 5),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -33,19 +33,20 @@ class ItNewsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AspectRatio(
-            aspectRatio: 16 / 9,
-            child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(8),
-                bottom: Radius.zero,
-              ),
-              child: Image.network(
-                '${jobvacancy.thumbnail}'
-              ),
+          ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+            ),
+            child: Image.network(
+              '${jobvacancy.thumbnail}',
+              width: double.infinity,
+              height: 150,  // Fixed height for the image
+              fit: BoxFit.cover,
             ),
           ),
-          Padding(
+          Container(
+            height: 50,  // Fixed height for the content
             padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,26 +57,25 @@ class ItNewsCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        jobvacancy.updatedBy.toString(),
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: AppColors.primaryColor,
-                        ),
-                      ),
-                      Text(
                         jobvacancy.contentType!.type.toString(),
                         style: const TextStyle(
                           fontSize: 12,
                           color: AppColors.primaryColor,
                         ),
                       ),
-                    ]
+                      Text(
+                        formattedDate,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 16),
-                // Title Section
                 Text(
-                  jobvacancy.title.toString(),
+                  jobvacancy.title,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
