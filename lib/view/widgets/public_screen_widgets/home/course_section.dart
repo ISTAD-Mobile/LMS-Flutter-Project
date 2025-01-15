@@ -8,7 +8,7 @@ import 'package:lms_mobile/view/widgets/public_screen_widgets/home/short_course_
 import 'package:lms_mobile/viewModel/course_viewmodel.dart';
 import 'package:provider/provider.dart';
 
-import '../../../screen/lms/profile/course_screen.dart';
+import '../../../screen/lms/profile/student_courses_screen.dart';
 
 
 // void main() {

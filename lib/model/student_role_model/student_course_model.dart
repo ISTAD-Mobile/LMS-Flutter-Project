@@ -29,8 +29,8 @@ class StudentCoursesModel {
       avatar: json['avatar'] ?? '',
       profileImage: json['profileImage'] ?? '',
       courses: (json['courses'] as List<dynamic>?)
-              ?.map((course) => Course.fromJson(course as Map<String, dynamic>))
-              .toList() ??
+          ?.map((course) => Course.fromJson(course as Map<String, dynamic>))
+          .toList() ??
           [], // Return an empty list if 'courses' is null
     );
   }

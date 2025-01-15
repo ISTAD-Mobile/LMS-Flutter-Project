@@ -10,6 +10,7 @@ class CourseDetailScreen extends StatefulWidget {
   final String credits;
   final String theory;
   final String practice;
+  final String thumbnailUrl;
 
   const CourseDetailScreen({
     super.key,
@@ -20,6 +21,7 @@ class CourseDetailScreen extends StatefulWidget {
     required this.credits,
     required this.theory,
     required this.practice,
+    required this.thumbnailUrl,
   });
 
   @override
@@ -151,7 +153,18 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child:
-                        const Icon(Icons.image, size: 48, color: Colors.grey),
+                        //Image.network(widget.thumbnailUrl),
+                        Container(
+                      width: double.infinity,
+                      height: 150,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        image: DecorationImage(
+                          image: NetworkImage(widget.thumbnailUrl),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
                   ),
 
                   // Instructor Info

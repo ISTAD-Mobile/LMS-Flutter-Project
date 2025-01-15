@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lms_mobile/view/screen/lms/profile/course_screen.dart';
+import 'package:lms_mobile/view/screen/lms/profile/student_courses_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../data/color/color_screen.dart';
@@ -286,19 +286,15 @@ class _MyHomePageState extends State<StudentScreen> {
                     selected: false,
                     onTap: () async {
                       try {
-                        // Clear the access token from SharedPreferences
                         final prefs = await SharedPreferences.getInstance();
                         await prefs.remove('accessToken');
 
-                        // Navigate to the Login screen (or HomeScreen if you want)
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  const HomeScreen()), // Use LoginScreen instead of HomeScreen
+                              builder: (context) => const HomeScreen()),
                         );
                       } catch (error) {
-                        // If there is an error, show a snack bar
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                               content: Text(

@@ -24,7 +24,6 @@ class StudentCoursesScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // Use FutureBuilder to fetch the data and pass it to _buildWelcomeBannerWithData
             FutureBuilder<StudentCoursesModel?>(
               future: viewModel.fetchStudentData(),
               builder: (context, snapshot) {
@@ -256,6 +255,9 @@ class CourseCard extends StatelessWidget {
   final String thumbnailUrl;
   final String userProfileUrl;
 
+  // final int theory;
+  // final int practice;
+
   const CourseCard({
     super.key,
     required this.title,
@@ -265,6 +267,8 @@ class CourseCard extends StatelessWidget {
     required this.credits,
     required this.thumbnailUrl,
     required this.userProfileUrl,
+    // required this.theory,
+    // required this.practice,
   });
 
   @override
@@ -282,6 +286,7 @@ class CourseCard extends StatelessWidget {
               credits: credits,
               theory: '',
               practice: '',
+              thumbnailUrl: thumbnailUrl,
             ),
           ),
         );
@@ -301,7 +306,6 @@ class CourseCard extends StatelessWidget {
         //     ),
         //   ),
         // );
-
       },
       child: Card(
         color: Colors.white,
