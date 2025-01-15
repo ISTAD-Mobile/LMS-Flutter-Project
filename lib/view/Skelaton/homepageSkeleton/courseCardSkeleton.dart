@@ -9,7 +9,7 @@ class ShortCourseCardSkeleton extends StatelessWidget {
     return GestureDetector(
       onTap: () {},
       child: SizedBox(  // Use SizedBox to ensure size constraints
-        width: MediaQuery.of(context).size.width, // Set width
+        width: 325,
         height: 150, // Set height
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),

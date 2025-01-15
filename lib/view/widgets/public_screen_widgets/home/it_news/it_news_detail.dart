@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
+import '../../../../../model/jobvacancy.dart';
 
 class ItNewsDetail extends StatelessWidget {
+ final int id;
+ ItNewsDetail({required this.id});
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +23,11 @@ class ItNewsDetail extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Title Section
-            Padding(
-              padding: const EdgeInsets.all(20),
+            const Padding(
+              padding: EdgeInsets.all(20),
               child: Text(
                 'Title',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w500,
                     color: AppColors.primaryColor,
@@ -41,7 +44,6 @@ class ItNewsDetail extends StatelessWidget {
               ),
             ),
 
-            // Date and Category Row
             Padding(
               padding: const EdgeInsets.all(16),
               child: Row(

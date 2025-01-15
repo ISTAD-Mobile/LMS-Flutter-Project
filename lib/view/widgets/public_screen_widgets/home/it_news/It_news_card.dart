@@ -5,9 +5,8 @@ import 'package:lms_mobile/model/jobvacancy.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/it_news/it_news_detail.dart';
 
 class ItNewsCard extends StatelessWidget {
-  ItNewsCard(this.jobvacancy);
-
   final JobvacancyDataList jobvacancy;
+  ItNewsCard(this.jobvacancy);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +18,7 @@ class ItNewsCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ItNewsDetail(),
+            builder: (context) => ItNewsDetail(id: jobvacancy.id),
           ),
         );
       },
