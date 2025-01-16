@@ -8,12 +8,12 @@ class ShortCourseCardSkeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {},
-      child: SizedBox(  // Use SizedBox to ensure size constraints
-        width: MediaQuery.of(context).size.width, // Set width
-        height: 150, // Set height
+      child: SizedBox(
+        width: 310,
+        height: 150,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-          margin: const EdgeInsets.only(right: 16),
+          // margin: const EdgeInsets.only(right: 10),
           decoration: BoxDecoration(
             color: AppColors.defaultWhiteColor,
             borderRadius: BorderRadius.circular(10),
@@ -26,10 +26,9 @@ class ShortCourseCardSkeleton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Skeleton for the image (using a Container)
               Container(
-                width: 85, // Ensure width and height are set here
-                height: 85, // Ensure height is set here
+                width: 85,
+                height: 85,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   color: Colors.grey.shade300,
@@ -40,21 +39,18 @@ class ShortCourseCardSkeleton extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Skeleton for the title
                     Container(
                       width: double.infinity,
                       height: 20,
                       color: Colors.grey.shade300,
                     ),
                     const SizedBox(height: 4),
-                    // Skeleton for the description
                     Container(
                       width: double.infinity,
                       height: 14,
                       color: Colors.grey.shade300,
                     ),
                     const SizedBox(height: 6),
-                    // Skeleton for the time and level
                     Row(
                       children: [
                         Container(
@@ -71,7 +67,6 @@ class ShortCourseCardSkeleton extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 10),
-                    // Skeleton for the fee button
                     Container(
                       width: 200,
                       height: 30,

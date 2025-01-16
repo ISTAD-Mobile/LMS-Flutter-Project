@@ -6,10 +6,15 @@ import 'package:lms_mobile/repository/student_profile_repository.dart';
 import 'package:lms_mobile/repository/student_profile_setting_repository.dart';
 import 'package:lms_mobile/view/screen/splashScreen/splash_screen.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/enrollments_widget/enroll_step2.dart';
+import 'package:lms_mobile/viewModel/admission/degree_viewmodel.dart';
+import 'package:lms_mobile/viewModel/admission/shift_viewmodel.dart';
+import 'package:lms_mobile/viewModel/admission/study_program_alas.dart';
+import 'package:lms_mobile/viewModel/course_details_viewmodel.dart';
 import 'package:lms_mobile/viewModel/course_viewmodel.dart';
 import 'package:lms_mobile/viewModel/enroll/current_address_view_model.dart';
 import 'package:lms_mobile/viewModel/enroll/place_of_birth_view_model.dart';
 import 'package:lms_mobile/viewModel/enroll/university_view_model.dart';
+import 'package:lms_mobile/viewModel/jobvacancy_detail_viewmodel.dart';
 import 'package:lms_mobile/viewModel/student_profile_viewModel.dart';
 import 'package:lms_mobile/viewModel/login_view_model.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +29,12 @@ void main() {
         ChangeNotifierProvider(create: (_) => PlaceOfBirthViewModel()),
         ChangeNotifierProvider(create: (_) => CurrentAddressViewModel()),
         ChangeNotifierProvider(create: (_) => UniversityViewModel()),
+        ChangeNotifierProvider(create: (_) => ShiftViewModel()),
+        ChangeNotifierProvider(create: (_) => DegreeViewModel()),
         ChangeNotifierProvider(create: (_) => CourseViewmodel()),
+        ChangeNotifierProvider(create: (_) => StudyProgramAlasViewModel()),
+        ChangeNotifierProvider(create: (_) => CourseDetailsViewmodel()),
+        ChangeNotifierProvider(create: (_) => JobvacancyDetailViewmodel()),
         Provider<StudentProfileRepository>(create: (_) => StudentProfileRepository(accessToken: '')), // Ensure you have a valid repository
         ChangeNotifierProvider(
           create: (context) => StudenProfileDataViewModel(userRepository: context.read<StudentProfileRepository>()),

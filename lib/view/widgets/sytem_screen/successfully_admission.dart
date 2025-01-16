@@ -4,32 +4,44 @@ import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../data/color/color_screen.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+class SuccessfullyAdmissionPage extends StatelessWidget {
+  final String telegramLink;
+  final String studentName;
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  SuccessfullyAdmissionPage({required this.telegramLink, required this.studentName});
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Admission Successfully',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: AppColors.primaryColor,
-        scaffoldBackgroundColor: AppColors.defaultWhiteColor,
-      ),
-      home: const SuccessfullyAdmission(),
-    );
+  // Function to launch the URL
+  Future<void> _launchURL() async {
+    final uri = Uri.parse(telegramLink);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not launch $telegramLink';
+    }
   }
-}
-class SuccessfullyAdmission extends StatelessWidget {
-  const SuccessfullyAdmission({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.primaryColor,
+        automaticallyImplyLeading: false,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Image.asset(
+                'assets/images/istad-logo-white.png',
+                height: 37,
+                width: 100,
+                fit: BoxFit.cover,
+              ),
+            ),
+            _buildAdmissionButton(context),
+          ],
+        ),
+      ),
       body: Column(
         children: [
           Expanded(
@@ -55,29 +67,19 @@ class SuccessfullyAdmission extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 15),
-                  const Text(
-                    'សូមស្វាគមន៍ tevy អ្នកបានចុះឈ្មោះជោគជ័យ។ សូមចុចតំណភ្ជាប់ (link) ឬ ស្កេន QR ដើម្បីចូលទៅកាន់គ្រុបតេលេក្រាមនិងតាមដានព័ត៌មានសិក្សា',
-                    style: TextStyle(
+                  Text(
+                    'សូមស្វាគមន៍ $studentName អ្នកបានចុះឈ្មោះជោគជ័យ។ សូមចុចតំណភ្ជាប់ (link) ឬ ស្កេន QR ដើម្បីចូលទៅកាន់គ្រុបតេលេក្រាមនិងតាមដានព័ត៌មានសិក្សា',
+                    style: const TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                       fontFamily: 'NotoSansKhmer',
                       color: AppColors.defaultGrayColor,
                     ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 24),
-
                   ElevatedButton(
-                    onPressed: () async {
-                      const telegramUrl = "https://t.me/istadkh";
-                      if (await canLaunch(telegramUrl)) {
-                        await launch(telegramUrl);
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Could not open Telegram')),
-                        );
-                      }
-                    },
+                    onPressed: _launchURL,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.buttonTelegramColor,
                       padding: const EdgeInsets.symmetric(
@@ -97,60 +99,90 @@ class SuccessfullyAdmission extends StatelessWidget {
                           width: 24,
                           color: AppColors.defaultWhiteColor,
                         ),
-                        SizedBox(width: 15),
+                        const SizedBox(width: 15),
                         const Text(
                           'Join Telegram Group',
-                          style: TextStyle(fontSize: 17,color: AppColors.defaultWhiteColor),
+                          style: TextStyle(fontSize: 17, color: AppColors.defaultWhiteColor),
                         ),
                         const SizedBox(width: 15),
-                        const Icon(Icons.arrow_forward_ios,color: AppColors.defaultWhiteColor),
+                        const Icon(Icons.arrow_forward_ios, color: AppColors.defaultWhiteColor),
                       ],
                     ),
                   ),
                   const SizedBox(height: 24),
-                  SizedBox(
-                    height: 50,
-                    child: Center(
-                      child: Stack(
-                        children: [
-                          for (var i = 0; i < 5; i++)
-                            Positioned(
-                              left: i * 20.0,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: Colors.white,
-                                    width: 2,
-                                  ),
-                                ),
-                                child: CircleAvatar(
-                                  radius: 20,
-                                  backgroundImage: NetworkImage(
-                                    'https://picsum.photos/200?random=$i',
-                                  ),
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: const EdgeInsets.all(8),
-                    child: Image.asset(
-                      'assets/qr_code.png',
-                      height: 150,
-                      width: 150,
-                    ),
-                  ),
+                  // SizedBox(
+                  //   height: 50,
+                  //   child: Center(
+                  //     child: Stack(
+                  //       children: [
+                  //         for (var i = 0; i < 5; i++)
+                  //           Positioned(
+                  //             left: i * 20.0,
+                  //             child: Container(
+                  //               decoration: BoxDecoration(
+                  //                 shape: BoxShape.circle,
+                  //                 border: Border.all(
+                  //                   color: Colors.white,
+                  //                   width: 2,
+                  //                 ),
+                  //               ),
+                  //               child: CircleAvatar(
+                  //                 radius: 20,
+                  //                 backgroundImage: NetworkImage(
+                  //                   'https://picsum.photos/200?random=$i',
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //           ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Admission button widget
+  Widget _buildAdmissionButton(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => const RegisterStep1(),
+        //   ),
+        // );
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.secondaryColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        minimumSize: const Size(120, 33),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image.network(
+            'https://cdn-icons-png.flaticon.com/128/684/684872.png',
+            width: 18,
+            height: 18,
+            color: Colors.white,
+            fit: BoxFit.cover,
+          ),
+          const SizedBox(width: 4),
+          const Text(
+            'ADMISSION',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
             ),
           ),
         ],

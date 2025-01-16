@@ -16,7 +16,7 @@ class ShortCourseScreen extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CourseDetailsPage(),
+            builder: (context) => CourseDetailPage(uuid: course.uuid),
           ),
         );
       },
