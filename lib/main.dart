@@ -14,6 +14,7 @@ import 'package:lms_mobile/viewModel/course_viewmodel.dart';
 import 'package:lms_mobile/viewModel/enroll/current_address_view_model.dart';
 import 'package:lms_mobile/viewModel/enroll/place_of_birth_view_model.dart';
 import 'package:lms_mobile/viewModel/enroll/university_view_model.dart';
+import 'package:lms_mobile/viewModel/jobvacancy_detail_viewmodel.dart';
 import 'package:lms_mobile/viewModel/student_profile_viewModel.dart';
 import 'package:lms_mobile/viewModel/login_view_model.dart';
 import 'package:provider/provider.dart';
@@ -33,6 +34,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => CourseViewmodel()),
         ChangeNotifierProvider(create: (_) => StudyProgramAlasViewModel()),
         ChangeNotifierProvider(create: (_) => CourseDetailsViewmodel()),
+        ChangeNotifierProvider(create: (_) => JobvacancyDetailViewmodel()),
         Provider<StudentProfileRepository>(create: (_) => StudentProfileRepository(accessToken: '')), // Ensure you have a valid repository
         ChangeNotifierProvider(
           create: (context) => StudenProfileDataViewModel(userRepository: context.read<StudentProfileRepository>()),

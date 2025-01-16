@@ -8,7 +8,6 @@ import '../../enrollments/enroll_screen.dart';
 
 class CourseDetailPage extends StatelessWidget {
   final String uuid;
-
   CourseDetailPage({required this.uuid});
 
   @override
