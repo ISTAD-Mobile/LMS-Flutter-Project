@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:lms_mobile/repository/reset_password_repo.dart';
+import 'package:lms_mobile/repository/enroll/enroll_repository.dart';
+import 'package:lms_mobile/repository/enroll/enroll_step3_repo.dart';
 import 'package:lms_mobile/resource/app_url.dart';
 import 'package:lms_mobile/view/screen/enrollments/enrollment_provider.dart';
 import 'package:lms_mobile/repository/login_repo.dart';
@@ -8,21 +9,27 @@ import 'package:lms_mobile/repository/student_profile_repository.dart';
 import 'package:lms_mobile/repository/student_profile_setting_repository.dart';
 import 'package:lms_mobile/view/screen/splashScreen/splash_screen.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/enrollments_widget/enroll_step2.dart';
+import 'package:lms_mobile/view/widgets/public_screen_widgets/enrollments_widget/enrollment_provider.dart';
 import 'package:lms_mobile/viewModel/course_viewmodel.dart';
 import 'package:lms_mobile/viewModel/enroll/available_course_view_model.dart';
 import 'package:lms_mobile/viewModel/enroll/current_address_view_model.dart';
+import 'package:lms_mobile/viewModel/enroll/enroll_view_model.dart';
+import 'package:lms_mobile/viewModel/enroll/enrollment_view_model.dart';
 import 'package:lms_mobile/viewModel/enroll/place_of_birth_view_model.dart';
 import 'package:lms_mobile/viewModel/enroll/university_view_model.dart';
-import 'package:lms_mobile/viewModel/reset_password_view_model.dart';
 import 'package:lms_mobile/viewModel/student_profile_viewModel.dart';
 import 'package:lms_mobile/viewModel/login_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:lms_mobile/view/widgets/sytem_screen/no_internet.dart';
 
 import 'data/network/api_service.dart';
+import 'data/network/enrollment_service.dart';
 import 'data/network/reset_password_service.dart';
 
 void main() {
+  final enrollmentService = EnrollmentService();
+  final enrollmentRepository = EnrollmentRepository(enrollmentService);
+  final enrollRepository = EnrollRepository(enrollmentService);
   runApp(
     MultiProvider(
       providers: [
@@ -31,8 +38,15 @@ void main() {
         ChangeNotifierProvider(create: (_) => PlaceOfBirthViewModel()),
         ChangeNotifierProvider(create: (_) => CurrentAddressViewModel()),
         ChangeNotifierProvider(create: (_) => UniversityViewModel()),
+        ChangeNotifierProvider(create: (_) => EnrollmentState()),
         ChangeNotifierProvider(create: (_) => CourseViewmodel()),
         ChangeNotifierProvider(create: (context) => AvailableCourseViewModel()),
+        ChangeNotifierProvider(
+          create: (_) => EnrollmentViewModel(enrollmentRepository),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => EnrollViewModel(enrollRepository),
+        ),
         Provider<StudentProfileRepository>(create: (_) => StudentProfileRepository(accessToken: '')),
         ChangeNotifierProvider(
           create: (context) => StudenProfileDataViewModel(userRepository: context.read<StudentProfileRepository>()),

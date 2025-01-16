@@ -1,184 +1,183 @@
-import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
 
-class EnrollmentFormData {
-  String? fullName;
-  String? gender;
-  String? phone;
-  String? email;
+class EnrollmentState extends ChangeNotifier {
+  // Form data for all steps
+  String? _fullName;
+  String? _gender;
+  String? _phone;
+  String? _email;
+  DateTime? _birthDate;
+  String? _birthAddress;
+  String? _currentAddress;
+  String? _education;
+  String? _university;
+  String? _selectedCourse;
+  String? _selectedClass;
+  String? _selectedShift;
+  String? _selectedHour;
 
-  DateTime? birthDate;
-  String? birthAddress;
-  String? currentAddress;
-  String? education;
-  String? university;
+  // Getters
+  String? get fullName => _fullName;
+  String? get gender => _gender;
+  String? get phone => _phone;
+  String? get email => _email;
+  DateTime? get birthDate => _birthDate;
+  String? get birthAddress => _birthAddress;
+  String? get currentAddress => _currentAddress;
+  String? get education => _education;
+  String? get university => _university;
+  String? get selectedCourse => _selectedCourse;
+  String? get selectedClass => _selectedClass;
+  String? get selectedShift => _selectedShift;
+  String? get selectedHour => _selectedHour;
 
-  String? selectedCourse;
-  String? selectedClass;
-  String? selectedShift;
-  String? selectedHour;
-
-  Map<String, dynamic> toJson() => {
-    'fullName': fullName,
-    'gender': gender,
-    'phone': phone,
-    'email': email,
-    'birthDate': birthDate?.toIso8601String(),
-    'birthAddress': birthAddress,
-    'currentAddress': currentAddress,
-    'education': education,
-    'university': university,
-    'selectedCourse': selectedCourse,
-    'selectedClass': selectedClass,
-    'selectedShift': selectedShift,
-    'selectedHour': selectedHour,
-  };
-
-  static EnrollmentFormData fromJson(Map<String, dynamic> json) {
-    var data = EnrollmentFormData();
-    data.fullName = json['fullName'];
-    data.gender = json['gender'];
-    data.phone = json['phone'];
-    data.email = json['email'];
-    data.birthDate = json['birthDate'] != null ? DateTime.parse(json['birthDate']) : null;
-    data.birthAddress = json['birthAddress'];
-    data.currentAddress = json['currentAddress'];
-    data.education = json['education'];
-    data.university = json['university'];
-    data.selectedCourse = json['selectedCourse'];
-    data.selectedClass = json['selectedClass'];
-    data.selectedShift = json['selectedShift'];
-    data.selectedHour = json['selectedHour'];
-    return data;
-  }
-}
-
-class EnrollmentStateNotifier extends ChangeNotifier {
-  Map<String, dynamic> formData = {};
-  void updateFormData(String key, dynamic value) {
-    formData[key] = value;
-    notifyListeners();
-  }
-
-  static const String _storageKey = 'enrollment_form_data';
+  // Step tracking
   int _currentStep = 0;
-  EnrollmentFormData _formData = EnrollmentFormData();
-  bool _isLoading = false;
-
   int get currentStep => _currentStep;
-  // EnrollmentFormData get formData => _formData;
-  bool get isLoading => _isLoading;
 
-  EnrollmentStateNotifier() {
-    _loadSavedData();
-  }
+  // Validation states
+  bool _step1Valid = false;
+  bool _step2Valid = false;
+  bool _step3Valid = false;
 
-  Future<void> _loadSavedData() async {
-    _isLoading = true;
-    notifyListeners();
+  bool get step1Valid => _step1Valid;
+  bool get step2Valid => _step2Valid;
 
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final savedDataString = prefs.getString(_storageKey);
-      if (savedDataString != null) {
-        final savedData = jsonDecode(savedDataString);
-        _formData = EnrollmentFormData.fromJson(savedData);
-      }
-    } catch (e) {
-      debugPrint('Error loading saved data: $e');
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
-  }
+  bool get canProceedToStep2 => _step1Valid;
+  bool get canProceedToStep3 => _step2Valid;
+  bool get canSubmit => _step3Valid;
 
-  Future<void> _saveData() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(_storageKey, jsonEncode(_formData.toJson()));
-    } catch (e) {
-      debugPrint('Error saving data: $e');
-    }
-  }
+  // Update step 1 data
+  void updateStep1Data({
+    required String fullName,
+    required String gender,
+    required String phone,
+    required String email,
+  }) {
+    _fullName = fullName;
+    _gender = gender;
+    _phone = phone;
+    _email = email;
 
-  Future<void> updateStep1({String? fullName, String? gender, String? phone, String? email}) async {
-    _formData.fullName = fullName ?? _formData.fullName;
-    _formData.gender = gender ?? _formData.gender;
-    _formData.phone = phone ?? _formData.phone;
-    _formData.email = email ?? _formData.email;
-    debugPrint('Step 1 Updated: ${_formData.toJson()}');
-    await _saveData();
+    // Validate step 1
+    _step1Valid = _fullName != null &&
+        _gender != null &&
+        _phone != null &&
+        _email != null &&
+        _fullName!.isNotEmpty &&
+        _gender!.isNotEmpty &&
+        _phone!.isNotEmpty &&
+        _email!.isNotEmpty;
+
     notifyListeners();
   }
 
-  bool validateStep1() {
-    return _formData.fullName?.isNotEmpty == true &&
-        _formData.gender?.isNotEmpty == true &&
-        _formData.phone?.isNotEmpty == true &&
-        _formData.email?.isNotEmpty == true;
+  // Update step 2 data
+  void updateStep2({
+    required DateTime? birthDate,
+    required String? birthAddress,
+    required String? currentAddress,
+    required String? education,
+    required String? university,
+  }) {
+    _birthDate = birthDate;
+    _birthAddress = birthAddress;
+    _currentAddress = currentAddress;
+    _education = education;
+    _university = university;
+
+    // Validate step 2
+    _step2Valid = _birthDate != null &&
+        _birthAddress != null &&
+        _currentAddress != null &&
+        _education != null &&
+        _university != null &&
+        _birthAddress!.isNotEmpty &&
+        _currentAddress!.isNotEmpty &&
+        _education!.isNotEmpty &&
+        _university!.isNotEmpty;
+
+    notifyListeners();
   }
 
-  Future<void> nextStep() async {
+  // Update step 3 data
+  void updateStep3({
+    required String? selectedCourse,
+    required String? selectedClass,
+    required String? selectedShift,
+    required String? selectedHour,
+  }) {
+    _selectedCourse = selectedCourse;
+    _selectedClass = selectedClass;
+    _selectedShift = selectedShift;
+    _selectedHour = selectedHour;
+
+    // Validate step 3
+    _step3Valid = _selectedCourse != null &&
+        _selectedClass != null &&
+        _selectedShift != null &&
+        _selectedHour != null &&
+        _selectedCourse!.isNotEmpty &&
+        _selectedClass!.isNotEmpty &&
+        _selectedShift!.isNotEmpty &&
+        _selectedHour!.isNotEmpty;
+
+    notifyListeners();
+  }
+
+  // Navigation methods
+  void nextStep() {
     if (_currentStep < 2) {
       _currentStep++;
-      await _saveData();
       notifyListeners();
     }
   }
 
-  Future<void> previousStep() async {
+  void previousStep() {
     if (_currentStep > 0) {
       _currentStep--;
-      await _saveData();
       notifyListeners();
     }
   }
 
-  Future<void> updateStep2({
-    DateTime? birthDate,
-    String? birthAddress,
-    String? currentAddress,
-    String? education,
-    String? university,
-  }) async {
-    _formData.birthDate = birthDate ?? _formData.birthDate;
-    _formData.birthAddress = birthAddress ?? _formData.birthAddress;
-    _formData.currentAddress = currentAddress ?? _formData.currentAddress;
-    _formData.education = education ?? _formData.education;
-    _formData.university = university ?? _formData.university;
+  // Get all enrollment data
+  Map<String, dynamic> getEnrollmentData() {
+    return {
+      'fullName': _fullName,
+      'gender': _gender,
+      'phone': _phone,
+      'email': _email,
+      'birthDate': _birthDate?.toIso8601String(),
+      'birthAddress': _birthAddress,
+      'currentAddress': _currentAddress,
+      'education': _education,
+      'university': _university,
+      'selectedCourse': _selectedCourse,
+      'selectedClass': _selectedClass,
+      'selectedShift': _selectedShift,
+      'selectedHour': _selectedHour,
+    };
+  }
 
-    debugPrint('Step 2 Updated: ${_formData.toJson()}');
-    await _saveData();
+  // Clear all data
+  void clearAllData() {
+    _fullName = null;
+    _gender = null;
+    _phone = null;
+    _email = null;
+    _birthDate = null;
+    _birthAddress = null;
+    _currentAddress = null;
+    _education = null;
+    _university = null;
+    _selectedCourse = null;
+    _selectedClass = null;
+    _selectedShift = null;
+    _selectedHour = null;
+    _currentStep = 0;
+    _step1Valid = false;
+    _step2Valid = false;
+    _step3Valid = false;
     notifyListeners();
   }
-
-  bool validateStep2() {
-    return _formData.birthDate != null &&
-        _formData.birthAddress?.isNotEmpty == true &&
-        _formData.currentAddress?.isNotEmpty == true &&
-        _formData.education?.isNotEmpty == true &&
-        _formData.university?.isNotEmpty == true;
-  }
-
-  // Future<void> _saveStep2Data() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   if (_selectedBirthDate != null) {
-  //     prefs.setString('birthDate', _selectedBirthDate!.toIso8601String());
-  //   }
-  //   if (_selectedBirthAddress != null) {
-  //     prefs.setString('birthAddress', _selectedBirthAddress!);
-  //   }
-  //   if (_selectedCurrentAddress != null) {
-  //     prefs.setString('currentAddress', _selectedCurrentAddress!);
-  //   }
-  //   if (_selectedEducation != null) {
-  //     prefs.setString('education', _selectedEducation!);
-  //   }
-  //   if (_selectedUniversity != null) {
-  //     prefs.setString('university', _selectedUniversity!);
-  //   }
-  // }
-
-
 }

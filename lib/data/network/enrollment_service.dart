@@ -11,13 +11,12 @@ class EnrollmentService {
       );
 
       if (response.statusCode == 200) {
-        // Return the response body as a Map
         return jsonDecode(response.body);
       } else {
-        throw Exception('Failed to enroll');
+        throw Exception('Failed to enroll: ${response.statusCode}');
       }
     } catch (e) {
-      rethrow;
+      throw Exception('Network error: $e');
     }
   }
 }

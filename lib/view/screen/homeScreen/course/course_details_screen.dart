@@ -305,7 +305,7 @@ class CourseDetailsPage extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () {
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (BuildContext context) => EnrollScreen()),
+            MaterialPageRoute(builder: (BuildContext context) => const EnrollScreen()),
           );
         },
         style: ElevatedButton.styleFrom(

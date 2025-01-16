@@ -33,6 +33,6 @@ class ApiUrl {
   static String login = '$baseUrl/auth/login';
   static String changePassword = '$baseUrl/auth/passwords';
   static String refreshToken = '$baseUrl/auth/refresh';
-
   static String postImageByUrl = '$baseUrl/medias/upload-single';
+  static String getGraduationUrl = '$baseUrl/graduations';
 }

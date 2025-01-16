@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
-import 'package:lms_mobile/view/screen/enrollments/enrollment_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:lms_mobile/viewModel/enroll/enrollment_view_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../screen/homeScreen/course/course_details_screen.dart';
 import 'enroll_step2.dart';
 
 class EnrollStep1 extends StatefulWidget {
-  final EnrollmentFormData formData;
-  const EnrollStep1({super.key, required this.formData, });
+  const EnrollStep1({super.key,});
 
   @override
   _EnrollStep1 createState() => _EnrollStep1();
@@ -21,6 +19,12 @@ class _EnrollStep1 extends State<EnrollStep1> {
   String? phone;
   String? email;
 
+  bool _isFormSubmitted = false;
+  String result = '';
+  bool isLoading = false;
+  final FocusNode _focusNode = FocusNode();
+  bool _isExpanded = false;
+
   bool _validateForm() {
     return _fullNameController.text.isNotEmpty &&
         _selectedGender != null &&
@@ -30,9 +34,7 @@ class _EnrollStep1 extends State<EnrollStep1> {
 
   final _formKey = GlobalKey<FormState>();
   String? _selectedGender;
-  String? _email;
   final List<String> genderOptions = ['Female', 'Male', 'Other'];
-  bool _isFormSubmitted = false;
 
   final List<String> _previousNames = [];
   final TextEditingController _fullNameController = TextEditingController();
@@ -40,48 +42,37 @@ class _EnrollStep1 extends State<EnrollStep1> {
   final genderController = TextEditingController();
   final phoneNumberController = TextEditingController();
 
-  final FocusNode _focusNode = FocusNode();
-  bool _isExpanded = false;
-
   @override
   void initState() {
     super.initState();
-    _focusNode.addListener(_onFocusChange);
     _loadSavedData();
+    _focusNode.addListener(_onFocusChange);
   }
 
   Future<void> _loadSavedData() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _fullNameController.text = prefs.getString('fullName') ?? '';
+      fullName = prefs.getString('fullName');
       _selectedGender = prefs.getString('gender');
-      phoneNumberController.text = prefs.getString('phone') ?? '';
-      emailController.text = prefs.getString('email') ?? '';
+      phone = prefs.getString('phone');
+      email = prefs.getString('email');
     });
   }
 
   Future<void> _saveStep1Data() async {
     final prefs = await SharedPreferences.getInstance();
-    final enrollmentState = Provider.of<EnrollmentStateNotifier>(context, listen: false);
-
-    // Save to SharedPreferences
-    await prefs.setString('fullName', _fullNameController.text);
-    await prefs.setString('gender', _selectedGender ?? '');
-    await prefs.setString('phone', phoneNumberController.text);
-    await prefs.setString('email', emailController.text);
-
-    // Update enrollment state
-    await enrollmentState.updateStep1(
-      fullName: _fullNameController.text,
-      gender: _selectedGender,
-      phone: phoneNumberController.text,
-      email: emailController.text,
-    );
+    prefs.setString('fullName', fullName?.toString() ?? '');
+    prefs.setString('gender', gender ?? '');
+    prefs.setString('phone', phone ?? '');
+    prefs.setString('email', email ?? '');
   }
 
   @override
   void dispose() {
     _fullNameController.dispose();
+    emailController.dispose();
+    genderController.dispose();
+    phoneNumberController.dispose();
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
     super.dispose();
@@ -103,6 +94,7 @@ class _EnrollStep1 extends State<EnrollStep1> {
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -416,7 +408,7 @@ class _EnrollStep1 extends State<EnrollStep1> {
                           await _saveStep1Data();
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => EnrollStep2(formData: EnrollmentFormData(),)),
+                            MaterialPageRoute(builder: (context) => const EnrollStep2()),
                           );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -424,7 +416,6 @@ class _EnrollStep1 extends State<EnrollStep1> {
                           );
                         }
                       },
-                      // onPressed: _handleNext,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryColor,
                         padding: const EdgeInsets.symmetric(

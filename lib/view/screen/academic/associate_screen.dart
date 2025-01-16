@@ -134,7 +134,7 @@ class AssociatePage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
-               Container(
+                    Container(
                       margin: const EdgeInsets.symmetric(horizontal: 16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

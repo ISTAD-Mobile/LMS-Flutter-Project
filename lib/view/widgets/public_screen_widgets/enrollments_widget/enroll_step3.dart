@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/viewModel/enroll/available_course_view_model.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../data/color/color_screen.dart';
+import '../../../../data/network/enrollment_service.dart';
 import '../../../../data/response/status.dart';
+import '../../../../model/admission/admission_form.dart';
+import '../../../../model/enrollmentRequest/register_model.dart';
 import '../../../../model/enrollment_response/available_course_model.dart';
-import '../../../screen/enrollments/enrollment_provider.dart';
+import '../../../../repository/enroll/enroll_repository.dart';
+import '../../../../repository/enroll/enroll_step3_repo.dart';
+import '../../../../resource/app_url.dart';
+import '../../../../viewModel/enroll/enroll_view_model.dart';
+import '../../../../viewModel/enroll/enrollment_view_model.dart';
 import 'enroll_step2.dart';
 import 'enroll_successful_screen.dart';
 
 class EnrollStep3 extends StatefulWidget {
-  final EnrollmentFormData formData;
   final String uuid;
-  const EnrollStep3({super.key, required this.formData, required this.uuid});
+  const EnrollStep3({super.key, required this.uuid});
 
   @override
   State<EnrollStep3> createState() => _EnrollStep3State();
@@ -39,11 +46,6 @@ class ClassOption {
 class _EnrollStep3State extends State<EnrollStep3> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  // Selected state variables
-  AvailableCourseDataList? _selectedAvailableCourseData;
-  String? _selectedClass;
-  String? _selectedShift;
-  String? _selectedHour;
 
   List<ClassOption> classOptions = [
     ClassOption(shift: 'Evening-Weekday', startTimeAsStr: '06:00 PM - 08:00 PM'),
@@ -52,9 +54,58 @@ class _EnrollStep3State extends State<EnrollStep3> {
     ClassOption(shift: 'Morning-Weekend', startTimeAsStr: '08:00 AM - 12:00 PM'),
   ];
 
+  Future<void> submitEnrollmentData() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // Collect data from all steps
+    final fullName = prefs.getString('fullName');
+    final email = prefs.getString('email');
+    final gender = prefs.getString('gender');
+    final phone = prefs.getInt('phoneNumber');
+    final birthDate = prefs.getString('birthDate');
+    final birthAddress = prefs.getString('birthAddress');
+    final currentAddress = prefs.getString('currentAddress');
+    final education = prefs.getString('education');
+    final university = prefs.getString('university');
+
+    if (fullName == null || email == null || gender == null || phone == null || birthDate == null || birthAddress == null || currentAddress == null || education == null || university == null) {
+
+      return;
+    }
+
+    final enrollmentData = {
+      'fullName': fullName,
+      'email': email,
+      'gender': gender,
+      'phone': phone,
+      'birthDate': birthDate,
+      'birthAddress': birthAddress,
+      'currentAddress': currentAddress,
+      'education': education,
+      'university': university,
+    };
+
+    print('Submitting Enrollment Data: $enrollmentData');
+  }
+
+  String? fullName;
+  String? email;
+  String? gender;
+  String? phone;
+  DateTime? _selectedBirthDate;
+  String? _selectedBirthAddress;
+  String? _selectedCurrentAddress;
+  String? _selectedEducation;
+  String? _selectedUniversity;
+  AvailableCourseDataList? _selectedAvailableCourseData;
+  String? _selectedClass;
+  String? _selectedShift;
+  String? _selectedHour;
+
   @override
   void initState() {
     super.initState();
+    _loadSavedData();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       print('Fetching available courses...');
       Provider.of<AvailableCourseViewModel>(context, listen: false).fetchAvailableCourseAllBlogs();
@@ -66,6 +117,184 @@ class _EnrollStep3State extends State<EnrollStep3> {
         print('Error: UUID is null or empty. UUID value: ${widget.uuid}');
       }
     });
+  }
+  Future<void> _loadSavedData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      fullName = prefs.getString('fullName') ?? '';
+      email = prefs.getString('email') ?? '';
+      gender = prefs.getString('gender') ?? '';
+      phone = prefs.getString('phoneNumber') ?? '';
+      _selectedBirthDate = DateTime.tryParse(prefs.getString('birthDate') ?? '');
+      _selectedBirthAddress = prefs.getString('birthAddress') ?? '';
+      _selectedCurrentAddress = prefs.getString('currentAddress') ?? '';
+      _selectedEducation = prefs.getString('education') ?? '';
+      _selectedUniversity = prefs.getString('university') ?? '';
+      _selectedAvailableCourseData = null;
+      _selectedClass = null;
+      _selectedShift = null;
+      _selectedHour = null;
+    });
+  }
+
+  Future<void> handleEnrollment() async {
+    if (!_formKey.currentState!.validate() || _selectedClass == null) {
+      _showErrorSnackBar('Please complete all required fields');
+      return;
+    }
+
+    try {
+      // Show loading indicator
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const Center(child: CircularProgressIndicator());
+        },
+      );
+
+      final enrollmentVM = context.read<EnrollmentViewModel>();
+      final enrollVM = context.read<EnrollViewModel>();
+
+      // Create enrollment data model
+      final enrollmentData = EnrollmentModel(
+        id: 0,
+        uuid: '',
+        dob: _selectedBirthDate!,
+        pob: _createAddressModel(_selectedBirthAddress!, 'BIRTH'),
+        currentAddress: _createAddressModel(_selectedCurrentAddress!, 'CURRENT'),
+        photoUri: '',
+        universityInfo: _createAddressModel(_selectedUniversity!, 'EDUCATION'),
+        email: email ?? '',
+        nameEn: fullName ?? '',
+        nameKh: null,
+        gender: gender ?? '',
+        phoneNumber: phone ?? '',
+      );
+
+      // First enroll the user
+      await enrollmentVM.enrollUser(AppUrl.postBlogRegisterUrl, enrollmentData);
+
+      if (enrollmentVM.status == Status.COMPLETED) {
+        // Get the selected class ID
+        final classId = _resolveClassId();
+        if (classId == null) {
+          throw Exception('Invalid class ID');
+        }
+
+        // Then enroll in the class
+        await enrollVM.enrollStudent(
+          classId: classId,
+          studentId: enrollmentVM.enrollmentModel!.id,
+        );
+
+        if (enrollVM.status == Status.COMPLETED) {
+          // Remove loading indicator
+          Navigator.pop(context);
+
+          // Navigate to success screen
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EnrollSuccessfulScreen(
+                course: _selectedAvailableCourseData!.title,
+                classTime: _selectedHour ?? 'Unknown Time',
+              ),
+            ),
+          );
+        } else {
+          throw Exception('Class enrollment failed: ${enrollVM.error}');
+        }
+      } else {
+        throw Exception('User enrollment failed: ${enrollmentVM.error}');
+      }
+    } catch (e) {
+      // Remove loading indicator if still showing
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+      _showErrorSnackBar('Enrollment failed: $e');
+    }
+  }
+
+  Future<int?> _handleInitialEnrollment() async {
+    final enrollmentViewModel = Provider.of<EnrollmentViewModel>(context, listen: false);
+
+    final enrollmentData = EnrollmentModel(
+      id: 0,
+      uuid: '',
+      dob: _selectedBirthDate!,
+      pob: _createAddressModel(_selectedBirthAddress!, 'BIRTH'),
+      currentAddress: _createAddressModel(_selectedCurrentAddress!, 'CURRENT'),
+      photoUri: '',
+      universityInfo: _createAddressModel(_selectedUniversity!, 'EDUCATION'), email: '', nameEn: '', nameKh:null, gender: '', phoneNumber: '',
+    );
+
+    await enrollmentViewModel.enrollUser(AppUrl.postBlogRegisterUrl, enrollmentData);
+
+    if (enrollmentViewModel.status == Status.COMPLETED &&
+        enrollmentViewModel.enrollmentModel != null) {
+      return enrollmentViewModel.enrollmentModel!.id;
+    }
+
+    throw Exception('Initial enrollment failed: ${enrollmentViewModel.error}');
+  }
+
+  Future<void> _handleClassEnrollment(int studentId) async {
+    final enrollStep3ViewModel = Provider.of<EnrollViewModel>(context, listen: false);
+    final classId = _resolveClassId();
+
+    if (classId == null) {
+      throw Exception('Invalid class ID');
+    }
+
+    await enrollStep3ViewModel.enrollStudent(
+      classId: classId,
+      studentId: studentId,
+    );
+
+    if (enrollStep3ViewModel.status == Status.COMPLETED) {
+      _navigateToSuccessScreen();
+    } else {
+      throw Exception('Class enrollment failed: ${enrollStep3ViewModel.error}');
+    }
+  }
+
+  CurrentAddress _createAddressModel(String address, String locationType) {
+    return CurrentAddress(
+      id: 1,
+      shortName: address,
+      fullName: address,
+      locationType: locationType,
+    );
+  }
+
+  int? _resolveClassId() {
+    return int.tryParse(_selectedClass!) ??
+        _selectedAvailableCourseData?.classes
+            .firstWhere((c) => c.shift == _selectedShift)
+            .id;
+  }
+
+  void _navigateToSuccessScreen() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EnrollSuccessfulScreen(
+          course: _selectedAvailableCourseData!.title,
+          classTime: _selectedHour ?? 'Unknown Time',
+        ),
+      ),
+    );
+  }
+
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
 
   Widget _buildCourseDetails(AvailableCourseViewModel viewModel) {
@@ -388,7 +617,6 @@ class _EnrollStep3State extends State<EnrollStep3> {
               context,
               MaterialPageRoute(
                 builder: (context) => EnrollStep2(
-                  formData: widget.formData,
                 ),
               ),
             );
@@ -459,14 +687,11 @@ class _EnrollStep3State extends State<EnrollStep3> {
                             children: [
                               ElevatedButton(
                                 onPressed: () {
-                                  Navigator.push(
+                                  Navigator.pushReplacement(
                                     context,
-                                    MaterialPageRoute(
-                                      builder: (context) => EnrollStep2(
-                                        formData: widget.formData,
-                                      ),
-                                    ),
+                                    MaterialPageRoute(builder: (context) => EnrollStep2()),
                                   );
+
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.grey[200],
@@ -487,22 +712,7 @@ class _EnrollStep3State extends State<EnrollStep3> {
                                 ),
                               ),
                               ElevatedButton(
-                                onPressed: _selectedClass != null
-                                    ? () {
-                                  if (_formKey.currentState!.validate()) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            EnrollSuccessfulScreen(
-                                              course: _selectedAvailableCourseData!.title,
-                                              classTime: _selectedHour ?? 'Unknown Time',
-                                            ),
-                                      ),
-                                    );
-                                  }
-                                }
-                                    : null,
+                                onPressed: _selectedClass != null ? handleEnrollment : null,
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.primaryColor,
                                   padding: const EdgeInsets.symmetric(

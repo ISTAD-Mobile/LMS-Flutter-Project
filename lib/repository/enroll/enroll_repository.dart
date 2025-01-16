@@ -2,26 +2,48 @@ import '../../data/network/enrollment_service.dart';
 import '../../model/enrollmentRequest/register_model.dart';
 import '../../resource/app_url.dart';
 
-class EnrollRepository {
-  var enrollmentService = EnrollmentService();
+class EnrollmentRepository {
+  final EnrollmentService _service;
 
-  Future<EnrollmentModel> postEnrollment(Map<String, dynamic> data) async {
+  EnrollmentRepository(this._service);
+
+  Future<EnrollmentModel> postEnrollment(EnrollmentModel enrollment) async {
     try {
-      // Convert the data to JSON
-      var enrollmentRequest = enrollmentModelToJson(data as EnrollmentModel);
+      final enrollmentRequest = enrollmentModelToJson(enrollment);
+      final response = await _service.postEnrollment(
+          AppUrl.postBlogRegisterUrl,
+          enrollmentRequest
+      );
 
-      // Make the API call
-      dynamic response = await enrollmentService.postEnrollment(
-          AppUrl.postBlogRegisterUrl, enrollmentRequest);
-
-      // Check if the response is successful, then parse the data into EnrollmentModel
       if (response != null) {
         return EnrollmentModel.fromJson(response);
       } else {
         throw Exception('Failed to load enrollment data');
       }
     } catch (e) {
-      rethrow;
+      throw Exception('Repository error: $e');
     }
   }
 }
+
+// class EnrollmentRepository {
+//   var enrollmentService = EnrollmentService();
+//
+//   Future<EnrollmentModel> postEnrollment(Map<String, dynamic> data) async {
+//     try {
+//       var enrollmentRequest = enrollmentModelToJson(data as EnrollmentModel);
+//
+//       dynamic response = await enrollmentService.postEnrollment(
+//           AppUrl.postBlogRegisterUrl, enrollmentRequest);
+//
+//       if (response != null) {
+//         return EnrollmentModel.fromJson(response);
+//       } else {
+//         throw Exception('Failed to load enrollment data');
+//       }
+//     } catch (e) {
+//       rethrow;
+//     }
+//   }
+
+

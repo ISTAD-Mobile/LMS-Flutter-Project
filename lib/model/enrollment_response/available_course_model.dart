@@ -63,6 +63,7 @@ class AvailableCourseDataList {
   final String thumbnailUri;
   final List<ClassOption> classOptions;
   final bool isActive;
+  final List<CourseClass> classes;
 
   AvailableCourseDataList({
     required this.id,
@@ -77,6 +78,7 @@ class AvailableCourseDataList {
     required this.thumbnailUri,
     required this.classOptions,
     this.isActive = true,
+    required this.classes,
   });
 
   factory AvailableCourseDataList.fromJson(Map<String, dynamic> json) {
@@ -97,6 +99,10 @@ class AvailableCourseDataList {
             json["classOptions"].map((x) => ClassOption.fromJson(x)))
             : [],
         isActive: json["isActive"] ?? true,
+        classes: json["classes"] != null
+            ? List<CourseClass>.from(
+            json["classes"].map((x) => CourseClass.fromJson(x)))
+            : [],
       );
     } catch (e) {
       print("Error parsing AvailableCourseDataList: $e");
@@ -111,6 +117,7 @@ class AvailableCourseDataList {
         totalLesson: 0,
         thumbnailUri: "",
         classOptions: [],
+        classes: [],
       );
     }
   }
@@ -128,6 +135,7 @@ class AvailableCourseDataList {
     "thumbnailUri": thumbnailUri,
     "classOptions": List<dynamic>.from(classOptions.map((x) => x.toJson())),
     "isActive": isActive,
+    "classes": List<dynamic>.from(classes.map((x) => x.toJson())),
   };
 
   List<ClassOption> getAvailableClassOptions() {
@@ -147,6 +155,7 @@ class AvailableCourseDataList {
     String? thumbnailUri,
     List<ClassOption>? classOptions,
     bool? isActive,
+    List<CourseClass>? classes,
   }) {
     return AvailableCourseDataList(
       id: id ?? this.id,
@@ -161,8 +170,39 @@ class AvailableCourseDataList {
       thumbnailUri: thumbnailUri ?? this.thumbnailUri,
       classOptions: classOptions ?? List<ClassOption>.from(this.classOptions),
       isActive: isActive ?? this.isActive,
+      classes: classes ?? List<CourseClass>.from(this.classes),
     );
   }
+}
+
+class CourseClass {
+  final int id;
+  final String shift;
+  final String startTimeAsStr;
+  final String endTimeAsStr;
+
+  CourseClass({
+    required this.id,
+    required this.shift,
+    required this.startTimeAsStr,
+    required this.endTimeAsStr,
+  });
+
+  factory CourseClass.fromJson(Map<String, dynamic> json) {
+    return CourseClass(
+      id: json['id'] ?? 0,
+      shift: json['shift'] ?? '',
+      startTimeAsStr: json['startTimeAsStr'] ?? '',
+      endTimeAsStr: json['endTimeAsStr'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'shift': shift,
+    'startTimeAsStr': startTimeAsStr,
+    'endTimeAsStr': endTimeAsStr,
+  };
 }
 
 class ClassOption {
