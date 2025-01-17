@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../data/color/color_screen.dart';
+import '../../home.dart';
 
 class SuccessfullyAdmissionPage extends StatelessWidget {
   final String telegramLink;
@@ -29,13 +30,21 @@ class SuccessfullyAdmissionPage extends StatelessWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Image.asset(
-                'assets/images/istad-logo-white.png',
-                height: 37,
-                width: 100,
-                fit: BoxFit.cover,
+            GestureDetector(
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Image.asset(
+                  'assets/images/istad-logo-white.png',
+                  height: 37,
+                  width: 100,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             _buildAdmissionButton(context),
@@ -110,34 +119,6 @@ class SuccessfullyAdmissionPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  // SizedBox(
-                  //   height: 50,
-                  //   child: Center(
-                  //     child: Stack(
-                  //       children: [
-                  //         for (var i = 0; i < 5; i++)
-                  //           Positioned(
-                  //             left: i * 20.0,
-                  //             child: Container(
-                  //               decoration: BoxDecoration(
-                  //                 shape: BoxShape.circle,
-                  //                 border: Border.all(
-                  //                   color: Colors.white,
-                  //                   width: 2,
-                  //                 ),
-                  //               ),
-                  //               child: CircleAvatar(
-                  //                 radius: 20,
-                  //                 backgroundImage: NetworkImage(
-                  //                   'https://picsum.photos/200?random=$i',
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //           ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
                 ],
               ),
             ),
@@ -154,7 +135,7 @@ class SuccessfullyAdmissionPage extends StatelessWidget {
         // Navigator.push(
         //   context,
         //   MaterialPageRoute(
-        //     builder: (context) => const RegisterStep1(),
+        //     builder: (context) => RegisterStep1(),
         //   ),
         // );
       },
