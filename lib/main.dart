@@ -38,7 +38,6 @@ void main() {
         ChangeNotifierProvider(create: (_) => PlaceOfBirthViewModel()),
         ChangeNotifierProvider(create: (_) => CurrentAddressViewModel()),
         ChangeNotifierProvider(create: (_) => UniversityViewModel()),
-        ChangeNotifierProvider(create: (_) => EnrollmentState()),
         ChangeNotifierProvider(create: (_) => CourseViewmodel()),
         ChangeNotifierProvider(create: (context) => AvailableCourseViewModel()),
         ChangeNotifierProvider(
