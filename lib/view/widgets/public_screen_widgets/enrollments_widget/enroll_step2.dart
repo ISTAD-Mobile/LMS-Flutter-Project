@@ -6,6 +6,7 @@ import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/viewModel/enroll/current_address_view_model.dart';
 import 'package:lms_mobile/viewModel/enroll/university_view_model.dart';
 import 'package:lms_mobile/viewModel/enroll/place_of_birth_view_model.dart';
+import 'enroll_step1.dart';
 import 'enroll_step3.dart';
 
 class EnrollStep2 extends StatefulWidget {
@@ -149,8 +150,16 @@ class _CourseEnrollForm extends State<EnrollStep2> {
       appBar: AppBar(
         backgroundColor: AppColors.defaultWhiteColor,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const EnrollStep1(
+                ),
+              ),
+            );
+          },
         ),
         title: const Text(
           'Enrollment Screen',
@@ -271,7 +280,12 @@ class _CourseEnrollForm extends State<EnrollStep2> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         ElevatedButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const EnrollStep1()),
+            );
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.grey[200],
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),

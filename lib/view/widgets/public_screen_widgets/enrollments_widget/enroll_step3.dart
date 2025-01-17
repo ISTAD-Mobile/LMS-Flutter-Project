@@ -691,7 +691,6 @@ class _EnrollStep3State extends State<EnrollStep3> {
                                     context,
                                     MaterialPageRoute(builder: (context) => EnrollStep2()),
                                   );
-
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.grey[200],

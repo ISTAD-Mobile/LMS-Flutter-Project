@@ -20,7 +20,7 @@ class _ItNewsSectionState extends State<ItNewsSection> {
   @override
   void initState() {
     super.initState();
-    jobvacancyViewModel.getAllJobvacancy();
+    jobvacancyViewModel.fetchAllJobvacancy();
   }
 
   @override
@@ -54,77 +54,65 @@ class _ItNewsSectionState extends State<ItNewsSection> {
               ),
             ],
           ),
-          SizedBox(height: 16,),
+          const SizedBox(height: 16),
           ChangeNotifierProvider(
-              create: (context) => jobvacancyViewModel,
-              child: Consumer<JobvacancyViewModel>(
-                builder: (context, viewModel, _) {
-                  final status = viewModel.jobvacancy.status;
-                  if (status == null) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  switch (status) {
-                    case Status.LOADING:
-                      return SizedBox(
-                        height: 352,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 10,
-                          itemBuilder: (context, index) => Jobvacancyskeleton(),
-                        ),
-                      );
+            create: (context) => jobvacancyViewModel,
+            child: Consumer<JobvacancyViewModel>(
+              builder: (context, viewModel, _) {
+                switch (viewModel.jobVacancy.status!) {
+                  case Status.LOADING:
+                    return SizedBox(
+                      height: 280,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 10,
+                        itemBuilder: (context, index) => Jobvacancyskeleton(),
+                      ),
+                    );
 
-                    case Status.COMPLETED:
-                      final jobvacancys = viewModel.jobvacancy.data?.jobvacancydataList ?? [];
-                      if (jobvacancys.isEmpty) {
-                        return const Center(
-                          child: Text('No jobvacancy available'),
-                        );
-                      }
-                      return SizedBox(
-                        height: 135,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: jobvacancys.length,
-                          itemBuilder: (context, index) {
-                            final jobvacancy = jobvacancys[index];
-                            return ItNewsCard(jobvacancy);
-                          },
-                        ),
-                      );
+                  case Status.COMPLETED:
+                    final jobvacancys = viewModel.jobVacancy.data?.data ?? [];
+                    return jobvacancys.isEmpty
+                        ? const Center(child: Text('No job vacancy available'))
+                        : SizedBox(
+                      height: 280,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: jobvacancys.length,
+                        itemBuilder: (context, index) {
+                          final jobvacancy = jobvacancys[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: ItNewsCard(jobvacancy),
+                          );
+                        },
+                      ),
+                    );
 
-                    case Status.ERROR:
-                      return Center(
-                        child: Text(
-                          "Error: ${viewModel.jobvacancy.message}",
-                          style: const TextStyle(color: Colors.red),
-                        ),
-                      );
-                    case Status.IDLE:
-                      // TODO: Handle this case.
-                      throw UnimplementedError();
-                  }
-                },
-              ),
+                  case Status.ERROR:
+                    return Center(
+                      child: Text(
+                        'An error occurred: ${viewModel.jobVacancy.message}',
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    );
+
+                  default:
+                    return const SizedBox.shrink();
+                }
+              },
             ),
+          ),
         ],
       ),
     );
   }
 
+  // Open the given URL
   void _launchURL() async {
     final url = Uri.parse('https://www.facebook.com/istad.co?mibextid=ZbWKwL');
-    print("Launching URL: $url");
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url, mode: LaunchMode.externalApplication);
-    } else {
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
       print("Could not launch $url");
     }
   }
 }
-
-
-
-
-
-
