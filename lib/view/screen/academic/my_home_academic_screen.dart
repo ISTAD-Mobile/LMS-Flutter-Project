@@ -231,7 +231,7 @@ class _HoverCardState extends State<_HoverCard> {
 // import 'package:flutter/material.dart';
 // import 'package:lms_mobile/data/color/color_screen.dart';
 // import 'package:lms_mobile/view/screen/academic/pre_university_screen.dart';
-// import '../homeScreen/course/course_screen.dart';
+// import '../homeScreen/course/student_courses_screen.dart';
 // import 'IT_expert_screen.dart';
 // import 'associate_screen.dart';
 // import 'bachelor_screen.dart';

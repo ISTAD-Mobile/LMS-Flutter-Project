@@ -7,9 +7,9 @@ import '../../../repository/student_profile_repository.dart';
 import '../../../viewModel/student_profile_viewModel.dart';
 import '../../home.dart';
 import '../../screen/lms/profile/acheivement_screen.dart';
-import '../../screen/lms/profile/course_screen.dart';
 import '../../screen/lms/profile/profile_view_screen.dart';
 import '../../screen/lms/profile/settings/static_profile_setting_screen.dart';
+import '../../screen/lms/profile/student_courses_screen.dart';
 
 class StudentScreen extends StatefulWidget {
   const StudentScreen({super.key, required this.title, required this.token, required this.userEmail,});
@@ -39,7 +39,7 @@ class _StudentScreenState extends State<StudentScreen> {
     setState(() {
       _pages = [
         {'title': 'Profile', 'widget': ProfileScreen(token: token)},
-        {'title': 'Course', 'widget': CourseScreen(token: token)},
+        {'title': 'Course', 'widget': StudentCoursesScreen(token: token)},
         {'title': 'Achievement', 'widget': const AcheivementScreen()},
         {'title': 'Setting', 'widget': StaticProfileViewScreen(token: token, refreshCallback: () {
           setState(() {

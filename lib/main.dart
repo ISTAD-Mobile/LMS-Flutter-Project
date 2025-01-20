@@ -53,7 +53,8 @@ void main() {
         Provider<StudentProfileRepository>(create: (_) => StudentProfileRepository(token: '')),
         Provider<StudentSettingRepository>(create: (_) => StudentSettingRepository(token: '')),
         ChangeNotifierProvider(
-          create: (context) => StudenProfileDataViewModel(userRepository: context.read<StudentProfileRepository>()),
+          create: (context) => StudenProfileDataViewModel(
+              userRepository: context.read<StudentProfileRepository>()),
         ),
       ],
       child: MyApp(),
