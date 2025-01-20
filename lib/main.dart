@@ -4,6 +4,7 @@ import 'package:lms_mobile/repository/enroll/enroll_repository.dart';
 import 'package:lms_mobile/repository/enroll/enroll_step3_repo.dart';
 import 'package:lms_mobile/repository/login_repo.dart';
 import 'package:lms_mobile/repository/student_profile_repository.dart';
+import 'package:lms_mobile/repository/student_profile_setting_repository.dart';
 import 'package:lms_mobile/view/screen/splashScreen/splash_screen.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/enrollments_widget/enrollment_provider.dart';
 import 'package:lms_mobile/viewModel/admission/degree_viewmodel.dart';
@@ -42,7 +43,6 @@ void main() {
         ChangeNotifierProvider(create: (_) => StudyProgramAlasViewModel()),
         ChangeNotifierProvider(create: (_) => CourseDetailsViewmodel()),
         ChangeNotifierProvider(create: (_) => JobvacancyDetailViewmodel()),
-        Provider<StudentProfileRepository>(create: (_) => StudentProfileRepository(accessToken: '')), // Ensure you have a valid repository
         ChangeNotifierProvider(create: (context) => AvailableCourseViewModel()),
         ChangeNotifierProvider(
           create: (_) => EnrollmentViewModel(enrollmentRepository),
@@ -50,7 +50,8 @@ void main() {
         ChangeNotifierProvider(
           create: (_) => EnrollViewModel(enrollRepository),
         ),
-        Provider<StudentProfileRepository>(create: (_) => StudentProfileRepository(accessToken: '')),
+        Provider<StudentProfileRepository>(create: (_) => StudentProfileRepository(token: '')),
+        Provider<StudentSettingRepository>(create: (_) => StudentSettingRepository(token: '')),
         ChangeNotifierProvider(
           create: (context) => StudenProfileDataViewModel(userRepository: context.read<StudentProfileRepository>()),
         ),

@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-
 import '../model/student_profile_setting.dart';
 import '../repository/student_profile_setting_repository.dart';
 

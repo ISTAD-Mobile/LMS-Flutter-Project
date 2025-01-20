@@ -5,16 +5,16 @@ import '../../../../data/color/color_screen.dart';
 import '../../../../viewModel/student_profile_viewModel.dart';
 
 class ProfileScreen extends StatelessWidget {
-  final String accessToken;
+  final String token;
 
-  const ProfileScreen({required this.accessToken, super.key});
+  const ProfileScreen({required this.token, super.key});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) =>
           StudenProfileDataViewModel(userRepository: StudentProfileRepository(
-              accessToken: accessToken)),
+              token: token)),
       child: Scaffold(
         backgroundColor: AppColors.defaultWhiteColor, // Keep scaffold white
         body: SafeArea(

@@ -6,15 +6,15 @@ import '../../../../../viewModel/student_profile_setting_viewmodel.dart';
 import 'profile_setting_screen.dart';
 
 class StaticProfileViewScreen extends StatelessWidget {
-  final String accessToken;
+  final String token;
 
-  const StaticProfileViewScreen({required this.accessToken, Key? key}) : super(key: key);
+  const StaticProfileViewScreen({required this.token, super.key, required Null Function() refreshCallback});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => StudentSettingViewModel(
-          repository: StudentSettingRepository(accessToken: accessToken))..fetchUserData(),
+          repository: StudentSettingRepository(token: token))..fetchUserData(),
       child: Scaffold(
         backgroundColor: AppColors.defaultWhiteColor,
         body: SafeArea(
@@ -69,7 +69,7 @@ class StaticProfileViewScreen extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => SettingScreen(accessToken: accessToken),
+                              builder: (context) => SettingScreen(token: token),
                             ),
                           );
                         },
@@ -126,4 +126,3 @@ class StaticProfileViewScreen extends StatelessWidget {
     );
   }
 }
-

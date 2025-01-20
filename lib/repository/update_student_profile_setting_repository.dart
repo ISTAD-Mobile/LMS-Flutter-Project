@@ -4,9 +4,9 @@ import 'package:http/http.dart' as http;
 import '../model/student_profile_setting.dart';
 
 class UpdateStudentProfileSettingRepository {
-  final String accessToken;
+  final String token;
 
-  UpdateStudentProfileSettingRepository({required this.accessToken});
+  UpdateStudentProfileSettingRepository({required this.token});
 
   Future<StudentSettingModel> fetchUdateData() async {
     Uri url = Uri.parse("https://dev-flutter.cstad.edu.kh/api/v1/students/setting");
@@ -15,10 +15,10 @@ class UpdateStudentProfileSettingRepository {
       var response = await http.get(
         url,
         headers: {
-          "Authorization": "Bearer $accessToken",
+          "Authorization": "Bearer $token",
         },
       );
-      print('Access Token Update data : ${accessToken}');
+      print('Access Token Update data : ${token}');
 
       if (response.statusCode == 200) {
         Map<String, dynamic> userData = jsonDecode(response.body);
@@ -38,13 +38,13 @@ class UpdateStudentProfileSettingRepository {
       final response = await http.patch(
         url,
         headers: {
-          "Authorization": "Bearer $accessToken",
+          "Authorization": "Bearer $token",
           "Content-Type": "application/json",
         },
         body: jsonEncode(studentSetting.toJson()),
       );
 
-      print('Access Token Update data : ${accessToken}');
+      print('Access Token Update data : ${token}');
       print('Response Status Code: ${response.statusCode}');
       print('Response Body: ${response.body}');
 

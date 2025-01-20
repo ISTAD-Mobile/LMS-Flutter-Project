@@ -117,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => StudentScreen(
-                                        accessToken: viewModel.accessToken!,
+                                        token: viewModel.accessToken!,
                                         userEmail: viewModel.userEmail ?? '',
                                         title: 'Student Dashboard',
                                       ),

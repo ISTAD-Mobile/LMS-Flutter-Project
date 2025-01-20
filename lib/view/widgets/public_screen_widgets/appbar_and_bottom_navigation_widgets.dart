@@ -21,14 +21,14 @@ class AppLayout extends StatelessWidget {
 
   Future<void> _handleLMSNavigation(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('accessToken');
+    final token = prefs.getString('token');
 
     if (token != null) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => StudentScreen(
-            accessToken: token,
+            token: token,
             title: '', userEmail: '',
           ),
         ),

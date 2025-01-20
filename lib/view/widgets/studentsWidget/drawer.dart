@@ -20,16 +20,16 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: appTitle,
-      home: StudentScreen(title: appTitle, accessToken: '', userEmail: '',),
+      home: StudentScreen(title: appTitle, token: '', userEmail: '',),
     );
   }
 }
 
 class StudentScreen extends StatefulWidget {
-  const StudentScreen({super.key, required this.title, required  this.accessToken, required this.userEmail});
+  const StudentScreen({super.key, required this.title, required  this.token, required this.userEmail});
   final String userEmail;
   final String title;
-  final String accessToken;
+  final String token;
 
   @override
   State<StudentScreen> createState() => _MyHomePageState();
@@ -38,30 +38,41 @@ class StudentScreen extends StatefulWidget {
 class _MyHomePageState extends State<StudentScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = 0;
-  late String accessToken;
-
+  late String token;
+  bool _needsRefresh = false;
 
   List<Map<String, dynamic>> _pages = [];
 
   @override
   void initState() {
     super.initState();
-    accessToken = widget.accessToken;
+    token = widget.token;
     _initializePages();
   }
 
   void _initializePages() {
     setState(() {
       _pages = [
-        {'title': 'Profile', 'widget': ProfileScreen(accessToken: accessToken)},
-        {'title': 'Course', 'widget': CourseScreen(accessToken: accessToken)},
+        {'title': 'Profile', 'widget': ProfileScreen(token: token)},
+        {'title': 'Course', 'widget': CourseScreen(token: token)},
         {'title': 'Achievement', 'widget': const AcheivementScreen()},
-        {'title': 'Setting', 'widget': StaticProfileViewScreen(accessToken: accessToken)},
+        {'title': 'Setting', 'widget': StaticProfileViewScreen(token: token,refreshCallback: () {
+          setState(() {
+            // Trigger Drawer refresh logic
+            _initializePages();
+          });
+        },)},
       ];
     });
   }
 
-
+  void _rebuildDrawer() {
+    if (_needsRefresh) {
+      setState(() {
+        _needsRefresh = false;
+      });
+    }
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -120,7 +131,7 @@ class _MyHomePageState extends State<StudentScreen> {
               onTap: () => _scaffoldKey.currentState?.openDrawer(),
                 child: ChangeNotifierProvider(
                   create: (_) => StudenProfileDataViewModel(
-                    userRepository: StudentProfileRepository(accessToken: accessToken),
+                    userRepository: StudentProfileRepository(token: token),
                   ),
                   child: Consumer<StudenProfileDataViewModel>(
                     builder: (context, viewModel, _) {
@@ -153,11 +164,11 @@ class _MyHomePageState extends State<StudentScreen> {
               onTap: () async {
 
                 final prefs = await SharedPreferences.getInstance();
-                await prefs.setString('accessToken', accessToken);
+                await prefs.setString('token', token);
 
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                  MaterialPageRoute(builder: (context) => const HomeScreen()),
                 );
               },
               child: Image.asset(
@@ -175,7 +186,7 @@ class _MyHomePageState extends State<StudentScreen> {
         child: Column(
           children: [
             ChangeNotifierProvider(
-            create: (_) => StudenProfileDataViewModel(userRepository: StudentProfileRepository(accessToken: accessToken)),
+            create: (_) => StudenProfileDataViewModel(userRepository: StudentProfileRepository(token: token)),
               child: Consumer<StudenProfileDataViewModel>(
               builder: (context, viewModel, _) {
               // Trigger fetch user data if needed
@@ -267,7 +278,7 @@ class _MyHomePageState extends State<StudentScreen> {
                       try {
                         // Clear the access token from SharedPreferences
                         final prefs = await SharedPreferences.getInstance();
-                        await prefs.remove('accessToken');
+                        await prefs.remove('token');
 
                         // Navigate to the Login screen (or HomeScreen if you want)
                         Navigator.pushReplacement(
