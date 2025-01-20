@@ -69,11 +69,11 @@ class _HomePageState extends State<HomeIstadScreen> {
                     fontSize: 22.0,
                     borderRadius: 10.0,
                     onButtonPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const RegisterStep1()),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //       builder: (context) => const RegisterStep1()),
+                      // );
                     },
                   ),
                   const SizedBox(height: 16),
@@ -89,11 +89,11 @@ class _HomePageState extends State<HomeIstadScreen> {
                     borderRadius: 10.0,
                     cardHeight: 180,
                     onButtonPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const RegisterStep1()),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //       builder: (context) => const RegisterStep1()),
+                      // );
                     },
                   ),
                 ],

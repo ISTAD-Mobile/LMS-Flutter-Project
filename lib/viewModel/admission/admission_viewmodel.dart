@@ -3,20 +3,27 @@ import 'package:lms_mobile/data/response/api_response.dart';
 import 'package:lms_mobile/repository/admission/admission_repository.dart';
 
 class AdmissionViewmodel extends ChangeNotifier {
-  final  _admissionRepository = AdmissionRepository();
-  var response = ApiResponse();
+  final _admissionRepository = AdmissionRepository();
+  ApiResponse<Map<String, dynamic>> response = ApiResponse.loading();
 
-  setAdmissionData(response) {
-    this.response=response;
+  setAdmissionData(ApiResponse<Map<String, dynamic>> response) {
+    this.response = response;
+    print('Admission response: $response');
     notifyListeners();
   }
 
-  Future<dynamic> postAdmission(data) async{
-    print('Posting admission data: ${data}');
-    print('Posting ...');
+  Future<Map<String, dynamic>?> postAdmission(data) async {
     setAdmissionData(ApiResponse.loading());
-    await _admissionRepository.postAdmission(data)
-        .then((isPosted) => setAdmissionData(ApiResponse.completed(isPosted)))
-        .onError((error,stackTrace) => setAdmissionData(ApiResponse.error(stackTrace.toString())));
+
+    try {
+      final response = await _admissionRepository.postAdmission(data);
+
+      setAdmissionData(ApiResponse.completed(response));
+      return response;
+    } catch (error) {
+      setAdmissionData(ApiResponse.error(error.toString()));
+      return null;
+    }
   }
 }
+
