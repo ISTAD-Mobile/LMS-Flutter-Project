@@ -103,7 +103,8 @@ class ItNewsCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontFamily: 'NotoSansKhmer',
+                      fontWeight: FontWeight.w600,
                       fontSize: 16,
                     ),
                   ),
