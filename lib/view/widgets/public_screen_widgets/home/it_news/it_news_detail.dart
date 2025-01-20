@@ -61,11 +61,13 @@ class _JobvacancyDetailScreenState extends State<ItNewsDetail> {
                     Text(
                       viewModel.jobvacancyDetail?.data?.title ?? 'No Title',
                       style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        fontFamily: 'NotoSansKhmer',
+                        // color: AppColors.defaultGrayColor,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 15),
                     Row(
                       children: [
                         SvgPicture.string(
@@ -153,6 +155,7 @@ class _JobvacancyDetailScreenState extends State<ItNewsDetail> {
                             ),
                             "p": Style(
                               textAlign: TextAlign.center,
+                              fontFamily: 'NotoSansKhmer',
                             ),
                             "img": Style(
                               display: Display.inlineBlock,
