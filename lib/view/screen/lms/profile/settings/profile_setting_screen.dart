@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lms_mobile/view/screen/lms/profile/settings/static_profile_setting_screen.dart';
 import 'dart:io';
 import 'package:provider/provider.dart';
 import '../../../../../data/color/color_screen.dart';
@@ -44,6 +45,7 @@ class _StudentSettingsState extends State<SettingScreen> {
   final familyNumberFocus = FocusNode();
   final placeOfBirthFocus = FocusNode();
   final List<String> genderOptions = ['Female', 'Male', 'Other'];
+  final List<String> guardianRelationshipOptions = ['Mother', 'Father', 'Sibling', 'Other'];
 
   @override
   void initState() {
@@ -224,10 +226,10 @@ class _StudentSettingsState extends State<SettingScreen> {
                       ),
                       _buildDropdownField(
                         label: 'GuardianRelationship',
-                        value: userData.guardianRelationShip.isNotEmpty && ['Mother', 'Father', 'Sibling', 'Other'].contains(userData.guardianRelationShip)
+                        value: userData.guardianRelationShip.isEmpty && guardianRelationshipOptions.contains(userData.guardianRelationShip)
                             ? userData.guardianRelationShip
                             : 'Other',
-                        items: ['Mother', 'Father', 'Sibling', 'Other'],
+                        items: guardianRelationshipOptions,
                         onChanged: (value) {
                           setState(() {
                             userData.guardianRelationShip = value ?? 'Other';
@@ -252,6 +254,12 @@ class _StudentSettingsState extends State<SettingScreen> {
 
                                 // Optionally, reset other fields or values related to image upload or changes if needed
                                 isImageUploade = '';  // Reset the image upload state if necessary
+                                // setState(() {});
+                                // Navigator.pushReplacement(
+                                //   context,
+                                //   MaterialPageRoute(builder: (context) => StaticProfileViewScreen(token: widget.token, refreshCallback: () {  },)),
+                                // );
+                                Navigator.pop(context);
                               },
                               style: OutlinedButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(horizontal: 38, vertical: 12),

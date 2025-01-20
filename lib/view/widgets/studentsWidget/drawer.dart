@@ -66,14 +66,6 @@ class _MyHomePageState extends State<StudentScreen> {
     });
   }
 
-  void _rebuildDrawer() {
-    if (_needsRefresh) {
-      setState(() {
-        _needsRefresh = false;
-      });
-    }
-  }
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
