@@ -2,15 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lms_mobile/model/student_profile_model.dart';
 import 'package:lms_mobile/repository/student_profile_repository.dart';
 
-import 'package:flutter/material.dart';
-import 'package:lms_mobile/model/student_profile_model.dart';
-import 'package:lms_mobile/repository/student_profile_repository.dart';
-
-
-import 'package:flutter/material.dart';
-import 'package:lms_mobile/model/student_profile_model.dart';
-import 'package:lms_mobile/repository/student_profile_repository.dart';
-
 class StudenProfileDataViewModel extends ChangeNotifier {
   final StudentProfileRepository userRepository;
   StudentProfileModel? _user;

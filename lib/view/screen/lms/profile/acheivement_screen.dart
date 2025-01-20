@@ -1,28 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:lms_mobile/model/achievement/year_of_study_achievement.dart';
 import 'package:lms_mobile/repository/achievement/year_of_study_achievement_repository.dart';
 import 'package:lms_mobile/repository/student_profile_repository.dart';
 import 'package:lms_mobile/viewModel/achievement/year_of_study_achievement_viewmodel.dart';
 import 'package:provider/provider.dart';
 import '../../../../data/color/color_screen.dart';
+import '../../../../data/response/status.dart';
+import '../../../../model/achievement/year_of_study_achievement.dart';
 import '../../../../viewModel/student_profile_viewModel.dart';
 
 class AcheivementScreen extends StatelessWidget {
   final String accessToken;
+
   AcheivementScreen({required this.accessToken});
 
-  final yearOfStudyAchievementViewModel = YearOfStudyAchievementViewmodel();
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-    providers: [
-      ChangeNotifierProvider(
-        create: (_) => StudenProfileDataViewModel(
-            userRepository: StudentProfileRepository(accessToken: accessToken)
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) =>
+              StudenProfileDataViewModel(
+                  userRepository: StudentProfileRepository(
+                      accessToken: accessToken)
+              ),
         ),
+        ChangeNotifierProvider(
+          create: (_) => YearOfStudyAchievementViewmodel(),
 
-      ),
-    ],
+        ),
+      ],
       child: Scaffold(
         backgroundColor: AppColors.backgroundColor,
         body: SafeArea(
@@ -33,7 +39,6 @@ class AcheivementScreen extends StatelessWidget {
                 _buildTranscript(),
                 _buildStudentInfo(),
                 _buildSemesterSection(),
-                // _buildSemesterSection(1),
               ],
             ),
           ),
@@ -42,11 +47,12 @@ class AcheivementScreen extends StatelessWidget {
     );
   }
 
-
+  // Building the Welcome Banner
   Widget _buildWelcomeBanner() {
     return Consumer<StudenProfileDataViewModel>(
       builder: (context, viewModel, child) {
-        if (viewModel.user == null && !viewModel.isLoading && viewModel.errorMessage == null) {
+        if (viewModel.user == null && !viewModel.isLoading &&
+            viewModel.errorMessage == null) {
           viewModel.fetchUserData();
         }
 
@@ -59,82 +65,85 @@ class AcheivementScreen extends StatelessWidget {
         } else {
           final user = viewModel.user!;
           return Container(
-              margin: const EdgeInsets.all(20.0),
-              padding: const EdgeInsets.fromLTRB(0, 16, 15, 20),
-              decoration: BoxDecoration(
-                color: AppColors.primaryColor,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 130.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Welcome back, ${user.nameEn}',
-                          style: const TextStyle(
-                            color: Colors.white,
+            margin: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.fromLTRB(0, 16, 15, 20),
+            decoration: BoxDecoration(
+              color: AppColors.primaryColor,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 130.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Welcome back, ${user.nameEn}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        'Passionate about literature and creative writing.',
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  top: 20,
+                  left: 0.0,
+                  child: CircleAvatar(
+                    radius: 60,
+                    backgroundImage: user.profileImage != null &&
+                        user.profileImage!.isNotEmpty
+                        ? NetworkImage(user.profileImage!)
+                        : const AssetImage('assets/images/placeholder.jpg')
+                    as ImageProvider,
+                  ),
+                ),
+                Positioned(
+                  top: 95,
+                  left: 130.0,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${user.nameEn}',
+                        style: TextStyle(
+                          color: AppColors.primaryColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      const Text(
+                        '12 Course',
+                        style: TextStyle(
+                            color: AppColors.defaultGrayColor,
                             fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        const Text(
-                          'Passionate about literature and creative writing.',
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ],
                   ),
-                  Positioned(
-                    top: 20,
-                    left: 0.0,
-                    child: CircleAvatar(
-                      radius: 60,
-                      backgroundImage: user.profileImage != null && user.profileImage!.isNotEmpty
-                          ? NetworkImage(user.profileImage!)
-                          : const AssetImage('assets/images/placeholder.jpg') as ImageProvider,
-                    ),
-                  ),
-                  Positioned(
-                    top: 95,
-                    left: 130.0,// Adjust the vertical position
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('${user.nameEn}',
-                          style: TextStyle(
-                            color: AppColors.primaryColor,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        SizedBox(height: 2),
-                        Text(
-                          '12 Course',
-                          style: TextStyle(
-                              color: AppColors.defaultGrayColor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              )
+                ),
+              ],
+            ),
           );
         }
       },
     );
   }
 
+  // Building the Transcript Section
   Widget _buildTranscript() {
     return Consumer<StudenProfileDataViewModel>(
       builder: (context, viewModel, child) {
@@ -143,11 +152,10 @@ class AcheivementScreen extends StatelessWidget {
         }
         final user = viewModel.user!;
         return Container(
-          margin: const EdgeInsets.fromLTRB(0.0,70.0,0.0,20.0),
+          margin: const EdgeInsets.fromLTRB(0.0, 70.0, 0.0, 20.0),
           padding: const EdgeInsets.all(20.0),
           decoration: BoxDecoration(
             color: Colors.white,
-            // borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.withOpacity(0.1),
@@ -169,7 +177,7 @@ class AcheivementScreen extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                       color: AppColors.primaryColor,
                     ),
-                    textAlign: TextAlign.center, // Ensures multiline text is centered
+                    textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 4),
                   Text(
@@ -185,16 +193,18 @@ class AcheivementScreen extends StatelessWidget {
               ),
               const SizedBox(height: 30),
               ClipRRect(
-                borderRadius: BorderRadius.circular(12), // Adjust the radius for rounded corners
+                borderRadius: BorderRadius.circular(12),
                 child: Container(
-                  height: 170, // Set the desired height
-                  width: 140,  // Set the width to maintain proportions
+                  height: 170,
+                  width: 140,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: user.profileImage != null && user.profileImage!.isNotEmpty
+                      image: user.profileImage != null &&
+                          user.profileImage!.isNotEmpty
                           ? NetworkImage(user.profileImage!)
-                          : const AssetImage('assets/images/placeholder.jpg') as ImageProvider,
-                      fit: BoxFit.cover, // Ensures the image fills the shape properly
+                          : const AssetImage('assets/images/placeholder.jpg')
+                      as ImageProvider,
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
@@ -208,7 +218,7 @@ class AcheivementScreen extends StatelessWidget {
 
   Widget _buildStudentInfo() {
     return Consumer<StudenProfileDataViewModel>(
-      builder: (context, viewModel, Widget? child) {
+      builder: (context, viewModel, child) {
         if (viewModel.user == null) {
           return const Center(child: Text("Loading user data..."));
         }
@@ -223,8 +233,6 @@ class AcheivementScreen extends StatelessWidget {
 
         return Column(
           children: infoData.entries.map((entry) {
-            bool isKhmerText = entry.key.contains('KH') || _isKhmerText(entry.value);
-
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 4.0),
               child: Row(
@@ -249,7 +257,6 @@ class AcheivementScreen extends StatelessWidget {
                         fontSize: 16,
                         color: AppColors.defaultGrayColor,
                         fontWeight: FontWeight.w400,
-                        fontFamily: isKhmerText ? 'NotoSansKhmer' : null, // Apply Khmer font if needed
                       ),
                     ),
                   ),
@@ -262,356 +269,105 @@ class AcheivementScreen extends StatelessWidget {
     );
   }
 
-  bool _isKhmerText(String? text) {
-    return text != null && RegExp(r'[\u1780-\u17FF]').hasMatch(text);
-  }
-
-
-
   Widget _buildSemesterSection() {
-    return ChangeNotifierProvider(
-      create: (context) => yearOfStudyAchievementViewModel,
-      child: Consumer<YearOfStudyAchievementViewmodel>(
-        builder: (context, viewModel, child) {
+    return Consumer<YearOfStudyAchievementViewmodel>(
+      builder: (context, viewModel, child) {
+        // Check for loading state, assuming ApiResponse has a status property
+        if (viewModel.yearOfStudyList.isEmpty) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-          if (viewModel.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (viewModel.errorMessage != null) {
-            return Center(child: Text("Error: ${viewModel.errorMessage}"));
-          } else if (viewModel.content == null || viewModel.content!.isEmpty) {
-            return const Center(child: Text("No achievements data found."));
-          } else {
-            final achievement = viewModel.content!.first;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Year ${achievement.year} - Semester ${achievement.semester}",
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                _buildGradesTable(achievement),
-              ],
-            );
-          }
-        },
-      ),
-    );
-  }
+        // Show error message if any
+        if (viewModel.yearOfStudy.message != null) {
+          return Center(
+            child: Text(
+              viewModel.yearOfStudy.message!,
+              style: const TextStyle(color: Colors.red),
+            ),
+          );
+        }
 
+        // Show message if no achievements are available
+        if (viewModel.yearOfStudy.data == null || viewModel.yearOfStudy.data!.yearOfStudy.isEmpty) {
+          return const Center(
+            child: Text("No achievements available."),
+          );
+        }
 
-  Widget _buildGradesTable(Content achievement) {
-    final headers = ['NO', 'Title', 'Score', 'Credit', 'Grade'];
-    final courses = achievement.course!.map((course) {
-      return [
-        achievement.course!.indexOf(course) + 1,
-        course.title,
-        course.score.toString(),
-        course.credit.toString(),
-        course.grade,
-      ];
-    }).toList();
+        var yearOfStudyData = viewModel.yearOfStudyList;
 
-    return Table(
-      border: TableBorder.all(),
-      columnWidths: const {
-        0: FlexColumnWidth(0.5),
-        1: FlexColumnWidth(2.5),
-        2: FlexColumnWidth(1),
-        3: FlexColumnWidth(0.8),
-        4: FlexColumnWidth(0.8),
-      },
-      children: [
-        TableRow(
-          decoration: BoxDecoration(color: Colors.grey.shade100),
-          children: headers.map((header) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                header,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            );
-          }).toList(),
-        ),
-        ...courses.map((course) {
-          return TableRow(
-            children: course.map((cell) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(cell.toString()),
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: yearOfStudyData.map((semester) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Display Year and Semester info
+                  Text(
+                    "Year ${semester.year} - Semester ${semester.semester}",
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Check if there are courses available for this semester
+                  if (semester.courseList.isNotEmpty)
+                    Column(
+                      children: semester.courseList.map((course) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Card(
+                            elevation: 4,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: ListTile(
+                              title: Text(course.title ?? 'No Title'),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Score: ${course.score ?? 'Not Available'}'),
+                                  Text('Credit: ${course.credit ?? 'Not Available'}'),
+                                  Text('Grade: ${course.grade ?? 'Not Available'}'),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    )
+                  else
+                    const Text("No courses available."),
+
+                  const SizedBox(height: 16), // Spacer between semesters
+                ],
               );
             }).toList(),
-          );
-        }).toList(),
-      ],
+          ),
+        );
+      },
     );
   }
-}
 
 
-// Widget _buildSemesterSection(int index) {
-  //   return Consumer<YearOfStudyAchievementViewModel>(
-  //     builder: (context, viewModel, child) {
-  //       // Fetch data if not already fetched
-  //       if (viewModel.yearOfStudyAchievement == null && !viewModel.isLoading && viewModel.errorMessage == null) {
-  //         viewModel.fetchYearOfStudyData(accessToken); // Ensure `accessToken` is available
-  //       }
-  //
-  //       if (viewModel.isLoading) {
-  //         return const Center(child: CircularProgressIndicator());
-  //       }
-  //
-  //       if (viewModel.errorMessage != null) {
-  //         return Center(
-  //           child: Text(
-  //             "Error: ${viewModel.errorMessage}",
-  //             style: const TextStyle(color: Colors.red),
-  //           ),
-  //         );
-  //       }
-  //
-  //       if (viewModel.yearOfStudyAchievement != null) {
-  //         final yearSemester = viewModel.getYearSemester(index);
-  //         final totalCourses = viewModel.getTotalCourses(index);
-  //         final totalCredits = viewModel.getTotalCredits(index);
-  //         final gpa = viewModel.getGPA(index);
-  //
-  //         return Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           children: [
-  //             Text(
-  //               yearSemester,
-  //               style: const TextStyle(
-  //                 fontSize: 16,
-  //                 fontWeight: FontWeight.bold,
-  //                 color: AppColors.primaryColor,
-  //               ),
-  //             ),
-  //             const SizedBox(height: 24),
-  //             _buildGradesTable(viewModel, index), // Fetch data dynamically
-  //             const SizedBox(height: 12),
-  //             Text(
-  //               'Total Course: $totalCourses     GPA: ${gpa.toStringAsFixed(2)}     Credit: $totalCredits',
-  //               style: const TextStyle(
-  //                 fontSize: 14,
-  //                 fontWeight: FontWeight.w400,
-  //                 color: AppColors.primaryColor,
-  //               ),
-  //             ),
-  //           ],
-  //         );
-  //       }
-  //
-  //       return const Center(child: Text("No data available."));
-  //     },
-  //   );
-  // }
-  // Widget _buildSemesterSection(int index) {
-  //   return Consumer< YearOfStudyAchievementViewModel>(
-  //     builder: (context, viewModel, child) {
-  //       if (viewModel.achievements == null && !viewModel.isLoading && viewModel.errorMessage == null) {
-  //         viewModel.fetchAchievements();
-  //       }
-  //
-  //       if (viewModel.isLoading) {
-  //         return const Center(child: CircularProgressIndicator());
-  //       } else if (viewModel.errorMessage != null) {
-  //         return Center(child: Text("Error: ${viewModel.errorMessage}"));
-  //       } else if (viewModel.achievements == null || viewModel.achievements!.isEmpty) {
-  //         return const Center(child: Text("No achievements data found."));
-  //       } else {
-  //         final achievement = viewModel.achievements![index];
-  //         return Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           children: [
-  //             Text(
-  //               "Year ${achievement.year} - Semester ${achievement.semester}",
-  //               style: const TextStyle(
-  //                 fontSize: 16,
-  //                 fontWeight: FontWeight.bold,
-  //                 color: AppColors.primaryColor,
-  //               ),
-  //             ),
-  //             const SizedBox(height: 24),
-  //             _buildGradesTable(achievement as YearOfStudyAchievement),
-  //             const SizedBox(height: 12),
-  //             // Text(
-  //             //   'Total Course: ${achievement.course}     GPA: ${achievement}     Credit: ${achievement.credit}',
-  //             //   style: const TextStyle(
-  //             //     fontSize: 14,
-  //             //     fontWeight: FontWeight.w400,
-  //             //     color: AppColors.primaryColor,
-  //             //   ),
-  //             // ),
-  //           ],
-  //         );
-  //       }
-  //     },
-  //   );
-  // }
-  //
-  //
-  //
-  // // Widget _buildGradesTable(YearOfStudyAchievementViewModel viewModel, int index) {
-  // //   // Get the relevant content for the specified year/semester
-  // //   final content = viewModel.yearOfStudyAchievement?.content[index];
-  // //
-  // //   if (content == null) {
-  // //     return const Center(child: Text("No courses available."));
-  // //   }
-  // //
-  // //   final headers = ['NO', 'Title', 'Score', 'Credit', 'Grade'];
-  // //   final courses = content.course.map((course) {
-  // //     return [
-  // //       content.course.indexOf(course) + 1, // Course number (index + 1)
-  // //       course.title,
-  // //       course.score.toString(),
-  // //       course.credit.toString(),
-  // //       course.grade,
-  // //     ];
-  // //   }).toList();
-  // //
-  // //   return Table(
-  // //     border: TableBorder.all(
-  // //       color: Colors.grey.shade300,
-  // //       width: 1,
-  // //     ),
-  // //     columnWidths: const {
-  // //       0: FlexColumnWidth(0.5),
-  // //       1: FlexColumnWidth(2.5),
-  // //       2: FlexColumnWidth(1),
-  // //       3: FlexColumnWidth(0.8),
-  // //       4: FlexColumnWidth(0.8),
-  // //     },
-  // //     children: [
-  // //       TableRow(
-  // //         decoration: BoxDecoration(
-  // //           color: Colors.grey.shade100,
-  // //         ),
-  // //         children: headers.map((header) {
-  // //           return Padding(
-  // //             padding: const EdgeInsets.all(8.0),
-  // //             child: Text(
-  // //               header,
-  // //               style: const TextStyle(
-  // //                 fontWeight: FontWeight.bold,
-  // //                 fontSize: 12,
-  // //               ),
-  // //             ),
-  // //           );
-  // //         }).toList(),
-  // //       ),
-  // //       ...courses.map((course) {
-  // //         return TableRow(
-  // //           children: course.map((cell) {
-  // //             return Padding(
-  // //               padding: const EdgeInsets.all(8.0),
-  // //               child: Text(
-  // //                 cell.toString(),
-  // //                 style: const TextStyle(fontSize: 12),
-  // //               ),
-  // //             );
-  // //           }).toList(),
-  // //         );
-  // //       }).toList(),
-  // //     ],
-  // //   );
-  // // }
-  // Widget _buildGradesTable(YearOfStudyAchievement achievement) {
-  //   // Define Table Headers
-  //   final headers = ['NO', 'Title', 'Score', 'Credit', 'Grade'];
-  //
-  //   // Convert Course Data to Table Rows
-  //   final courses = achievement.content![0].course!.map((course) {
-  //     return [
-  //       achievement.content![0].course!.indexOf(course) + 1, // Course number (index + 1)
-  //       course.title,
-  //       course.score.toString(),
-  //       course.credit.toString(),
-  //       course.grade,
-  //     ];
-  //   }).toList();
-  //
-  //   // Build the Table Widget
-  //   return Table(
-  //     border: TableBorder.all(
-  //       color: Colors.grey.shade300,
-  //       width: 1,
-  //     ),
-  //     columnWidths: const {
-  //       0: FlexColumnWidth(0.5),
-  //       1: FlexColumnWidth(2.5),
-  //       2: FlexColumnWidth(1),
-  //       3: FlexColumnWidth(0.8),
-  //       4: FlexColumnWidth(0.8),
-  //     },
-  //     children: [
-  //       // Table Headers Row
-  //       TableRow(
-  //         decoration: BoxDecoration(
-  //           color: Colors.grey.shade100,
-  //         ),
-  //         children: headers.map((header) {
-  //           return Padding(
-  //             padding: const EdgeInsets.all(8.0),
-  //             child: Text(
-  //               header,
-  //               style: const TextStyle(
-  //                 fontWeight: FontWeight.bold,
-  //                 fontSize: 12,
-  //               ),
-  //             ),
-  //           );
-  //         }).toList(),
-  //       ),
-  //       // Table Rows for Courses
-  //       ...courses.map((course) {
-  //         return TableRow(
-  //           children: course.map((cell) {
-  //             return Padding(
-  //               padding: const EdgeInsets.all(8.0),
-  //               child: Text(
-  //                 cell.toString(),
-  //                 style: const TextStyle(fontSize: 12),
-  //               ),
-  //             );
-  //           }).toList(),
-  //         );
-  //       }).toList(),
-  //     ],
-  //   );
-  // }
-//   Widget _buildSemesterSection() {
-//     return Consumer<YearOfStudyAchievementViewmodel>(
-//       builder: (context, viewModel, child) {
-//         if (viewModel.isLoading) {
-//           return const Center(child: CircularProgressIndicator());
-//         } else if (viewModel.errorMessage != null) {
-//           return Center(child: Text("Error: ${viewModel.errorMessage}"));
-//         } else if (viewModel.content == null || viewModel.content!.isEmpty) {
-//           return const Center(child: Text("No achievements data found."));
-//         } else {
-//           final achievement = viewModel.content?.first;
-//           return Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               Text(
-//                 "Year ${achievement!.year} - Semester ${achievement.semester}",
-//                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-//               ),
-//               _buildGradesTable(context as YearOfStudyAchievement),
-//             ],
-//           );
-//         }
-//       },
-//     );
-//   }
-//
-//   Widget _buildGradesTable(YearOfStudyAchievement achievement) {
-//     final headers = ['NO', 'Title', 'Score', 'Credit', 'Grade'];
-//     final courses = achievement.content![0].course!.map((course) {
+
+
+
+
+
+
+// // Building the Grades Table
+//   Widget _buildGradesTable(Course content) {
+//     const headers = ['NO', 'Title', 'Score', 'Credit', 'Grade'];
+//     final courses = content[0].courses.asMap().entries.map((entry) {
+//       final index = entry.key + 1;
+//       final course = entry.value;
 //       return [
-//         achievement.content![0].course!.indexOf(course) + 1,
+//         index,
 //         course.title,
 //         course.score.toString(),
 //         course.credit.toString(),
@@ -619,39 +375,65 @@ class AcheivementScreen extends StatelessWidget {
 //       ];
 //     }).toList();
 //
-//     return Table(
-//       border: TableBorder.all(),
-//       columnWidths: const {
-//         0: FlexColumnWidth(0.5),
-//         1: FlexColumnWidth(2.5),
-//         2: FlexColumnWidth(1),
-//         3: FlexColumnWidth(0.8),
-//         4: FlexColumnWidth(0.8),
-//       },
-//       children: [
-//         TableRow(
-//           decoration: BoxDecoration(color: Colors.grey.shade100),
-//           children: headers.map((header) {
-//             return Padding(
-//               padding: const EdgeInsets.all(8.0),
-//               child: Text(
-//                 header,
-//                 style: TextStyle(fontWeight: FontWeight.bold),
-//               ),
-//             );
-//           }).toList(),
-//         ),
-//         ...courses.map((course) {
-//           return TableRow(
-//             children: course.map((cell) {
+//     return SingleChildScrollView(
+//       scrollDirection: Axis.horizontal,
+//       child: Table(
+//         border: TableBorder.all(),
+//         columnWidths: const {
+//           0: FlexColumnWidth(0.5),
+//           1: FlexColumnWidth(2.5),
+//           2: FlexColumnWidth(1),
+//           3: FlexColumnWidth(0.8),
+//           4: FlexColumnWidth(0.8),
+//         },
+//         children: [
+//           // Header Row
+//           TableRow(
+//             decoration: BoxDecoration(color: Colors.grey.shade100),
+//             children: headers.map((header) {
 //               return Padding(
 //                 padding: const EdgeInsets.all(8.0),
-//                 child: Text(cell.toString()),
+//                 child: Text(
+//                   header,
+//                   style: const TextStyle(fontWeight: FontWeight.bold),
+//                 ),
 //               );
 //             }).toList(),
-//           );
-//         }).toList(),
-//       ],
+//           ),
+//           // Data Rows
+//           if (courses.isEmpty)
+//             TableRow(
+//               children: List.generate(
+//                 headers.length,
+//                     (index) => TableCell(
+//                   child: Padding(
+//                     padding: const EdgeInsets.all(8.0),
+//                     child: Text(
+//                       index == 0 ? 'No courses available' : '',
+//                       style: const TextStyle(color: Colors.grey),
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//             )
+//           else
+//             ...courses.map((course) {
+//               return TableRow(
+//                 children: course.map((cell) {
+//                   return Padding(
+//                     padding: const EdgeInsets.all(8.0),
+//                     child: Text(cell.toString()),
+//                   );
+//                 }).toList(),
+//               );
+//             }).toList(),
+//         ],
+//       ),
 //     );
 //   }
-// }
+
+
+
+
+
+}

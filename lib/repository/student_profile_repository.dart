@@ -20,10 +20,16 @@ class StudentProfileRepository {
       );
 
       if (response.statusCode == 200) {
-        var jsonResponse = jsonDecode(response.body);
-        return StudentProfileModel.fromJson(jsonResponse); // Convert JSON to User object
+        // Decode the response body as UTF-8
+        String decodedResponse = utf8.decode(response.bodyBytes);
+
+        // Now, parse the decoded string into JSON
+        var jsonResponse = jsonDecode(decodedResponse);
+
+        // Return the StudentProfileModel from the decoded JSON
+        return StudentProfileModel.fromJson(jsonResponse);
       } else {
-        throw Exception("Failed to fetch user data");
+        throw Exception("Failed to fetch user data. Status code: ${response.statusCode}");
       }
     } catch (e) {
       throw Exception("Error fetching user data: $e");

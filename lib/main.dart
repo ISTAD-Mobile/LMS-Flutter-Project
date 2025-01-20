@@ -80,7 +80,19 @@ class _MyAppState extends State<MyApp> {
       stream: connectivityStream,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const MaterialApp(
+          return MaterialApp(
+            // locale: Locale('km', 'KH'), // Khmer locale
+            // supportedLocales: [
+            //   Locale('en', 'US'),
+            //   Locale('km', 'KH'),
+            // ],
+            // localizationsDelegates: [
+            //   GlobalMaterialLocalizations.delegate,
+            //   GlobalWidgetsLocalizations.delegate,
+            // ],
+            theme: ThemeData(
+              fontFamily: 'NotoSansKhmer',
+            ),
             debugShowCheckedModeBanner: false,
             home: Scaffold(
               body: Center(child: CircularProgressIndicator()),
