@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/services.dart';
 import 'package:lms_mobile/repository/achievement/year_of_study_achievement_repository.dart';
 import 'package:lms_mobile/view/screen/academic/foundation_screen.dart';
 import 'package:lms_mobile/view/screen/enrollments/enrollment_provider.dart';
@@ -19,7 +20,8 @@ import 'package:lms_mobile/viewModel/login_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:lms_mobile/view/widgets/sytem_screen/no_internet.dart';
 
-void main() {
+
+void main() async {
   runApp(
     MultiProvider(
       providers: [
@@ -29,19 +31,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => CurrentAddressViewModel()),
         ChangeNotifierProvider(create: (_) => UniversityViewModel()),
         ChangeNotifierProvider(create: (_) => CourseViewmodel()),
-        // ChangeNotifierProvider(
-        //   create: (_) => AchievementViewModel(
-        //     achievementRepository: AchievementRepository(accessToken: ''),
-        //   ),
-        // ),
-        Provider<YearOfStudyAchievementRepository>(
-          create: (_) => YearOfStudyAchievementRepository(accessToken: ''),
-        ),
-        ChangeNotifierProvider< YearOfStudyAchievementViewmodel >(
-          create: (context) =>  YearOfStudyAchievementViewmodel (
-            userRepository: context.read<YearOfStudyAchievementRepository>(),
-          ),
-        ),
+
         Provider<StudentProfileRepository>(create: (_) => StudentProfileRepository(accessToken: '')), // Ensure you have a valid repository
         ChangeNotifierProvider(
           create: (context) => StudenProfileDataViewModel(userRepository: context.read<StudentProfileRepository>()),

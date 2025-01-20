@@ -53,6 +53,7 @@ dependencies:
   flutter_secure_storage: ^9.2.2
   shared_preferences: ^2.3.4
   jwt_decoder: ^2.0.1
+  khmer_fonts: ^0.0.6
 
 dev_dependencies:
   flutter_test:
