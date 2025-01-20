@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:lms_mobile/view/screen/lms/profile/settings/static_profile_setting_screen.dart';
 import 'dart:io';
 import 'package:provider/provider.dart';
 import '../../../../../data/color/color_screen.dart';
@@ -253,12 +252,7 @@ class _StudentSettingsState extends State<SettingScreen> {
                                 _placeOfBirthController.text = userData.birthPlace ?? '';
 
                                 // Optionally, reset other fields or values related to image upload or changes if needed
-                                isImageUploade = '';  // Reset the image upload state if necessary
-                                // setState(() {});
-                                // Navigator.pushReplacement(
-                                //   context,
-                                //   MaterialPageRoute(builder: (context) => StaticProfileViewScreen(token: widget.token, refreshCallback: () {  },)),
-                                // );
+                                isImageUploade = '';
                                 Navigator.pop(context);
                               },
                               style: OutlinedButton.styleFrom(
@@ -294,12 +288,19 @@ class _StudentSettingsState extends State<SettingScreen> {
                                     );
 
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text('Your data has been saved successfully!')),
+                                      const SnackBar(
+                                        backgroundColor: AppColors.successColor,
+                                        content: Text(
+                                          'Your data has been saved successfully!',
+                                          style: TextStyle(
+                                            color: AppColors.defaultWhiteColor,
+                                          ),
+                                        ),
+                                      ),
                                     );
 
                                     // Call the refresh callback
                                     widget.refreshCallback?.call();
-
                                     Navigator.pop(context);
                                   } catch (error) {
                                     ScaffoldMessenger.of(context).showSnackBar(
