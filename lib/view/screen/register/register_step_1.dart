@@ -93,15 +93,6 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
     prefs.setString('email', emailController.text);
     prefs.setString('classStudent', classStudentController.text);
     prefs.setString('guardianContact', guardianContactController.text);
-
-    // await prefs.remove('nameKh');
-    // await prefs.remove('nameEn');
-    // await prefs.remove('phoneNumber');
-    // await prefs.remove('email');
-    // await prefs.remove('classStudent');
-    // await prefs.remove('guardianContact');
-    // await prefs.remove('dob');
-    // await prefs.remove('phoneNumber');
   }
 
   @override

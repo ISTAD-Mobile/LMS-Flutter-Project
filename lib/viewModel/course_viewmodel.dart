@@ -7,24 +7,23 @@ class CourseViewmodel extends ChangeNotifier {
   final CourseRepository courseRepository = CourseRepository();
   ApiResponse<CourseResponse> course = ApiResponse.loading();
 
-  setBlogList(ApiResponse<CourseResponse> response){
+  setBlogList(ApiResponse<CourseResponse> response) {
     course = response;
     notifyListeners();
   }
 
   Future<dynamic> fetchAllBlogs() async {
-    await courseRepository.getAllBlogs()
+    await courseRepository
+        .getAllBlogs()
         .then((course) => setBlogList(ApiResponse.completed(course)))
-        .onError((error, stackTrace)=> ApiResponse.error(stackTrace.toString()))
-    ;
+        .onError(
+            (error, stackTrace) => ApiResponse.error(stackTrace.toString()));
   }
 
   List<String> get getCourseList {
     try {
       if (course.data == null) return [];
-      return course.data!.courseList
-          .map((data) => data.title)
-          .toList();
+      return course.data!.courseList.map((data) => data.title).toList();
     } catch (e) {
       debugPrint('Error converting course: $e');
       return [];

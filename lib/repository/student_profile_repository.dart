@@ -3,9 +3,9 @@ import 'package:http/http.dart' as http;
 import 'package:lms_mobile/model/student_profile_model.dart';
 
 class StudentProfileRepository {
-  final String accessToken;
+  final String token;
 
-  StudentProfileRepository({required this.accessToken});
+  StudentProfileRepository({required this.token});
 
   // Fetch user data from the API
   Future<StudentProfileModel> fetchUserData() async {
@@ -15,7 +15,7 @@ class StudentProfileRepository {
       var response = await http.get(
         url,
         headers: {
-          "Authorization": "Bearer $accessToken",
+          "Authorization": "Bearer $token",
         },
       );
 

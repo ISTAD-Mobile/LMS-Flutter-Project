@@ -8,9 +8,9 @@ import '../../../../viewModel/student_profile_viewModel.dart';
 import '../../../widgets/studentsWidget/lms/acheivement_year_semester.dart';
 
 class AcheivementScreen extends StatefulWidget {
-  final String accessToken;
+  final String token;
 
-  AcheivementScreen({required this.accessToken, Key? key}) : super(key: key);
+  AcheivementScreen({required this.token, Key? key}) : super(key: key);
 
   @override
   _AcheivementScreenState createState() => _AcheivementScreenState();
@@ -24,7 +24,7 @@ class _AcheivementScreenState extends State<AcheivementScreen> {
     super.initState();
 
     final repository = YearOfStudyAchievementRepository(
-      accessToken: widget.accessToken,
+      accessToken: widget.token,
     );
 
     viewModel = YearOfStudyAchievementViewModel(repository: repository);
@@ -38,7 +38,7 @@ class _AcheivementScreenState extends State<AcheivementScreen> {
           create: (_) =>
               StudenProfileDataViewModel(
                 userRepository: StudentProfileRepository(
-                  accessToken: widget.accessToken,
+                  token: widget.token,
                 ),
               ),
         ),
@@ -58,7 +58,7 @@ class _AcheivementScreenState extends State<AcheivementScreen> {
                     maxWidth: MediaQuery.of(context).size.width,
                   ),
                   child: IntrinsicHeight(
-                    child: YearOfStudyAchievementScreen(accessToken: widget.accessToken),
+                    child: YearOfStudyAchievementScreen(accessToken: widget.token),
                   ),
                 ),
               ],

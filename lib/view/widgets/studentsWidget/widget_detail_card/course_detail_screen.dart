@@ -10,6 +10,7 @@ class CourseDetailScreen extends StatefulWidget {
   final String credits;
   final String theory;
   final String practice;
+  final String thumbnailUrl;
 
   const CourseDetailScreen({
     super.key,
@@ -20,13 +21,15 @@ class CourseDetailScreen extends StatefulWidget {
     required this.credits,
     required this.theory,
     required this.practice,
+    required this.thumbnailUrl,
   });
 
   @override
   State<CourseDetailScreen> createState() => _CourseDetailScreenState();
 }
 
-class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTickerProviderStateMixin {
+class _CourseDetailScreenState extends State<CourseDetailScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -64,36 +67,38 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Top Content
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Year and Semester Tags
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: AppColors.secondaryColor,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           'Year ${widget.year}',
-                          style: const TextStyle(color: Colors.white, fontSize: 16),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 16),
                         ),
                       ),
                       const SizedBox(width: 20),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: AppColors.secondaryColor,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           'Semester ${widget.semester}',
-                          style: const TextStyle(color: Colors.white, fontSize: 16),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 16),
                         ),
                       ),
                     ],
@@ -147,7 +152,19 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
                       color: Colors.grey[200],
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Icon(Icons.image, size: 48, color: Colors.grey),
+                    child:
+                        //Image.network(widget.thumbnailUrl),
+                        Container(
+                      width: double.infinity,
+                      height: 150,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        image: DecorationImage(
+                          image: NetworkImage(widget.thumbnailUrl),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
                   ),
 
                   // Instructor Info
@@ -216,10 +233,8 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
                 ],
               ),
             ),
-
-            // Tab Bar View
             SizedBox(
-              height: 300, // Set a fixed height for TabBarView
+              height: 300,
               child: TabBarView(
                 controller: _tabController,
                 children: const [

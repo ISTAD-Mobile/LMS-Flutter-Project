@@ -33,20 +33,21 @@ class EnrollmentModel {
     required this.universityInfo,
   });
 
-  factory EnrollmentModel.fromJson(Map<String, dynamic> json) => EnrollmentModel(
-    id: json["id"],
-    uuid: json["uuid"],
-    email: json["email"],
-    nameEn: json["nameEn"],
-    nameKh: json["nameKh"],
-    gender: json["gender"],
-    dob: DateTime.parse(json["dob"]),
-    pob: CurrentAddress.fromJson(json["pob"]),
-    currentAddress: CurrentAddress.fromJson(json["currentAddress"]),
-    phoneNumber: json["phoneNumber"],
-    photoUri: json["photoUri"],
-    universityInfo: CurrentAddress.fromJson(json["universityInfo"]),
-  );
+  factory EnrollmentModel.fromJson(Map<String, dynamic> json) =>
+      EnrollmentModel(
+        id: json["id"],
+        uuid: json["uuid"],
+        email: json["email"],
+        nameEn: json["nameEn"],
+        nameKh: json["nameKh"],
+        gender: json["gender"],
+        dob: DateTime.parse(json["dob"]),
+        pob: CurrentAddress.fromJson(json["pob"]),
+        currentAddress: CurrentAddress.fromJson(json["currentAddress"]),
+        phoneNumber: json["phoneNumber"],
+        photoUri: json["photoUri"],
+        universityInfo: CurrentAddress.fromJson(json["universityInfo"]),
+      );
 
   Map<String, dynamic> toJson() => {
     "id": id,

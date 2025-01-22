@@ -1,6 +1,13 @@
+import 'dart:convert';
+
 class AppUrl {
   static String baseUrl = "https://api.istad.co/shortcourse/api/v1";
+  static String baseUrlDevApi = "https://dev-flutter.cstad.edu.kh/api/v1";
   static String getBlogUrl = '$baseUrl/courses';
+  static String getAvailableBlogUrl = '$getBlogUrl/available';
+
+  // Student Role End Point
+  static String studentCourses = '$baseUrlDevApi/students/courses';
 
   //Enrollment
   static String getPlaceOfBirthUrl = '$baseUrl/provinces?location_type=p';
@@ -19,7 +26,6 @@ class StudentProfileUrl {
   static String getStudentProfileUrl = '$baseUrl/students';
 }
 
-
 class AdmissionUrl {
   static String admisionbaseUrl = "https://dev-flutter.cstad.edu.kh/api/v1";
   static String postAdmisionByUrl = '$admisionbaseUrl/student-admissions';
@@ -32,9 +38,10 @@ class AdmissionUrl {
 class ApiUrl {
   static String baseUrl = 'https://dev-flutter.cstad.edu.kh/api/v1';
   static String login = '$baseUrl/auth/login';
-  static String refreshToken = '$baseUrl/auth/refresh-token';
-
+  static String changePassword = '$baseUrl/auth/passwords';
+  static String refreshToken = '$baseUrl/auth/refresh';
   static String postImageByUrl = '$baseUrl/medias/upload-single';
+  static String getGraduationUrl = '$baseUrl/graduations';
 }
 
 class UploadImageUrl {

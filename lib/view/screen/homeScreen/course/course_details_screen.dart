@@ -4,6 +4,7 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import '../../../../data/color/color_screen.dart';
 import '../../../../model/course_details_model.dart';
+import '../../../widgets/public_screen_widgets/enrollments_widget/enroll_step1.dart';
 import '../../enrollments/enroll_screen.dart';
 
 class CourseDetailPage extends StatelessWidget {
@@ -251,8 +252,11 @@ class CourseDetailPage extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (BuildContext context) => EnrollScreen()),
+          // Navigator.of(context).push(
+          //   MaterialPageRoute(builder: (BuildContext context) => const EnrollScreen()),
+          // );
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const EnrollStep1()),
           );
         },
         style: ElevatedButton.styleFrom(

@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 EnrollModel enrollModelFromJson(String str) => EnrollModel.fromJson(json.decode(str));
