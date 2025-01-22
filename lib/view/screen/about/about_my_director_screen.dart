@@ -86,10 +86,10 @@ class DirectorScreen extends StatelessWidget {
               itemCount: 4,
               itemBuilder: (context, index) {
                 List<String> imagePaths = [
-                  'assets/images/about_our_director1.png',
-                  'assets/images/about_our_director2.png',
-                  'assets/images/about_our_director3.png',
-                  'assets/images/about_our_director4.png',
+                  'https://dev-flutter.cstad.edu.kh/api/v1/medias/view/9ba3cd51-8e01-443f-9741-29f5ba95d184.png',
+                  'https://dev-flutter.cstad.edu.kh/api/v1/medias/view/4454aa7e-9337-4365-80e9-8ec2d7f58860.png',
+                  'https://dev-flutter.cstad.edu.kh/api/v1/medias/view/f0cfe8d8-885e-49c0-bc21-b9d134ce880e.png',
+                  'https://dev-flutter.cstad.edu.kh/api/v1/medias/view/18f4c956-8582-4c83-ba08-8b83a6df9b9e.png',
                 ];
 
                 List<Size> imageSizes = [
@@ -105,7 +105,7 @@ class DirectorScreen extends StatelessWidget {
                     alignment: Alignment.center,
                     width: imageSizes[index].width,
                     height: imageSizes[index].height,
-                    child: Image.asset(
+                    child: Image.network(
                       imagePaths[index],
                       fit: BoxFit.cover,
                     ),
@@ -129,7 +129,7 @@ class DirectorScreen extends StatelessWidget {
               const SizedBox(height: 20),
               Container(
                 child:
-                Image.asset("assets/images/about_our_director5.png"),
+                Image.network("https://dev-flutter.cstad.edu.kh/api/v1/medias/view/ca4912cd-a733-4f4e-badd-e7756895647e.png"),
               ),
 
               const SizedBox(height: 20),
@@ -159,8 +159,8 @@ class DirectorScreen extends StatelessWidget {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: Image.asset(
-                          'assets/images/about_our_director1.png',
+                        child: Image.network(
+                          'https://dev-flutter.cstad.edu.kh/api/v1/medias/view/9ba3cd51-8e01-443f-9741-29f5ba95d184.png',
                           fit: BoxFit.cover,
                           width: double.infinity,
                           height: 200,

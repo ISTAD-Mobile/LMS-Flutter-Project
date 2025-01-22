@@ -30,10 +30,10 @@ class MyAcademicScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<String> carouselImages = [
-      'assets/images/IT_expert_gen1.png',
-      'assets/images/Foundation.jpg',
-      'assets/images/IT_expert_gen2.png',
-      'assets/images/pre-university.png',
+      'https://dev-flutter.cstad.edu.kh/api/v1/medias/view/ca4912cd-a733-4f4e-badd-e7756895647e.png',//IT expert gen 1
+      'https://dev-flutter.cstad.edu.kh/api/v1/medias/view/9d783fa5-e8ff-4666-a054-a5fc45367729.jpg',//foundation
+      'https://dev-flutter.cstad.edu.kh/api/v1/medias/view/f0d8b9fb-bf7f-4448-ab96-1e9fd6634be6.jpg',//IT expert gen 2
+      'https://dev-flutter.cstad.edu.kh/api/v1/medias/view/404852a2-f6d5-4ded-9d93-2c6ec53ccdfe.jpg',//Pre_university
     ];
 
     return Scaffold(
@@ -48,7 +48,7 @@ class MyAcademicScreen extends StatelessWidget {
                     .map(
                       (imagePath) => ClipRRect(
                         borderRadius: BorderRadius.circular(0.0),
-                        child: Image.asset(
+                        child: Image.network(
                           imagePath,
                           fit: BoxFit.cover,
                           width: double.infinity,

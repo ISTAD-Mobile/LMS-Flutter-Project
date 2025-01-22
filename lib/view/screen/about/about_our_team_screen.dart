@@ -26,13 +26,13 @@ class OurTeamScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    'assets/images/about_our_team2.png',
+                  Image.network(
+                    'https://dev-flutter.cstad.edu.kh/api/v1/medias/view/948dd1f6-80a7-4177-995f-f89abd1f1142.png',
                     width: 160,
                     height: 170,
                   ),
-                  Image.asset(
-                    'assets/images/about_our_team3.png',
+                  Image.network(
+                    'https://dev-flutter.cstad.edu.kh/api/v1/medias/view/53618d40-6056-4164-a7f8-6b29538c717b.png',
                     width: 160,
                     height: 170,
                   ),
@@ -105,8 +105,8 @@ class OurTeamScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Image.asset(
-                    'assets/images/about_our_team4.png',
+                  Image.network(
+                    'https://dev-flutter.cstad.edu.kh/api/v1/medias/view/c8ffdf95-18a8-4283-b00f-c4e17a5533f7.png',
                     width: 150,
                     height: 170,
                   ),
@@ -116,8 +116,8 @@ class OurTeamScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    'assets/images/about_our_team5.png',
+                  Image.network(
+                    'https://dev-flutter.cstad.edu.kh/api/v1/medias/view/d766efce-5bf6-41c3-8eaa-c48e6d0e0258.png',
                     width: 150,
                     height: 170,
                   ),
@@ -239,8 +239,8 @@ class OurTeamScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Image.asset(
-                    'assets/images/about_our_team7.png',
+                  Image.network(
+                    'https://dev-flutter.cstad.edu.kh/api/v1/medias/view/8e27ce9c-7162-48f3-b0da-30d02edfe1a2.png',
                     width: 150,
                     height: 170,
                   ),
@@ -250,8 +250,8 @@ class OurTeamScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    'assets/images/about_our_team6.png',
+                  Image.network(
+                    'https://dev-flutter.cstad.edu.kh/api/v1/medias/view/69c03bfc-1363-4b42-bff6-2271bdc928f4.png',
                     width: 150,
                     height: 170,
                   ),
