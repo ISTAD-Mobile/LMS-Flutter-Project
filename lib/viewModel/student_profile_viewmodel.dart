@@ -14,7 +14,6 @@ class StudenProfileDataViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
-  // Fetch user data
   Future<void> fetchUserData() async {
     _setLoading(true);
 

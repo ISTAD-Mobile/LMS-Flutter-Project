@@ -7,40 +7,21 @@ class YearOfStudyAchievementRepository {
 
   YearOfStudyAchievementRepository({required this.accessToken});
 
-  Future<YearOfStudyAchievementModel> fetchYearOfStudyData() async {
-    Uri url = Uri.parse("https://dev-flutter.cstad.edu.kh/api/v1/students/year-of-study-achievement");
+  Future<List<YearOfStudyAchievement>> fetchAchievements() async {
+    final response = await http.get(
+      Uri.parse('https://dev-flutter.cstad.edu.kh/api/v1/students/year-of-study-achievement'),
+      headers: {
+        'Authorization': 'Bearer $accessToken',
+        'Content-Type': 'application/json',
+      },
+    );
 
-    try {
-      print("Fetching year of study data...");
-      print("Access Token: $accessToken");
-
-      var response = await http.get(
-        url,
-        headers: {
-          "Authorization": "Bearer $accessToken",
-        },
-      );
-
-      print("Response Status Code: ${response.statusCode}");
-      print("Response Body: ${response.body}");
-
-      if (response.statusCode == 200) {
-        var jsonResponse = jsonDecode(response.body);
-
-        print("Repository : $jsonResponse");
-
-        if (jsonResponse.containsKey('content')) {
-          // Wrap the entire response into the model.
-          return YearOfStudyAchievementModel.fromJson(jsonResponse);
-        } else {
-          throw Exception("No 'content' key found in the response.");
-        }
-      } else {
-        throw Exception("Failed to fetch data. Status Code: ${response.statusCode}");
-      }
-    } catch (e) {
-      print("Error fetching year of study data: $e");
-      throw Exception("Error fetching year of study data: $e");
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      final responseModel = Response.fromJson(responseData);
+      return responseModel.content;
+    } else {
+      throw Exception('Failed to load achievements');
     }
   }
 }

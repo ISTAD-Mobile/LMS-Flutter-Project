@@ -6,6 +6,7 @@ import 'package:lms_mobile/repository/student_profile_repository.dart';
 import 'package:lms_mobile/repository/student_profile_setting_repository.dart';
 import 'package:lms_mobile/view/screen/splashScreen/splash_screen.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/enrollments_widget/enroll_step2.dart';
+import 'package:lms_mobile/viewModel/achievement/year_of_study_achievement_viewmodel.dart';
 import 'package:lms_mobile/viewModel/admission/degree_viewmodel.dart';
 import 'package:lms_mobile/viewModel/admission/shift_viewmodel.dart';
 import 'package:lms_mobile/viewModel/admission/study_program_alas.dart';
