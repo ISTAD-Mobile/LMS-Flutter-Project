@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lottie/lottie.dart';
 import 'dart:io';
 import 'package:provider/provider.dart';
 import '../../../../../data/color/color_screen.dart';
@@ -107,7 +108,13 @@ class _StudentSettingsState extends State<SettingScreen> {
       child: Consumer<UpdataStudentProfileSettingViewmodel>(
         builder: (context, viewModel, _) {
           if (viewModel.isLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+              child: Lottie.asset(
+                'assets/animation/loading.json',
+                width: 100,
+                height: 100,
+              ),
+            );
           } else if (viewModel.errorMessage.isNotEmpty) {
             return Center(child: Text(viewModel.errorMessage));
           } else if (viewModel.userData == null) {
@@ -287,17 +294,17 @@ class _StudentSettingsState extends State<SettingScreen> {
                                           : userData.profileImage ?? '',
                                     );
 
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        backgroundColor: AppColors.successColor,
-                                        content: Text(
-                                          'Your data has been saved successfully!',
-                                          style: TextStyle(
-                                            color: AppColors.defaultWhiteColor,
-                                          ),
-                                        ),
-                                      ),
-                                    );
+                                    // ScaffoldMessenger.of(context).showSnackBar(
+                                    //   const SnackBar(
+                                    //     backgroundColor: AppColors.successColor,
+                                    //     content: Text(
+                                    //       'Your data has been saved successfully!',
+                                    //       style: TextStyle(
+                                    //         color: AppColors.defaultWhiteColor,
+                                    //       ),
+                                    //     ),
+                                    //   ),
+                                    // );
 
                                     // Call the refresh callback
                                     widget.refreshCallback?.call();

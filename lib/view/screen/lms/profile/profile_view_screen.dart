@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/repository/student_profile_repository.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import '../../../../data/color/color_screen.dart';
 import '../../../../viewModel/student_profile_viewModel.dart';
@@ -16,10 +17,10 @@ class ProfileScreen extends StatelessWidget {
           StudenProfileDataViewModel(userRepository: StudentProfileRepository(
               token: token)),
       child: Scaffold(
-        backgroundColor: AppColors.defaultWhiteColor, // Keep scaffold white
+        backgroundColor: AppColors.defaultWhiteColor,
         body: SafeArea(
           child: Container(
-            color: AppColors.backgroundColor, // Grey background for body
+            color: AppColors.backgroundColor,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -36,67 +37,71 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Main Profile Card
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 0.0),
-                  child: Card(
-                    color: AppColors.defaultWhiteColor,
-                    child: Padding(
-                      padding: const EdgeInsets.all(24.0),
-                      child: Consumer<StudenProfileDataViewModel>(
-                        builder: (context, viewModel, _) {
-                          // Trigger fetch user data if needed
-                          if (viewModel.user == null && !viewModel.isLoading &&
-                              viewModel.errorMessage == null) {
-                            viewModel.fetchUserData();
-                          }
+                Consumer<StudenProfileDataViewModel>(
+                  builder: (context, viewModel, _) {
+                    if (viewModel.user == null && !viewModel.isLoading &&
+                        viewModel.errorMessage == null) {
+                      viewModel.fetchUserData();
+                    }
 
-                          if (viewModel.isLoading) {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          } else if (viewModel.errorMessage != null) {
-                            return Center(child: Text(
-                                "Error: ${viewModel.errorMessage}"));
-                          } else if (viewModel.user == null) {
-                            return const Center(
-                                child: Text("No user data found"));
-                          } else {
-                            final user = viewModel.user!;
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                CircleAvatar(
-                                  radius: 70,
-                                  backgroundImage: user.profileImage != null &&
-                                      user.profileImage!.isNotEmpty
-                                      ? NetworkImage(user.profileImage!)
-                                      : const AssetImage(
-                                      'assets/images/placeholder.jpg') as ImageProvider,
-                                ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  user.nameEn,
-                                  style: const TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.primaryColor,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                const SizedBox(height: 20),
-                                _buildProfileDetail('Degree:', user.degree),
-                                const SizedBox(height: 16),
-                                _buildProfileDetail('Date of Birth:', user.dob),
-                                const SizedBox(height: 16),
-                                _buildProfileDetail('Major:', user.major),
-                              ],
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                  ),
+                    if (viewModel.isLoading) {
+                      return Center(
+                        child: Lottie.asset(
+                          'assets/animation/loading.json',
+                          width: 100,
+                          height: 100,
+                        ),
+                      );
+                    } else if (viewModel.errorMessage != null) {
+                      return Center(child: Text(
+                          "Error: ${viewModel.errorMessage}"));
+                    } else if (viewModel.user == null) {
+                      return const Center(
+                          child: Text("No user data found"));
+                    } else {
+                      final user = viewModel.user!;
+                      return Container(
+                        padding: EdgeInsets.all(16),
+                        margin: EdgeInsets.only(right: 16,left: 16),
+                        // color: AppColors.defaultGrayColor,
+                        decoration: BoxDecoration(
+                          color: AppColors.defaultWhiteColor,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            CircleAvatar(
+                              radius: 70,
+                              backgroundColor: Colors.grey[200], // Placeholder color
+                              foregroundImage: user.profileImage != null && user.profileImage!.isNotEmpty
+                                  ? NetworkImage(user.profileImage!)
+                                  : null,
+                              child: user.profileImage == null || user.profileImage!.isEmpty
+                                  ? Image.asset('assets/images/placeholder.jpg')
+                                  : null,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              user.nameEn,
+                              style: const TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.primaryColor,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            const SizedBox(height: 20),
+                            _buildProfileDetail('Degree:', user.degree),
+                            const SizedBox(height: 16),
+                            _buildProfileDetail('Date of Birth:', user.dob),
+                            const SizedBox(height: 16),
+                            _buildProfileDetail('Major:', user.major),
+                          ],
+                        ),
+                      );
+                    }
+                  },
                 ),
               ],
             ),
