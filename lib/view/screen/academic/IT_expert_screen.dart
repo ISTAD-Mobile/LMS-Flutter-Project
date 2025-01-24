@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lms_mobile/view/screen/about/my_home_about_istad_screen.dart';
 import '../../../data/color/color_screen.dart';
-import '../../home.dart';
-import '../../widgets/public_screen_widgets/appbar_and_bottom_navigation_widgets.dart';
-import '../lms/auth/first_log_in_screen.dart';
-import 'my_home_academic_screen.dart';
 
 class ITExpertPage extends StatefulWidget {
   const ITExpertPage({Key? key}) : super(key: key);
@@ -49,8 +44,8 @@ class _ITExpertPageState extends State<ITExpertPage> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.asset(
-                  'assets/images/IT_expert_gen2.png',
+                child: Image.network(
+                  'https://dev-flutter.cstad.edu.kh/api/v1/medias/view/f0d8b9fb-bf7f-4448-ab96-1e9fd6634be6.jpg',
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: 200,

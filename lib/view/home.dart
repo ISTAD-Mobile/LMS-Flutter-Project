@@ -30,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final courseViewModel = CourseViewmodel();
   int _selectedIndex = 0;
 
+
   @override
   void initState() {
     super.initState();
@@ -41,10 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final token = prefs.getString('accessToken');
     if (token != null && token.isNotEmpty) {
       // Token exists, navigate to LMS content
-      return StudentScreen(
-        accessToken: token,
-        title: '',
-      ); // Use the retrieved token
+      return StudentScreen(token: token, title: '', userEmail: '',);
     } else {
       // No token, navigate to LoginScreen
       return const LoginScreen();
@@ -69,11 +67,11 @@ class _HomeScreenState extends State<HomeScreen> {
       'title': 'Home',
       'page': ListView(
         children: [
-          VideoBackground(),
+          const VideoBackground(),
           const IstadActivity(),
           const AcademicTypeAndScholarshipWidget(),
           CourseSection(),
-          // const ItNewsSection(),
+          const ItNewsSection(),
           ProjectArcheivementHome(),
           BachelorProgramHome(),
           Container(
@@ -107,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
         'title': 'Home',
         'page': ListView(
           children: [
-            VideoBackground(),
+            const VideoBackground(),
             const IstadActivity(),
             const AcademicTypeAndScholarshipWidget(),
             CourseSection(),

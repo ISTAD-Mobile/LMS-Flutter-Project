@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
 import '../model/student_profile_setting.dart';
 
 class StudentSettingRepository {
-  final String accessToken;
+  final String token;
 
-  StudentSettingRepository({required this.accessToken});
+  StudentSettingRepository({required this.token});
 
   Future<StudentSettingModel> fetchUserData() async {
     Uri url = Uri.parse("https://dev-flutter.cstad.edu.kh/api/v1/students/setting");
@@ -15,19 +14,25 @@ class StudentSettingRepository {
       var response = await http.get(
         url,
         headers: {
-          "Authorization": "Bearer $accessToken",
+          "Authorization": "Bearer $token",
         },
       );
 
       if (response.statusCode == 200) {
+        print('Response body: ${response.body}');
         Map<String, dynamic> userData = jsonDecode(response.body);
+
+        if (userData.isEmpty) {
+          throw Exception("No data available");
+        }
+
         return StudentSettingModel.fromJson(userData);
       } else {
         throw Exception("Failed to fetch user data: ${response.statusCode}");
       }
     } catch (e) {
+      print("Error: $e");
       throw Exception("Error fetching user data: $e");
     }
   }
 }
-

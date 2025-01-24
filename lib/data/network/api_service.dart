@@ -39,7 +39,6 @@ class ApiService {
 
     if (response.statusCode == 200) {
       return true;
-      print(await response.stream.bytesToString());
     }
     else {
       return false;

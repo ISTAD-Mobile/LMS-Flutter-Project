@@ -4,8 +4,8 @@ class Jobvacancyskeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width,
-      margin: const EdgeInsets.only(bottom: 20),
+      width: 310,
+      margin: const EdgeInsets.only(bottom: 20,right: 15),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -25,32 +25,37 @@ class Jobvacancyskeleton extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Skeleton for Image Section (Simple placeholder)
-          AspectRatio(
-            aspectRatio: 16 / 9,
+          ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+            ),
             child: Container(
-              color: Colors.grey.shade300,  // Placeholder color for image
+              width: double.infinity,
+              height: 150,
+              color: Colors.grey.shade300, // Placeholder color for image
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(20),
+          Container(
+            padding: const EdgeInsets.all(18),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Skeleton for Date and Category Section
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _buildSkeletonBox(60, 12),
-                    _buildSkeletonBox(60, 12),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Skeleton for contentType Text
+                      _buildSkeletonBox(80, 12),
+                      // Skeleton for formattedDate Text
+                      _buildSkeletonBox(60, 12),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 16),
-                // Skeleton for Title Section
-                _buildSkeletonBox(180, 20),
-                const SizedBox(height: 6),
-                // Skeleton for Description Section
-                _buildSkeletonBox(250, 15),
+                const SizedBox(height: 10),
+                // Skeleton for title Text
+                _buildSkeletonBox(180, 16),
               ],
             ),
           ),

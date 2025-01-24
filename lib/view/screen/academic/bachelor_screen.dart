@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
+import 'package:lms_mobile/view/screen/register/register_step_1.dart';
 
 void main() {
   runApp(const MaterialApp(
@@ -38,8 +39,8 @@ class BachelorPage extends StatelessWidget {
                   child: Stack(
                     children: [
                       // Background Image
-                      Image.asset(
-                        'assets/images/IT_expert_gen2.png',
+                      Image.network(
+                        'https://dev-flutter.cstad.edu.kh/api/v1/medias/view/f0d8b9fb-bf7f-4448-ab96-1e9fd6634be6.jpg',
                         height: 230,
                         width: double.infinity,
                         fit: BoxFit.cover,
@@ -81,7 +82,10 @@ class BachelorPage extends StatelessWidget {
                       const SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: () {
-
+                          Navigator.push(
+                              context, 
+                              MaterialPageRoute(builder: (context) => const RegisterStep1())
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primaryColor.withOpacity(0.6),

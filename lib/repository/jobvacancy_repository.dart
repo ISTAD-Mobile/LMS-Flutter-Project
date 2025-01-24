@@ -1,16 +1,18 @@
-import 'package:lms_mobile/data/network/api_service.dart';
-import 'package:lms_mobile/model/jobvacancy.dart';
-import 'package:lms_mobile/resource/app_url.dart';
 
-class JobvacancyRepository{
-  final ApiService apiService = ApiService();
+import '../data/network/jobvacancy_service.dart';
+import '../model/jobvacancy.dart';
+import '../resource/app_url.dart';
 
-  Future<JobvacancyResponse> getAllJobvacancy() async {
-    try{
-      final jobvacancyData = await apiService.getApiService(JobVacancyUrl.getJobvacancyByUrl);
-      print("Job Vacancy Data: $jobvacancyData");
-      return jobvacancyResponseFromJson(jobvacancyData);
-    }catch (exception) {
+class JobVacancyRepository {
+  final JobvacancyService jobvacancyService = JobvacancyService();
+
+  Future<JobvacancyResponse> getAllJobVacancies() async {
+    try {
+      final jobVacancyData = await jobvacancyService.getApiJobvacancy(JobVocancyUrl.getJobvacancyByUrl);
+      print("Job Vacancy Repo: $jobVacancyData");
+      return jobvacancyResponseFromJson(jobVacancyData);
+    } catch (exception) {
+      print("Error in JobVacancyRepository: $exception");
       rethrow;
     }
   }

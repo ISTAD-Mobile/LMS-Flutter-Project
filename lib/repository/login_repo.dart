@@ -1,80 +1,86 @@
-// import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-// import 'package:lms_mobile/data/network/login_service.dart';
-//
-// class LoginRepository {
-//   final LoginService _loginService = LoginService();
-//   final FlutterSecureStorage _flutterSecureStorage =
-//       const FlutterSecureStorage();
-//
-//   // to save token securely
-//   Future<void> saveTokens(String accessToken, String refreshToken) async {
-//     await _flutterSecureStorage.write(key: 'access_token', value: accessToken);
-//     await _flutterSecureStorage.write(
-//         key: 'refresh_token', value: refreshToken);
-//   }
-//
-//   // to retrieve tokens
-//   Future<String?> getAccessToken() async {
-//     return await _flutterSecureStorage.read(key: 'access_token');
-//   }
-//
-//   Future<String?> getRefreshToken() async {
-//     return await _flutterSecureStorage.read(key: 'refresh_token');
-//   }
-//
-//   // to login and save tokens
-//   Future<void> login(String usernameOrEmail, String password) async {
-//     final response = await _loginService.login(usernameOrEmail, password);
-//     await saveTokens(response.accessToken, response.refreshToken);
-//   }
-//
-//   // to refresh access token
-//   Future<void> refreshAccessToken() async {
-//     final refreshToken = await getRefreshToken();
-//     if (refreshToken == null) {
-//       throw Exception('Refresh token not found');
-//     }
-//
-//     final response = await _loginService.refreshToken(refreshToken);
-//     await saveTokens(response.accessToken, refreshToken);
-//   }
-// }
-
-
-
-
-// repositories/user_repository.dart
-
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../resource/app_url.dart';
 
 class LoginStudentRepository {
-  Future<String?> login(String emailOrUsername, String password) async {
-    Uri url = Uri.parse("https://dev-flutter.cstad.edu.kh/api/v1/auth/login");
-    var data = {
+  static Future<Map<String, dynamic>> login(String emailOrUsername, String password) async {
+    Uri url = Uri.parse(ApiUrl.login);
+    Map<String, String> data = {
       "emailOrUsername": emailOrUsername,
       "password": password,
     };
 
     try {
-      var response = await http.post(
+      print("Making login request to: $url");
+      print("Request data: $data");
+
+      final response = await http.post(
         url,
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Accept": "application/json",
         },
         body: jsonEncode(data),
       );
 
-      print("API Response: ${response.body}"); // Debug: Log the API response
+      print("Status Code: ${response.statusCode}");
+      print("Response Headers: ${response.headers}");
+      print("API Response: ${response.body}");
 
       if (response.statusCode == 200) {
-        var jsonData = jsonDecode(response.body);
-        return jsonData['accessToken']; // Return the access token
+        final decodedResponse = jsonDecode(response.body);
+
+        // Validate the response structure
+        if (decodedResponse['accessToken'] == null) {
+          return {
+            'error': 'Invalid response',
+            'details': 'Access token missing in response'
+          };
+        }
+
+        // Return the full response for token processing in ViewModel
+        return decodedResponse;
       } else {
-        throw Exception("Login failed: ${response.body}");
+        Map<String, dynamic> errorResponse;
+        try {
+          errorResponse = jsonDecode(response.body);
+          return {
+            'error': 'Login failed',
+            'details': errorResponse['message'] ?? 'Unknown error occurred',
+            'statusCode': response.statusCode
+          };
+        } catch (e) {
+          return {
+            'error': 'Login failed',
+            'details': 'Failed to decode error response: ${response.body}',
+            'statusCode': response.statusCode
+          };
+        }
       }
+    } on FormatException catch (e) {
+      return {
+        'error': 'Format Exception',
+        'details': 'Invalid response format: ${e.toString()}'
+      };
+    } on http.ClientException catch (e) {
+      return {
+        'error': 'Network Error',
+        'details': 'Connection failed: ${e.toString()}'
+      };
     } catch (e) {
-      throw Exception("Error: $e");
+      return {
+        'error': 'Exception',
+        'details': 'Unexpected error: ${e.toString()}'
+      };
+    }
+  }
+
+  static bool isValidJson(String str) {
+    try {
+      jsonDecode(str);
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 }

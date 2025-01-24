@@ -1,52 +1,6 @@
-// import 'package:flutter/cupertino.dart';
-// import 'package:lms_mobile/repository/login_repo.dart';
-//
-// class LoginViewModel extends ChangeNotifier {
-//   final LoginRepository _loginRepository = LoginRepository();
-//
-//   bool _isLoading = false;
-//
-//   bool get isLoading => _isLoading;
-//
-//   String? _errorMessage;
-//
-//   String? get errorMessage => _errorMessage;
-//
-//   // login method
-//   Future<bool> login(String usernameOrEmail, String password) async {
-//     _isLoading = true;
-//     _errorMessage = null;
-//     notifyListeners();
-//
-//     try {
-//       await _loginRepository.login(usernameOrEmail, password);
-//       _isLoading = false;
-//       notifyListeners();
-//       return true;
-//     } catch (e) {
-//       _errorMessage = e.toString();
-//       _isLoading = false;
-//       notifyListeners();
-//       return false;
-//     }
-//   }
-//
-//   Future<bool> refreshAccessToken() async {
-//     try {
-//       await _loginRepository.refreshAccessToken();
-//       return true;
-//     } catch (e) {
-//       _errorMessage = e.toString();
-//       return false;
-//     }
-//   }
-// }
-
-
-
-
-import 'package:flutter/material.dart';
-import 'package:lms_mobile/repository/login_repo.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import '../repository/login_repo.dart';
 
 class LoginViewModel extends ChangeNotifier {
   final LoginStudentRepository _userRepository;
@@ -56,27 +10,83 @@ class LoginViewModel extends ChangeNotifier {
   String? accessToken;
   bool isLoading = false;
   String? errorMessage;
+  bool? isChangePassword;
+  bool neverChangedPassword = false;
+  String? userEmail;  // Added for storing email from JWT
+  List<String> roles = [];  // Added for storing roles from JWT
+  Map<String, dynamic>? decodedToken;
+  bool isTokenValid() {
+    if (accessToken == null) return false;
+    try {
+      return !JwtDecoder.isExpired(accessToken!);
+    } catch (e) {
+      print("Error checking token validity: $e");
+      return false;
+    }
+  }
+
+  // Check if user has student role
+  bool get isStudent => roles.contains('student');
 
   Future<void> login(String emailOrUsername, String password) async {
     try {
       isLoading = true;
       notifyListeners();
 
-      // Call the login API
-      accessToken = await _userRepository.login(emailOrUsername, password);
+      final response = await LoginStudentRepository.login(emailOrUsername, password);
 
-      if (accessToken != null) {
-        print("Login successful. Access Token: $accessToken"); // Debug: Check if accessToken is retrieved
-      } else {
-        errorMessage = "Failed to get access token.";
-        print(errorMessage); // Debug: Check the error message
+      if (response['error'] != null) {
+        errorMessage = response['details'];
+        if (response['statusCode'] == 401) {
+          errorMessage = 'Invalid username or password';
+        } else if (response['statusCode'] == 404) {
+          errorMessage = 'User not found';
+        } else if (response['statusCode'] == 403) {
+          errorMessage = 'Account is locked or inactive';
+        }
+        print("Login failed: $errorMessage");
+        return;
       }
+
+      // Process successful response
+      accessToken = response['accessToken'];
+      if (accessToken == null || accessToken!.isEmpty) {
+        errorMessage = "Failed to get access token.";
+        print(errorMessage);
+        return;
+      }
+
+      // Decode JWT token
+      try {
+        decodedToken = JwtDecoder.decode(accessToken!);
+        print("Decoded Token: $decodedToken");
+
+        // Extract user email from 'sub' claim
+        userEmail = decodedToken!['sub'];
+
+        // Extract roles
+        if (decodedToken!['roles'] != null) {
+          roles = List<String>.from(decodedToken!['roles']);
+        }
+        // Extract isChangePassword
+        isChangePassword = decodedToken!['isChangePassword'];
+
+        print("User Email: $userEmail");
+        print("Roles: $roles");
+
+      } catch (e) {
+        print("Error decoding token: $e");
+        errorMessage = "Invalid token format";
+        return;
+      }
+
     } catch (e) {
-      errorMessage = e.toString();
-      print("Error: $errorMessage"); // Debug: Check the error
+      errorMessage = 'Unexpected error occurred';
+      print("Error: ${e.toString()}");
     } finally {
       isLoading = false;
       notifyListeners();
     }
   }
 }
+

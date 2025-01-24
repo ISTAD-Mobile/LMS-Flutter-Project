@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lms_mobile/view/screen/about/my_home_about_istad_screen.dart';
 import '../../../data/color/color_screen.dart';
-import '../../home.dart';
-import '../lms/auth/first_log_in_screen.dart';
-import 'my_home_academic_screen.dart';
 
 class PreUniversityPage extends StatefulWidget {
   const PreUniversityPage({Key? key}) : super(key: key);
@@ -43,8 +39,8 @@ class _PreUniversityPageState extends State<PreUniversityPage> {
             children: <Widget>[
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.asset(
-                  'assets/images/pre-university.png', // Replace with the correct image
+                child: Image.network(
+                  'https://dev-flutter.cstad.edu.kh/api/v1/medias/view/404852a2-f6d5-4ded-9d93-2c6ec53ccdfe.jpg', // Replace with the correct image
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: 200,

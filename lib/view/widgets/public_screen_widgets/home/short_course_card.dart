@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/model/course.dart';
-import 'package:lms_mobile/view/screen/homeScreen/course/course_details_screen.dart';
+
+import '../../../screen/homeScreen/course/course_details_screen.dart';
+
 
 class ShortCourseCard extends StatelessWidget {
   final Course course;
@@ -16,7 +18,7 @@ class ShortCourseCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CourseDetailsPage(),
+            builder: (context) => CourseDetailPage(uuid: course.uuid),
           ),
         );
       },

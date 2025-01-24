@@ -8,34 +8,6 @@ import 'package:lms_mobile/view/widgets/public_screen_widgets/home/short_course_
 import 'package:lms_mobile/viewModel/course_viewmodel.dart';
 import 'package:provider/provider.dart';
 
-import '../../../screen/lms/profile/student_courses_screen.dart';
-
-
-// void main() {
-//   runApp(MyApp());
-// }
-//
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return ChangeNotifierProvider(
-//       create: (context) => CourseViewmodel(),
-//       child: MaterialApp(
-//         debugShowCheckedModeBanner: false, // Disable the debug banner
-//         title: 'Course App',
-//         theme: ThemeData(
-//           primarySwatch: Colors.blue,
-//           visualDensity: VisualDensity.adaptivePlatformDensity,
-//         ),
-//         home: CourseSection(), // Start the app with the CourseSection widget
-//       ),
-//     );
-//   }
-// }
-
-
-
-
 class CourseSection extends StatefulWidget {
 
   @override
@@ -126,9 +98,11 @@ class _CourseSectionState extends State<CourseSection> {
                     return Center(
                       child: Text(
                         'An error occurred: ${viewModel.course.message}',
-                        style: TextStyle(color: Colors.red),
+                        style: const TextStyle(color: Colors.red),
                       ),
                     );
+                  case Status.IDLE:
+                    throw UnimplementedError();
                 }
               },
             ),

@@ -1,223 +1,168 @@
 import 'package:flutter/material.dart';
-import 'package:lms_mobile/data/color/color_screen.dart';
-
+import 'package:lms_mobile/viewModel/course_details_viewmodel.dart';
+import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
+import '../../../../data/color/color_screen.dart';
+import '../../../../model/course_details_model.dart';
+import '../../../widgets/public_screen_widgets/enrollments_widget/enroll_step1.dart';
 import '../../enrollments/enroll_screen.dart';
 
-class CourseDetailsPage extends StatelessWidget {
-  final List<CourseSection> sections = [
-    CourseSection(
-      title: 'INTRODUCTION TO DATA ANALYTICS',
-      topics: [
-        'What is Data Analytic',
-        'Data Analysis Steps',
-        'Type of Data Analytics',
-        'Data Analytics Use Cases',
-        'Lifecycle of Data Analytics',
-        'Benefits of Data Analytic',
-        'Data Analytics Techniques',
-        'Data Analytics Tools',
-        'How to become a Data Analyst?',
-        'Skills needed to become a data analyst',
-        'Data Analytics Techniques',
-      ],
-    ),
-    CourseSection(
-      title: 'EXCEL FOR DATA ANALYTICS',
-      topics: [
-        'Data preparation with Excel Sheet, (Extraction)',
-        'Data Warehouse (Load, find the missing value, invalid data)',
-        'Data Transformation and Data Analyze',
-        'Data Visualization (chart, statistics)'
-      ],
-    ),
-    CourseSection(
-      title: 'PYTHON WITH LIBRARIES TO USE IN DATA ANALYTIC',
-      topics: [
-        'Installation Python',
-        'Tool to use (Jupyter)',
-        'Array',
-        'Matrix Operation',
-        'Dictionaries',
-        'Dataframe of Pandas with Python',
-        'Series of Pandas with Python',
-        'Dynamic Array of Numpy with Python',
-      ],
-    ),
-    CourseSection(
-      title: 'SQL FOR DATA ANALYTIC',
-      topics: [
-        'Introduction to SQL',
-        'Database Normalization and Entity Relationship Model',
-        'SQL Operators',
-        'Working with SQL',
-      ],
-    ),
-    CourseSection(
-      title: 'BUSINESS CASE STUDIES AND REPORT AND STORYTELLING',
-      topics: [
-        'Understanding Business domains',
-        'Understanding the business problem and formulating hypotheses',
-        'Exploratory data analysis',
-        'Data storytelling',
-        'Project on deriving business insights and storytelling',
-      ],
-    ),
-    CourseSection(
-      title: 'BUSINESS CASE STUDIES',
-      topics: [
-        'Real world Business Analytics',
-        'Focus on Real world problem',
-        'Business Required',
-        'Answer to business question',
-        'Predictive Model based on Real Requirement',
-        'Practice to Build a Model and Generate the Report',
-      ],
-    ),
-    CourseSection(
-      title: 'PREDICTIVE MODELING',
-      topics: [
-        'Build model to analyze following defined questions of business',
-      ],
-    ),
-    CourseSection(
-      title: 'DATA WAREHOUSE (READY DATA TO ANALYZE)',
-      topics: [
-        'Data Warehouse Concept',
-        'Type of Data Warehouse',
-        'Data Warehouse architecture',
-        'Data Warehouse Characteristics',
-        'Data Warehouse vs Database',
-        'Create a Data Warehouse from a sample raw data',
-      ],
-    ),
-    CourseSection(
-      title: 'TABLEAU',
-      topics: [
-        'Introduction to Data Visualization and The Power of Tableau',
-        'Architecture of Tableau',
-        'Charts and Graphs',
-        'Working with Metadata and Data Blending',
-        'Advanced Data Manipulations',
-        'Organizing Data and Visual Analytics to report to Business owner',
-      ],
-    ),
-    CourseSection(
-      title: 'FINAL PROJECT',
-      topics: [
-        'Topic will be provided',
-      ],
-    ),
-  ];
+class CourseDetailPage extends StatelessWidget {
+  final String uuid;
+  CourseDetailPage({required this.uuid});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.defaultWhiteColor,
-      appBar: AppBar(
+    return ChangeNotifierProvider(
+      create: (_) => CourseDetailsViewmodel()..getCourseDetail(uuid),
+      child: Scaffold(
         backgroundColor: AppColors.defaultWhiteColor,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.arrow_back_ios, color: AppColors.defaultGrayColor),
+        appBar: AppBar(
+          backgroundColor: AppColors.defaultWhiteColor,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.arrow_back_ios, color: AppColors.defaultGrayColor),
+          ),
+          title: const Text("Course Description",
+            style: TextStyle(fontSize: 16, color: AppColors.primaryColor),
+          ),
         ),
-        title: const Text("Course Description",
-          style: TextStyle(fontSize: 16, color: AppColors.primaryColor),),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.0),
-                  border: Border.all(
-                    color: Colors.grey.shade300,
-                    width: 1.0,
+        body: Consumer<CourseDetailsViewmodel>(
+          builder: (context, viewModel, child) {
+            if (viewModel.isLoading) {
+              return Center(
+                  child: Lottie.asset(
+                    'assets/animation/loading.json',
+                    width: 100,
+                    height: 100,
                   ),
-                ),
+              );
+            }
+
+            if (viewModel.errorMessage != null) {
+              return Center(child: Text('Error: ${viewModel.errorMessage}'));
+            }
+
+            if (viewModel.courseDetail == null) {
+              return Center(child: Text('No course details found.'));
+            }
+
+            final course = viewModel.courseDetail!.data;
+
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'DATA ANALYTIC',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primaryColor,
-                        letterSpacing: 2.0,
+                    // Course Title & Description Section
+                    Container(
+                      padding: const EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        border: Border.all(color: Colors.grey.shade300, width: 1.0),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Data Analytics is the process of analyzing raw data sets of the techniques and processes of data analytics have been automated into mechanical processes and algorithms.',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppColors.defaultGrayColor,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            course?.title ?? 'No Title',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primaryColor,
+                              letterSpacing: 2.0,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            course?.description ?? 'No Description',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: AppColors.defaultGrayColor,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'COURSE OFFER',
+                            style: TextStyle(
+                              fontSize: 18,
+                              letterSpacing: 2.0,
+                              color: AppColors.primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          _buildCourseOffers(course?.offer?.details),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'COURSE OFFER',
-                      style: TextStyle(
-                        fontSize: 18,
-                        letterSpacing: 2.0,
-                        color: AppColors.primaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    _buildCourseOffers(),
+                    _buildPriceSection(viewModel.courseDetail),
+                    const SizedBox(height: 16),
+                    _buildResetButton(context),
+                    const SizedBox(height: 16),
+                    _buildExpansionTile(course?.outline ?? []),
                   ],
                 ),
               ),
-
-              const SizedBox(height: 16),
-              _buildPriceSection(),
-              const SizedBox(height: 16),
-              _buildResetButton(context),
-              const SizedBox(height: 16),
-              ...sections.map((section) => _buildExpansionTile(section))
-                  .toList(),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );
   }
 
-  Widget _buildCourseOffers() {
-    final offers = [
-      '1. Introduction to Data Analytics',
-      '2. Excel for Data Analytics',
-      '3. Python with Libraries to use in Data\nAnalytics',
-      '4. SQL for Analytics',
-      '5. Business Problem Solving, Insights\nand Storytelling',
-      '6. Business Case Studies',
-      '7. Predictive Modeling',
-      '8. Data Warehouse',
-      '9. Tableau',
-      '10. Final Project',
-    ];
+  Widget _buildCourseOffers(List<String>? offers) {
+    if (offers == null || offers.isEmpty) {
+      return Text('No offers available.');
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: offers.map((offer) =>
+      children: offers.asMap().map((index, offer) {
+        return MapEntry(
+          index,
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(offer, style: const TextStyle(fontSize: 14,)),
+                Text(
+                  '${index + 1}. ',
+                  style: const TextStyle(fontSize: 14),
+                ),
+                Expanded(
+                  child: Text(
+                    offer,
+                    style: const TextStyle(fontSize: 14),
+                    softWrap: true,
+                    overflow: TextOverflow.visible,
+                  ),
+                ),
               ],
             ),
-          )).toList(),
+          ),
+        );
+      }).values.toList(),
     );
   }
 
-  Widget _buildPriceSection() {
+
+
+
+  Widget _buildPriceSection(CourseDetailResponse? courseDetailResponse) {
+    if (courseDetailResponse == null || courseDetailResponse.data == null) {
+      return const Center(child: Text('No course details available.'));
+    }
+
+    final courseData = courseDetailResponse.data;
+    final fee = courseData?.fee ?? 0.0;
+    final discountedFee = fee * (1 - 0.20);
+    final duration = courseData?.totalHour ;
+
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -235,29 +180,31 @@ class CourseDetailsPage extends StatelessWidget {
                   ),
                 ),
                 child: const Text(
-                  '20% Off',
+                  '20% Schoolarship',
                   style: TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w700,
                     color: Colors.white,
                   ),
                 ),
               ),
-              const SizedBox(height: 10,),
-              const Text.rich(
+              const SizedBox(height: 10),
+              Text.rich(
                 TextSpan(
                   children: [
+                    // Original price with strikethrough
                     TextSpan(
-                      text: '\$1200.0 ',
-                      style: TextStyle(
+                      text: '\$${fee.toStringAsFixed(3)} ',
+                      style: const TextStyle(
                         color: Colors.black,
                         decoration: TextDecoration.lineThrough,
                         decorationColor: Colors.red,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
+                    // Discounted price
                     TextSpan(
-                      text: '  /  \$960.0',
+                      text: '  /  \$${discountedFee.toStringAsFixed(3)}',
                       style: TextStyle(
                         color: AppColors.defaultBlackColor,
                         fontWeight: FontWeight.w500,
@@ -271,9 +218,9 @@ class CourseDetailsPage extends StatelessWidget {
           Align(
             alignment: Alignment.centerRight,
             child: RichText(
-              text: const TextSpan(
+              text: TextSpan(
                 children: [
-                  TextSpan(
+                  const TextSpan(
                     text: 'Duration: ',
                     style: TextStyle(
                       fontSize: 16,
@@ -282,8 +229,8 @@ class CourseDetailsPage extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: ' 4 months',
-                    style: TextStyle(
+                    text:'$duration hours',
+                    style: const TextStyle(
                       fontSize: 16,
                       color: AppColors.secondaryColor,
                       fontWeight: FontWeight.w600,
@@ -292,20 +239,24 @@ class CourseDetailsPage extends StatelessWidget {
                 ],
               ),
             ),
-          )
-
+          ),
         ],
       ),
     );
   }
+
+
 
   Widget _buildResetButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (BuildContext context) => EnrollScreen()),
+          // Navigator.of(context).push(
+          //   MaterialPageRoute(builder: (BuildContext context) => const EnrollScreen()),
+          // );
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const EnrollStep1()),
           );
         },
         style: ElevatedButton.styleFrom(
@@ -326,91 +277,97 @@ class CourseDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildExpansionTile(CourseSection section) {
-    return StatefulBuilder(
-      builder: (context, setState) {
-        return Container(
-          margin: const EdgeInsets.only(bottom: 10),
-          decoration: const BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: AppColors.primaryColor,
-                width: 1,
-              ),
-            ),
+  Widget _buildExpansionTile(List<Detail> outline) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: const BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: Colors.blue,
+            width: 1,
           ),
-          child: Theme(
+        ),
+      ),
+      child: Builder(
+        builder: (BuildContext context) {
+          return Theme(
             data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-            child: ExpansionTile(
-              title: Text(
-                section.title,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primaryColor,
-                ),
-              ),
-              // backgroundColor: Colors.blue,
-              collapsedBackgroundColor: Colors.white,
-              iconColor: AppColors.primaryColor,
-              collapsedIconColor: Colors.blue[900],
-              tilePadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-              childrenPadding: EdgeInsets.all(0),
-              expandedAlignment: Alignment.topLeft,
-              maintainState: true,
-              onExpansionChanged: (expanded) {
-                setState(() {});
-              },
-              trailing: const Icon(Icons.arrow_drop_down),
-              leading: Icon(Icons.menu_book_outlined, color: Colors.blue[900]),
-              initiallyExpanded: false,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: section.topics.map((topic) =>
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(top: 6),
-                                child: Icon(Icons.circle, size: 6,
-                                    color: Colors.grey[600]),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  topic,
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )).toList(),
+            child: Column(
+              children: outline.isNotEmpty
+                  ? outline.map((section) {
+                return ExpansionTile(
+                  title: Text(
+                    section.title ?? 'Untitled',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primaryColor,
+                    ),
                   ),
-                ),
-              ],
+                  collapsedBackgroundColor: Colors.white,
+                  iconColor: AppColors.primaryColor,
+                  collapsedIconColor: Colors.blue[900],
+                  tilePadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                  childrenPadding: EdgeInsets.all(0),
+                  expandedAlignment: Alignment.topLeft,
+                  maintainState: true,
+                  trailing: const Icon(Icons.arrow_drop_down),
+                  leading: Icon(Icons.menu_book_outlined, color: Colors.blue[900]),
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Check if details is available and non-empty
+                          section.details != null && section.details!.isNotEmpty
+                              ? Column(
+                            children: section.details!
+                                .map((detailItem) => Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.only(top: 6),
+                                    child: Icon(
+                                      Icons.circle,
+                                      size: 6,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      detailItem,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ))
+                                .toList(),
+                          )
+                              : const Text('No details available.'),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              }).toList()
+                  : [Text('No outline available.')],
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
+
+
+
 }
 
-  class CourseSection {
-  final String title;
-  final List<String> topics;
-
-  CourseSection({
-    required this.title,
-    required this.topics,
-  });
-}
 

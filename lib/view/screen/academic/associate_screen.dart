@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 
+import '../register/register_step_1.dart';
+
 void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
@@ -41,8 +43,8 @@ class AssociatePage extends StatelessWidget {
                     child: Stack(
                       children: [
                         // Background Image
-                        Image.asset(
-                          'assets/images/IT_expert_gen1.png',
+                        Image.network(
+                          'https://dev-flutter.cstad.edu.kh/api/v1/medias/view/f0d8b9fb-bf7f-4448-ab96-1e9fd6634be6.jpg',
                           height: 230,
                           width: double.infinity,
                           fit: BoxFit.cover,
@@ -85,6 +87,10 @@ class AssociatePage extends StatelessWidget {
                         // Enroll Button
                         ElevatedButton(
                           onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const RegisterStep1())
+                            );
                             // Handle button press
                           },
                           style: ElevatedButton.styleFrom(
@@ -134,7 +140,7 @@ class AssociatePage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
-               Container(
+                    Container(
                       margin: const EdgeInsets.symmetric(horizontal: 16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

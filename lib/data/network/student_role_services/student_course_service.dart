@@ -3,15 +3,15 @@ import 'dart:convert';
 
 class StudentCoursesService {
   final String baseUrl = 'https://dev-flutter.cstad.edu.kh/api/v1';
-  final String accessToken;
+  final String token;
 
-  StudentCoursesService({required this.accessToken});
+  StudentCoursesService({required this.token});
 
   Future<Map<String, dynamic>> fetchStudentCourses() async {
     final url = Uri.parse('$baseUrl/students/courses');
     try {
       final response = await http.get(url, headers: {
-        'Authorization': 'Bearer $accessToken',
+        'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
       });
 
