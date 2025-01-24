@@ -55,6 +55,7 @@ dependencies:
   flutter_secure_storage: ^9.2.2
   jwt_decoder: ^2.0.1
   khmer_fonts: ^0.0.6
+  fluttertoast: ^8.2.10
 
 dev_dependencies:
   flutter_test:

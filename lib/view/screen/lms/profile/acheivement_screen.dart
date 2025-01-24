@@ -47,28 +47,20 @@ class _AcheivementScreenState extends State<AcheivementScreen> {
         backgroundColor: AppColors.backgroundColor,
         body: SafeArea(
           child: SingleChildScrollView(
-            child: Column(
-              children: [
-                _buildWelcomeBanner(),
-                _buildTranscript(),
-                _buildStudentInfo(),
-                ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight: 500,
-                    maxWidth: MediaQuery.of(context).size.width,
-                  ),
-                  child: IntrinsicHeight(
-                    child: YearOfStudyAchievementScreen(accessToken: widget.token),
-                  ),
-                ),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0),
+              child: Column(
+                children: [
+                  _buildWelcomeBanner(),
+                  _buildTranscript(),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
   }
-
 
   // Welcome Banner
   Widget _buildWelcomeBanner() {
@@ -142,89 +134,102 @@ class _AcheivementScreenState extends State<AcheivementScreen> {
   }
 
   // Transcript Section
-  Widget _buildTranscript() {
-    return Consumer<StudenProfileDataViewModel>(
-        builder: (context, viewModel, child) {
-          if (viewModel.user == null) {
-            return const Center(child: Text("Loading transcript..."));
-          }
-          final user = viewModel.user!;
-          return Container(
-            margin: const EdgeInsets.fromLTRB(0.0, 70.0, 0.0, 20.0),
-            padding: const EdgeInsets.all(20.0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.1),
-                  spreadRadius: 1,
-                  blurRadius: 5,
-                ),
-              ],
+ Widget _buildTranscript() {
+  return Consumer<StudenProfileDataViewModel>(
+    builder: (context, viewModel, child) {
+      if (viewModel.user == null) {
+        return const Center(child: Text("Loading transcript..."));
+      }
+      final user = viewModel.user!;
+      return Container(
+        margin: const EdgeInsets.fromLTRB(20.0, 70.0, 20.0, 20.0),
+        padding: const EdgeInsets.all(20.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 5,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text(
-                  'Center of Science and Technology Advanced Development',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.primaryColor,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 4),
-                const Text(
-                  'OFFICIAL TRANSCRIPT',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.primaryColor,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 30),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    height: 170,
-                    width: 140,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: user.profileImage != null &&
-                            user.profileImage!.isNotEmpty
-                            ? NetworkImage(user.profileImage!)
-                            : const AssetImage(
-                            'assets/images/placeholder.jpg') as ImageProvider,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Text(
+              'Center of Science and Technology Advanced Development',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: AppColors.primaryColor,
+              ),
+              textAlign: TextAlign.center,
             ),
-          );
-        });
-  }
+            const SizedBox(height: 4),
+            const Text(
+              'OFFICIAL TRANSCRIPT',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w400,
+                color: AppColors.primaryColor,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 30),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                height: 170,
+                width: 140,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: user.profileImage != null && user.profileImage!.isNotEmpty
+                        ? NetworkImage(user.profileImage!)
+                        : const AssetImage('assets/images/placeholder.jpg') as ImageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            _buildStudentInfo(),
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: 500,
+                maxWidth: MediaQuery.of(context).size.width,
+              ),
+              child: IntrinsicHeight(
+                child: YearOfStudyAchievementScreen(token: widget.token),
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
 
   // Student Info Section
   Widget _buildStudentInfo() {
-    return Consumer<StudenProfileDataViewModel>(
-      builder: (context, viewModel, child) {
-        if (viewModel.user == null) {
-          return const Center(child: Text("Loading user data..."));
-        }
-        final user = viewModel.user!;
-        final infoData = {
-          'Name (KH)': user.nameKh,
-          'Name (EN)': user.nameEn,
-          'Date of Birth': user.dob,
-          'Degree': user.degree,
-          'Major': user.major,
-        };
+  return Consumer<StudenProfileDataViewModel>(
+    builder: (context, viewModel, child) {
+      if (viewModel.user == null) {
+        return const Center(child: Text("Loading user data..."));
+      }
+      final user = viewModel.user!;
+      final infoData = {
+        'Name (KH)': user.nameKh,
+        'Name (EN)': user.nameEn,
+        'Date of Birth': user.dob,
+        'Degree': user.degree,
+        'Major': user.major,
+      };
 
-        return Column(
+      return Container(
+        color: Colors.white,
+        child: Column(
           children: infoData.entries.map((entry) {
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -257,19 +262,9 @@ class _AcheivementScreenState extends State<AcheivementScreen> {
               ),
             );
           }).toList(),
-        );
-      },
-    );
-
-
-
-
-  }
-
-
-
+        ),
+      );
+    },
+  );
 }
-
-
-
-
+}

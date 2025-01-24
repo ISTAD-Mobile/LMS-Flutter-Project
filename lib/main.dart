@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lms_mobile/repository/enroll/enroll_repository.dart';
 import 'package:lms_mobile/repository/enroll/enroll_step3_repo.dart';
 import 'package:lms_mobile/repository/login_repo.dart';
@@ -23,6 +24,7 @@ import 'package:lms_mobile/viewModel/student_profile_viewModel.dart';
 import 'package:lms_mobile/viewModel/login_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:lms_mobile/view/widgets/sytem_screen/no_internet.dart';
+import 'data/color/color_screen.dart';
 import 'data/network/enrollment_service.dart';
 
 void main() {
@@ -69,6 +71,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late final Stream<List<ConnectivityResult>> connectivityStream;
+  DateTime timeBackPressed = DateTime.now();
 
   @override
   void initState() {
@@ -78,52 +81,76 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<ConnectivityResult>>(
-      stream: connectivityStream,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const MaterialApp(
-            debugShowCheckedModeBanner: false,
-            home: Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-            ),
-          );
-        }
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: WillPopScope(
+        onWillPop: () async {
+          final difference = DateTime.now().difference(timeBackPressed);
+          final isExitWarning = difference >= Duration(seconds: 2);
 
-        if (snapshot.hasError) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            home: Scaffold(
-              body: Center(child: Text('Error: ${snapshot.error}')),
-            ),
-          );
-        }
+          timeBackPressed = DateTime.now();
 
-        if (snapshot.hasData) {
-          ConnectivityResult connectivityResult = snapshot.data![0];
+          if (isExitWarning) {
+            Fluttertoast.showToast(
+              msg: 'Press back again to exit',
+              fontSize: 18,
+              textColor: AppColors.primaryColor,
+            );
+            return false;
+          } else {
+            Fluttertoast.cancel();
+            return true;
+          }
+        },
+        child: StreamBuilder<List<ConnectivityResult>>(
+          stream: connectivityStream,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const MaterialApp(
+                debugShowCheckedModeBanner: false,
+                home: Scaffold(
+                  body: Center(child: CircularProgressIndicator()),
+                ),
+              );
+            }
 
-          if (connectivityResult == ConnectivityResult.none) {
-            // No internet connection
+            if (snapshot.hasError) {
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                home: Scaffold(
+                  body: Center(child: Text('Error: ${snapshot.error}')),
+                ),
+              );
+            }
+            if (snapshot.hasData) {
+              ConnectivityResult connectivityResult = snapshot.data![0];
+
+              if (connectivityResult == ConnectivityResult.none) {
+                // No internet connection
+                return MaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  home: NoInternetPage(),
+                );
+              }
+              // Internet available
+              return const MaterialApp(
+                debugShowCheckedModeBanner: false,
+                home: SplashScreen(),
+              );
+            }
             return MaterialApp(
               debugShowCheckedModeBanner: false,
-              home: NoInternetPage(),
+              home: Scaffold(
+                body: const Center(child: Text('No connectivity data available')),
+                floatingActionButton: FloatingActionButton(
+                  onPressed: () {},
+                  child: const Icon(Icons.add),
+                ),
+              ),
             );
-          }
-
-          // Internet available
-          return const MaterialApp(
-            debugShowCheckedModeBanner: false,
-            home: SplashScreen(),
-          );
-        }
-
-        return const MaterialApp(
-          debugShowCheckedModeBanner: false,
-          home: Scaffold(
-            body: Center(child: Text('No connectivity data available')),
-          ),
-        );
-      },
+          },
+        ),
+      ),
     );
   }
 }
