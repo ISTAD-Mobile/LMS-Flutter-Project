@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:lottie/lottie.dart';
+import 'package:lms_mobile/view/screen/lms/profile/settings/static_profile_setting_screen.dart';
 import 'dart:io';
 import 'package:provider/provider.dart';
 import '../../../../../data/color/color_screen.dart';
@@ -17,15 +17,13 @@ class SettingScreen extends StatefulWidget {
   final String token;
   const SettingScreen({required this.token, Key? key}) : super(key: key);
 
-  get refreshCallback => null;
-
   @override
-  _StudentSettingsState createState() => _StudentSettingsState(token: token);
+  _StudentSettingsState createState() => _StudentSettingsState(accessToken: token);
 }
 
 class _StudentSettingsState extends State<SettingScreen> {
-  final String token;
-  _StudentSettingsState({required this.token});
+  final String accessToken;
+  _StudentSettingsState({required this.accessToken});
 
   late UpdataStudentProfileSettingViewmodel viewModel;
   late Future<StudentSettingModel> _futureAlbum;
@@ -44,8 +42,6 @@ class _StudentSettingsState extends State<SettingScreen> {
   final personalNumberFocus = FocusNode();
   final familyNumberFocus = FocusNode();
   final placeOfBirthFocus = FocusNode();
-  final List<String> genderOptions = ['Female', 'Male', 'Other'];
-  final List<String> guardianRelationshipOptions = ['Mother', 'Father', 'Sibling', 'Other'];
 
   @override
   void initState() {
@@ -100,7 +96,7 @@ class _StudentSettingsState extends State<SettingScreen> {
     return ChangeNotifierProvider(
       create: (_) {
         final viewModel = UpdataStudentProfileSettingViewmodel(
-          repository: UpdateStudentProfileSettingRepository(token: widget.token)
+            repository: UpdateStudentProfileSettingRepository(token: widget.token)
         );
         viewModel.fetchUserData();
         return viewModel;
@@ -108,13 +104,7 @@ class _StudentSettingsState extends State<SettingScreen> {
       child: Consumer<UpdataStudentProfileSettingViewmodel>(
         builder: (context, viewModel, _) {
           if (viewModel.isLoading) {
-            return Center(
-              child: Lottie.asset(
-                'assets/animation/loading.json',
-                width: 100,
-                height: 100,
-              ),
-            );
+            return const Center(child: CircularProgressIndicator());
           } else if (viewModel.errorMessage.isNotEmpty) {
             return Center(child: Text(viewModel.errorMessage));
           } else if (viewModel.userData == null) {
@@ -188,10 +178,10 @@ class _StudentSettingsState extends State<SettingScreen> {
                       const SizedBox(height: 20),
                       _buildDropdownField(
                         label: 'Gender',
-                        value: userData.gender.isEmpty && genderOptions.contains(userData.gender)
+                        value: userData.gender.isNotEmpty && ['Male', 'Female', 'Other'].contains(userData.gender)
                             ? userData.gender
-                            : 'Female',
-                        items: genderOptions,
+                            : 'Male', // Ensure the default value is in the list
+                        items: ['Male', 'Female', 'Other'],
                         onChanged: (value) {
                           setState(() {
                             userData.gender = value ?? 'Male';
@@ -232,10 +222,10 @@ class _StudentSettingsState extends State<SettingScreen> {
                       ),
                       _buildDropdownField(
                         label: 'GuardianRelationship',
-                        value: userData.guardianRelationShip.isEmpty && guardianRelationshipOptions.contains(userData.guardianRelationShip)
+                        value: userData.guardianRelationShip.isNotEmpty && ['Mother', 'Father', 'Sibling', 'Other'].contains(userData.guardianRelationShip)
                             ? userData.guardianRelationShip
-                            : 'Other',
-                        items: guardianRelationshipOptions,
+                            : 'Other', // Ensure the default value is in the list
+                        items: ['Mother', 'Father', 'Sibling', 'Other'],
                         onChanged: (value) {
                           setState(() {
                             userData.guardianRelationShip = value ?? 'Other';
@@ -259,8 +249,7 @@ class _StudentSettingsState extends State<SettingScreen> {
                                 _placeOfBirthController.text = userData.birthPlace ?? '';
 
                                 // Optionally, reset other fields or values related to image upload or changes if needed
-                                isImageUploade = '';
-                                Navigator.pop(context);
+                                isImageUploade = '';  // Reset the image upload state if necessary
                               },
                               style: OutlinedButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(horizontal: 38, vertical: 12),
@@ -278,6 +267,8 @@ class _StudentSettingsState extends State<SettingScreen> {
                             ElevatedButton(
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
+                                  final profileImage = isImageUploade.isNotEmpty ? isImageUploade : userData.profileImage ?? '';
+
                                   try {
                                     await viewModel.updateUserData(
                                       phoneNumber: _personalNumberController.text,
@@ -289,44 +280,40 @@ class _StudentSettingsState extends State<SettingScreen> {
                                       currentAddress: _currentAddressController.text,
                                       birthPlace: _placeOfBirthController.text,
                                       gender: userData.gender.isEmpty ? 'Male' : userData.gender,
-                                      profileImage: isImageUploade.isNotEmpty
-                                          ? isImageUploade
-                                          : userData.profileImage ?? '',
+                                      profileImage: profileImage,
                                     );
 
-                                    // ScaffoldMessenger.of(context).showSnackBar(
-                                    //   const SnackBar(
-                                    //     backgroundColor: AppColors.successColor,
-                                    //     content: Text(
-                                    //       'Your data has been saved successfully!',
-                                    //       style: TextStyle(
-                                    //         color: AppColors.defaultWhiteColor,
-                                    //       ),
-                                    //     ),
-                                    //   ),
-                                    // );
-
-                                    // Call the refresh callback
-                                    widget.refreshCallback?.call();
-                                    Navigator.pop(context);
+                                    // Show success Snackbar
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: const Text('Your data has been saved successfully!'),
+                                        duration: const Duration(seconds: 2),
+                                      ),
+                                    );
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => StaticProfileViewScreen(token: accessToken, refreshCallback: () {  },)),
+                                    );
                                   } catch (error) {
+                                    // Handle errors (optional)
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(content: Text('Failed to save data. Please try again.')),
                                     );
                                   }
                                 }
                               },
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(horizontal: 38, vertical: 12),
-                                  backgroundColor: AppColors.primaryColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(horizontal: 38, vertical: 12),
+                                backgroundColor: AppColors.primaryColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
-                              child: const Text('Save',
+                              ),
+                              child: const Text(
+                                'Save',
                                 style: TextStyle(color: AppColors.defaultWhiteColor, fontSize: 16.0),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -390,6 +377,7 @@ class _StudentSettingsState extends State<SettingScreen> {
     );
   }
 
+
   Widget _buildDropdownField({
     required String label,
     required String? value,
@@ -413,6 +401,7 @@ class _StudentSettingsState extends State<SettingScreen> {
           DropdownMenu<String>(
             width: double.infinity,
             menuHeight: 250,
+            initialSelection: value,
             hintText: hintText ?? 'Select an option',
             textStyle: const TextStyle(fontSize: 16, color: Colors.black),
             dropdownMenuEntries: items.map((item) {
@@ -448,13 +437,22 @@ class _StudentSettingsState extends State<SettingScreen> {
               backgroundColor: WidgetStateProperty.all(Colors.white),
               shape: WidgetStateProperty.all(
                 RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
             ),
-            onSelected: onChanged,
+            onSelected: (selectedValue) {
+              onChanged(selectedValue);
+            },
           ),
         ],
       ),
     );
   }
+
+
+
+
+
 }
+
