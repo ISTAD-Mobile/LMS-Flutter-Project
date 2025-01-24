@@ -1,27 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:lms_mobile/view/screen/register/register_step_1.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../data/color/color_screen.dart';
-
-class MyAppLayout extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      color: AppColors.defaultWhiteColor,
-      debugShowCheckedModeBanner: false,
-      title: 'Your App Title',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: AppLayout(
-        title: 'Your App Title',
-        body: Container(
-          color: AppColors.defaultWhiteColor,
-        ),
-        currentIndex: 0,
-        onTabTapped: (int index) {},
-      ),
-    );
-  }
-}
+import '../../screen/lms/auth/log_in_screen.dart';
+import '../studentsWidget/drawer.dart';
 
 class AppLayout extends StatelessWidget {
   final String title;
@@ -37,17 +19,47 @@ class AppLayout extends StatelessWidget {
     required this.onTabTapped,
   }) : super(key: key);
 
+  Future<void> _handleLMSNavigation(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('accessToken');
+
+    if (token != null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => StudentScreen(
+            accessToken: token,
+            title: '',
+          ),
+        ),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+      );
+    }
+  }
+
+  void _handleTabTap(BuildContext context, int index) {
+    if (index == 3) {
+      _handleLMSNavigation(context);
+    } else {
+      onTabTapped(index);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.defaultWhiteColor,
-      appBar: currentIndex == 3 ? null : _buildAppBar(),
+      appBar: currentIndex == 3 ? null : _buildAppBar(context),
       body: body,
-      bottomNavigationBar: currentIndex == 3 ? null : _buildBottomNavigationBar(),
+      bottomNavigationBar: currentIndex == 3 ? null : _buildBottomNavigationBar(context),
     );
   }
 
-  AppBar _buildAppBar() {
+  AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       backgroundColor: AppColors.primaryColor,
       automaticallyImplyLeading: false,
@@ -56,22 +68,49 @@ class AppLayout extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Image.network(
-              'https://www.cstad.edu.kh/_next/image?url=%2Fschool-logo%2Flogo-white-version.png&w=256&q=75',
-              height: 30,
+            child: Image.asset(
+              'assets/images/istad-logo-white.png',
+              height: 37,
               width: 100,
               fit: BoxFit.cover,
             ),
           ),
-          _buildAdmissionButton(),
+          _buildAdmissionButton(context),
         ],
       ),
     );
   }
 
-  ElevatedButton _buildAdmissionButton() {
+  Widget _buildBottomNavigationBar(BuildContext context) {
+    return BottomNavigationBar(
+      currentIndex: currentIndex,
+      onTap: (index) => _handleTabTap(context, index),
+      type: BottomNavigationBarType.fixed,
+      selectedItemColor: AppColors.primaryColor,
+      unselectedItemColor: AppColors.defaultGrayColor,
+      showSelectedLabels: true,
+      showUnselectedLabels: true,
+      selectedLabelStyle: const TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w700,
+      ),
+      unselectedLabelStyle: const TextStyle(
+        fontSize: 14,
+      ),
+      backgroundColor: AppColors.defaultWhiteColor,
+      items: _bottomNavItems(),
+    );
+  }
+
+  Widget _buildAdmissionButton(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const RegisterStep1(),
+          ),
+        );
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.secondaryColor,
@@ -102,27 +141,6 @@ class AppLayout extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  BottomNavigationBar _buildBottomNavigationBar() {
-    return BottomNavigationBar(
-      currentIndex: currentIndex,
-      onTap: onTabTapped,
-      type: BottomNavigationBarType.fixed,
-      selectedItemColor: AppColors.primaryColor,
-      unselectedItemColor: AppColors.defaultGrayColor,
-      showSelectedLabels: true,
-      showUnselectedLabels: true,
-      selectedLabelStyle: const TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeight.w700,
-      ),
-      unselectedLabelStyle: const TextStyle(
-        fontSize: 14,
-      ),
-      backgroundColor: AppColors.defaultWhiteColor,
-      items: _bottomNavItems(),
     );
   }
 

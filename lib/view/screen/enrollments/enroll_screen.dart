@@ -1,44 +1,46 @@
 import 'package:flutter/material.dart';
-import 'package:lms_mobile/data/color/color_screen.dart';
-
+import 'package:provider/provider.dart';
 import '../../widgets/public_screen_widgets/enrollments_widget/enroll_step1.dart';
+import '../../widgets/public_screen_widgets/enrollments_widget/enroll_step2.dart';
+import '../../widgets/public_screen_widgets/enrollments_widget/enroll_step3.dart';
+import 'enrollment_provider.dart' as screen_provider;
 
 
 class EnrollScreen extends StatefulWidget {
   const EnrollScreen({super.key});
 
   @override
-  _EnrollScreen createState() => _EnrollScreen();
+  State<EnrollScreen> createState() => _EnrollScreenState();
 }
 
-class _EnrollScreen extends State<EnrollScreen> {
-  int _currentStep = 0;
+class _EnrollScreenState extends State<EnrollScreen> {
+  late final List<Widget> _steps;
 
-  final List<Widget> _steps = [
-    EnrollStep1(),
-  ];
-
+  @override
+  void initState() {
+    super.initState();
+    final formData = screen_provider.EnrollmentFormData();
+    _steps = [
+      EnrollStep1(formData: formData),
+      const EnrollStep2(),
+      EnrollStep3(formData: formData),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+    return ChangeNotifierProvider<screen_provider.EnrollmentStateNotifier>(
+      create: (context) => screen_provider.EnrollmentStateNotifier(),
+      child: Consumer<screen_provider.EnrollmentStateNotifier>(
+        builder: (context, enrollmentState, _) => Scaffold(
+          body: Column(
+            children: [
+              Expanded(
+                child: _steps[enrollmentState.currentStep],
+              ),
+            ],
+          ),
         ),
-        title: const Text(
-          'Enrollment Screen',
-          style: TextStyle(color: AppColors.primaryColor, fontSize: 18),
-        ),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: [
-          Expanded(child: _steps[_currentStep]),
-        ],
       ),
     );
   }

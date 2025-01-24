@@ -17,8 +17,7 @@ class _VideoBackgroundState extends State<VideoBackground> {
   void initState() {
     super.initState();
     _controller = VideoPlayerController.network(
-      'https://static.vecteezy.com/system/browse_category/video/140/Cityscapes.mp4',
-    )
+        'https://static.vecteezy.com/system/browse_category/video/140/Cityscapes.mp4')
       ..initialize().then((_) {
         _controller.setLooping(true);
         _controller.play();
@@ -44,16 +43,16 @@ class _VideoBackgroundState extends State<VideoBackground> {
           width: MediaQuery.of(context).size.width,
           child: _controller.value.isInitialized
               ? FittedBox(
-            fit: BoxFit.cover,
-            child: SizedBox(
-              width: _controller.value.size.width,
-              height: _controller.value.size.height,
-              child: VideoPlayer(_controller),
-            ),
-          )
+                  fit: BoxFit.cover,
+                  child: SizedBox(
+                    width: _controller.value.size.width,
+                    height: _controller.value.size.height,
+                    child: VideoPlayer(_controller),
+                  ),
+                )
               : const Center(
-            child: CircularProgressIndicator(),
-          ),
+                  child: CircularProgressIndicator(),
+                ),
         ),
         // Overlay Content
         SafeArea(

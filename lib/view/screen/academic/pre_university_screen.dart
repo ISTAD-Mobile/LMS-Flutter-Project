@@ -14,15 +14,6 @@ class PreUniversityPage extends StatefulWidget {
 
 class _PreUniversityPageState extends State<PreUniversityPage> {
   int currentIndex = 0;
-
-  // List of screens for each tab
-  final List<Widget> screens = [
-    const HomeScreen(),
-    const MyAcademicScreen(),
-    const HomeIstadScreen(),
-    const firstSignInScreen(),
-  ];
-
   void onTabTapped(int index) {
     setState(() {
       currentIndex = index;
@@ -32,7 +23,9 @@ class _PreUniversityPageState extends State<PreUniversityPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.defaultWhiteColor,
       appBar: AppBar(
+        backgroundColor: AppColors.defaultWhiteColor,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);

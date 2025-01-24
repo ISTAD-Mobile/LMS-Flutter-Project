@@ -15,7 +15,7 @@ class _TestimonialPageState extends State<TestimonialPage> {
 
   final List<Map<String, String>> testimonials = [
     {
-      "name": "Mr. PHON SOBON",
+      "name": "Mr. PHON SOBON ",
       "role": "Student from ISTAD",
       "image": "assets/images/Testimonial Profile (4).png",
       "quote": "At CSTAD, I'm learning a lot about IT. The teachers are really good and help me understand things easily..."

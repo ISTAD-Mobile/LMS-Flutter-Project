@@ -1,274 +1,208 @@
 import 'package:flutter/material.dart';
-import 'package:lms_mobile/data/color/color_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:lms_mobile/repository/login_repo.dart';
 
+import '../../../../data/color/color_screen.dart';
+import '../../../../viewModel/login_view_model.dart';
+import '../../../home.dart';
+import '../../../widgets/studentsWidget/drawer.dart';
 
-void main() {
-  runApp(const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: confirmSignInScreen()));
-}
-
-class confirmSignInScreen extends StatefulWidget {
-  const confirmSignInScreen({Key? key}) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<confirmSignInScreen> createState() => _SignInScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _SignInScreenState extends State<confirmSignInScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   bool _obscurePassword = true;
-  bool _isLoading = false;
-  final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-
-  // Error messages
-  String? _emailError;
-  String? _passwordError;
-
-  Future<void> _handleSignIn() async {
-    // Clear previous errors
-    setState(() {
-      _emailError = null;
-      _passwordError = null;
-    });
-
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
-
-      try {
-        // Simulate API call
-        await Future.delayed(const Duration(seconds: 2));
-
-        // TODO: Replace with your actual API call
-        /* Example API call:
-        final response = await http.post(
-          Uri.parse('your-api-endpoint/login'),
-          body: {
-            'email': _emailController.text,
-            'password': _passwordController.text,
-          },
-        );
-        */
-
-        // For demo purposes, checking hardcoded credentials
-        if (_emailController.text == "admin@istad.co" &&
-            _passwordController.text == "password123") {
-          // Navigate to home screen on success
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Sign in successful!'),
-                backgroundColor: Colors.green,
-              ),
-            );
-            // TODO: Navigate to home screen
-            // Navigator.pushReplacement(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => const HomeScreen()),
-            // );
-          }
-        } else {
-          throw Exception('Invalid credentials');
-        }
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Error: ${e.toString()}'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-      } finally {
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
-          });
-        }
-      }
-    }
-  }
-
-  String? _validateEmail(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Email is required';
-    }
-    // Basic email validation
-    final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    if (!emailRegExp.hasMatch(value)) {
-      return 'Please enter a valid email';
-    }
-    return null;
-  }
-
-  String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Password is required';
-    }
-    if (value.length < 6) {
-      return 'Password must be at least 6 characters';
-    }
-    return null;
-  }
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: AppColors.defaultGrayColor),
-          onPressed: () => Navigator.pop(context),
-          padding: EdgeInsets.zero,
-        ),
-        title: const Text(
-          'Sign In with your account',
-          style: TextStyle(color: AppColors.primaryColor, fontSize: 18),
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 40),
-              Image.asset(
-                'assets/images/logo_log_in.png',
-                height: 60,
+    return ChangeNotifierProvider<LoginViewModel>(
+      create: (_) => LoginViewModel(LoginStudentRepository()),
+      child: Consumer<LoginViewModel>(
+        builder: (context, viewModel, _) {
+          return Scaffold(
+            backgroundColor: AppColors.defaultWhiteColor,
+            appBar: AppBar(
+              backgroundColor: AppColors.defaultWhiteColor,
+              elevation: 0,
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back_ios,
+                    color: AppColors.defaultGrayColor),
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                        (route) => false,
+                  );
+                },
               ),
-              const SizedBox(height: 40),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Email',
-                    style: TextStyle(
-                      color: AppColors.primaryColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  TextFormField(
-                    controller: _emailController,
-                    validator: _validateEmail,
-                    decoration: InputDecoration(
-                      hintText: 'Enter your email or Username',
-                      hintStyle: const TextStyle(
-                          color: AppColors.defaultGrayColor
-                      ),
-                      errorText: _emailError,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.grey),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.primaryColor), // Border color when focused
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                    ),
-                  ),
-                ],
+              title: const Text(
+                'Login with your account',
+                style: TextStyle(color: AppColors.primaryColor, fontSize: 18),
               ),
-              const SizedBox(height: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Password',
-                    style: TextStyle(
-                      color: AppColors.primaryColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+            ),
+            body: SingleChildScrollView(
+              padding: const EdgeInsets.all(24.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: 40),
+                    Image.asset('assets/images/logo_log_in.png', height: 60),
+                    const SizedBox(height: 40),
+                    _buildTextField(
+                      label: 'Email or Username',
+                      hintText: 'Enter your email or username',
+                      controller: emailController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Email or Username is required';
+                        }
+                        return null;
+                      },
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  TextFormField(
-                    controller: _passwordController,
-                    validator: _validatePassword,
-                    obscureText: _obscurePassword,
-                    decoration: InputDecoration(
+                    const SizedBox(height: 20),
+                    _buildTextField(
+                      label: 'Password',
                       hintText: 'Enter your password',
-                      hintStyle: const TextStyle(
-                          color: AppColors.defaultGrayColor
-                      ),
-                      errorText: _passwordError,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: Colors.grey),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.primaryColor), // Border color when focused
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                          color: Colors.grey,
+                      controller: passwordController,
+                      obscureText: _obscurePassword,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Password is required';
+                        }
+                        if (value.length < 6) {
+                          return 'Password must be at least 6 characters long';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 30),
+                    ElevatedButton(
+                      onPressed: viewModel.isLoading
+                          ? null
+                          : () async {
+                        if (_formKey.currentState!.validate()) {
+                          String emailOrUsername = emailController.text;
+                          String password = passwordController.text;
+
+                          await viewModel.login(emailOrUsername, password);
+
+                          if (viewModel.accessToken != null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => StudentScreen(
+                                  accessToken: viewModel.accessToken!,
+                                  title: '',
+                                ),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  viewModel.errorMessage ??
+                                      'Login failed. Try again.',
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryColor,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        onPressed: () {
-                          setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          });
-                        },
+                      ),
+                      child: viewModel.isLoading
+                          ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          color: AppColors.defaultWhiteColor,
+                          strokeWidth: 2,
+                        ),
+                      )
+                          : const Text(
+                        'Sign In',
+                        style: TextStyle(
+                          color: AppColors.defaultWhiteColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 28),
-              ElevatedButton(
-                onPressed: _isLoading ? null : _handleSignIn,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryColor,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: _isLoading
-                    ? const SizedBox(
-                  height: 20,
-                  width: 20,
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 2,
-                  ),
-                )
-                    : const Text(
-                  'Sign In',
-                  style: TextStyle(
-                    color: AppColors.defaultWhiteColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
+                    if (viewModel.errorMessage != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 16.0),
+                        child: Text(
+                          viewModel.errorMessage!,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
 
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
+  Widget _buildTextField({
+    required String label,
+    required String hintText,
+    required TextEditingController controller,
+    required String? Function(String?) validator,
+    bool obscureText = false,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+              color: AppColors.primaryColor,
+              fontSize: 16,
+              fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: controller,
+          obscureText: obscureText,
+          validator: validator,
+          decoration: InputDecoration(
+            hintText: hintText,
+            hintStyle: const TextStyle(color: AppColors.defaultGrayColor),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            suffixIcon: label == 'Password' ? IconButton(
+              icon: Icon(
+                _obscurePassword ? Icons.visibility_off : Icons.visibility,
+              ),
+              onPressed: () {
+                setState(() {
+                  _obscurePassword = !_obscurePassword;
+                });
+              },
+            ) : null,
+          ),
+        ),
+      ],
+    );
   }
 }

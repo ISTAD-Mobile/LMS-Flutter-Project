@@ -9,4 +9,6 @@ class AppColors {
   static const Color defaultGrayColor = Color(0xFF535763);
   static const Color backgroundColor = Color(0xFFF5F5F5);
   static const Color primaryColor99 = Color(0xFF26335D);
+  static const Color successColor = Color(0xFF4CAF50);
+  static const Color buttonTelegramColor = Color(0xFF0088CE);
 }

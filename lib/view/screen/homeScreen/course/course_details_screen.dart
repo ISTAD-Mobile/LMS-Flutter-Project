@@ -112,13 +112,14 @@ class CourseDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.defaultWhiteColor,
       appBar: AppBar(
+        backgroundColor: AppColors.defaultWhiteColor,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios, color: AppColors.defaultGrayColor),
         ),
         title: const Text("Course Description",
           style: TextStyle(fontSize: 16, color: AppColors.primaryColor),),
@@ -343,7 +344,7 @@ class CourseDetailsPage extends StatelessWidget {
             child: ExpansionTile(
               title: Text(
                 section.title,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                   color: AppColors.primaryColor,
@@ -360,17 +361,17 @@ class CourseDetailsPage extends StatelessWidget {
               onExpansionChanged: (expanded) {
                 setState(() {});
               },
-              trailing: Icon(Icons.arrow_drop_down),
+              trailing: const Icon(Icons.arrow_drop_down),
               leading: Icon(Icons.menu_book_outlined, color: Colors.blue[900]),
               initiallyExpanded: false,
               children: [
                 Container(
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: section.topics.map((topic) =>
                         Padding(
-                          padding: EdgeInsets.symmetric(vertical: 8),
+                          padding: const EdgeInsets.symmetric(vertical: 8),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -379,11 +380,11 @@ class CourseDetailsPage extends StatelessWidget {
                                 child: Icon(Icons.circle, size: 6,
                                     color: Colors.grey[600]),
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
                                   topic,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 14,
                                     color: Colors.black87,
                                   ),

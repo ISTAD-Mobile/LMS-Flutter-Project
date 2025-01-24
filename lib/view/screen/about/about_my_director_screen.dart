@@ -8,6 +8,7 @@ class DirectorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.defaultWhiteColor,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(15),
@@ -223,7 +224,7 @@ class DirectorScreen extends StatelessWidget {
                                 throw 'Could not launch $url';
                               }
                             },
-                            child: Text(
+                            child: const Text(
                               'ពាក្យស្លោករបស់លោកគ្រូនាយក។',
                               style: TextStyle(fontSize: 14, color: AppColors.primaryColor99,fontWeight: FontWeight.w700,
                                 fontFamily: 'NotoSansKhmer',

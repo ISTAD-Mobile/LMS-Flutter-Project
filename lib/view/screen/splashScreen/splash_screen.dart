@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/view/home.dart';
 
-class SplashScreenPage extends StatefulWidget {
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  _SplashScreenPageState createState() => _SplashScreenPageState();
 }
 
-class _SplashScreenState extends State<SplashScreenPage> {
+class _SplashScreenPageState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
-    // Navigate to ProfileScreen after 3 seconds
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
     });
   }
@@ -25,11 +25,26 @@ class _SplashScreenState extends State<SplashScreenPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset('assets/images/New Logo iSTAD-06.png', width: 150,height: 150),
-          ],
+        child: AnimatedOpacity(
+          opacity: 1.0,
+          duration: const Duration(seconds: 1),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AnimatedContainer(
+                duration: const Duration(seconds: 2),
+                height: 80,
+                child: Image.asset(
+                  'assets/images/New Logo iSTAD-06.png',
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(Icons.error, color: Colors.red);
+                  },
+                ),
+              ),
+              const SizedBox(height: 20),
+              //const CircularProgressIndicator(),
+            ],
+          ),
         ),
       ),
     );
