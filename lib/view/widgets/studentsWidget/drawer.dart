@@ -10,6 +10,7 @@ import '../../screen/lms/profile/acheivement_screen.dart';
 import '../../screen/lms/profile/profile_view_screen.dart';
 import '../../screen/lms/profile/settings/static_profile_setting_screen.dart';
 import '../../screen/lms/profile/student_courses_screen.dart';
+import 'package:shimmer/shimmer.dart';
 
 class StudentScreen extends StatefulWidget {
   const StudentScreen({super.key, required this.title, required this.token, required this.userEmail,});
@@ -116,7 +117,15 @@ class _StudentScreenState extends State<StudentScreen> {
                     }
 
                     if (viewModel.isLoading) {
-                      return const Center(child: CircularProgressIndicator());
+                      // Skeleton loader for CircleAvatar
+                      return Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: CircleAvatar(
+                          radius: 22,
+                          backgroundColor: Colors.grey[200],
+                        ),
+                      );
                     } else if (viewModel.errorMessage != null) {
                       return Center(child: Text("Error: ${viewModel.errorMessage}"));
                     } else if (viewModel.user == null) {
@@ -125,9 +134,13 @@ class _StudentScreenState extends State<StudentScreen> {
                       final user = viewModel.user!;
                       return CircleAvatar(
                         radius: 22,
-                        backgroundImage: user.profileImage != null && user.profileImage!.isNotEmpty
+                        backgroundColor: Colors.grey[200],
+                        foregroundImage: user.profileImage != null && user.profileImage!.isNotEmpty
                             ? NetworkImage(user.profileImage!)
-                            : const AssetImage('assets/images/placeholder.jpg') as ImageProvider,
+                            : null,
+                        child: user.profileImage == null || user.profileImage!.isEmpty
+                            ? Image.asset('assets/images/placeholder.jpg')
+                            : null,
                       );
                     }
                   },
@@ -154,118 +167,165 @@ class _StudentScreenState extends State<StudentScreen> {
         ),
       ),
       body: _pages[_selectedIndex]['widget'] as Widget,
-      drawer: Drawer(
-        backgroundColor: AppColors.defaultWhiteColor,
-        child: Column(
-          children: [
-            ChangeNotifierProvider(
-              create: (_) => StudenProfileDataViewModel(userRepository: StudentProfileRepository(token: token)),
-              child: Consumer<StudenProfileDataViewModel>(
-                builder: (context, viewModel, _) {
-                  if (viewModel.user == null && !viewModel.isLoading && viewModel.errorMessage == null) {
-                    viewModel.fetchUserData();
-                  }
-                  if (viewModel.isLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (viewModel.errorMessage != null) {
-                    return Center(child: Text("Error: ${viewModel.errorMessage}"));
-                  } else if (viewModel.user == null) {
-                    return const Center(child: Text("No user data found"));
-                  }
 
-                  final user = viewModel.user!;
+    drawer: Drawer(
+    backgroundColor: AppColors.defaultWhiteColor,
+      child: Column(
+        children: [
+          ChangeNotifierProvider(
+            create: (_) => StudenProfileDataViewModel(userRepository: StudentProfileRepository(token: token)),
+            child: Consumer<StudenProfileDataViewModel>(
+              builder: (context, viewModel, _) {
+                if (viewModel.user == null && !viewModel.isLoading && viewModel.errorMessage == null) {
+                  viewModel.fetchUserData();
+                }
+
+                if (viewModel.isLoading) {
                   return Container(
                     height: 115,
                     padding: const EdgeInsets.fromLTRB(20, 45, 0, 0),
-                    color: AppColors.defaultWhiteColor,
                     child: Row(
                       children: [
-                        CircleAvatar(
-                          radius: 22,
-                          backgroundImage: user.profileImage != null && user.profileImage!.isNotEmpty
-                              ? NetworkImage(user.profileImage!)
-                              : const AssetImage('assets/images/placeholder.jpg') as ImageProvider,
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: CircleAvatar(
+                            radius: 22,
+                            backgroundColor: Colors.grey[300],
+                          ),
                         ),
                         const SizedBox(width: 16),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              user.nameEn,
-                              style: const TextStyle(
-                                color: AppColors.primaryColor,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
+                            Shimmer.fromColors(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                              child: Container(
+                                width: 120,
+                                height: 16,
+                                color: Colors.grey[300],
                               ),
                             ),
-                            Text(
-                              user.degree,
-                              style: const TextStyle(color: Colors.grey, fontSize: 14),
+                            const SizedBox(height: 8),
+                            Shimmer.fromColors(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                              child: Container(
+                                width: 80,
+                                height: 14,
+                                color: Colors.grey[300],
+                              ),
                             ),
                           ],
                         ),
                       ],
                     ),
                   );
-                },
-              ),
+                } else if (viewModel.errorMessage != null) {
+                  return Center(child: Text("Error: ${viewModel.errorMessage}"));
+                } else if (viewModel.user == null) {
+                  return const Center(child: Text("No user data found"));
+                }
+
+                final user = viewModel.user!;
+                return Container(
+                  height: 115,
+                  padding: const EdgeInsets.fromLTRB(20, 45, 0, 0),
+                  color: AppColors.defaultWhiteColor,
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 22,
+                        backgroundColor: Colors.grey[200],
+                        foregroundImage: user.profileImage != null && user.profileImage!.isNotEmpty
+                            ? NetworkImage(user.profileImage!)
+                            : null,
+                        child: user.profileImage == null || user.profileImage!.isEmpty
+                            ? Image.asset('assets/images/placeholder.jpg')
+                            : null,
+                      ),
+                      const SizedBox(width: 16),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            user.nameEn,
+                            style: const TextStyle(
+                              color: AppColors.primaryColor,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            user.degree,
+                            style: const TextStyle(color: Colors.grey, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
-            const Divider(color: AppColors.primaryColor, thickness: 0.3),
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  _buildDrawerListTile(
-                    icon: Icons.account_circle_rounded,
-                    title: 'Profile',
-                    selected: _selectedIndex == 0,
-                    onTap: () => _onItemTapped(0),
-                  ),
-                  _buildDrawerListTile(
-                    icon: Icons.collections_bookmark_rounded,
-                    title: 'Course',
-                    selected: _selectedIndex == 1,
-                    onTap: () => _onItemTapped(1),
-                  ),
-                  _buildDrawerListTile(
-                    icon: Icons.account_balance_wallet,
-                    title: 'Achievement',
-                    selected: _selectedIndex == 2,
-                    onTap: () => _onItemTapped(2),
-                  ),
-                  _buildDrawerListTile(
-                    icon: Icons.settings,
-                    title: 'Setting',
-                    selected: _selectedIndex == 3,
-                    onTap: () => _onItemTapped(3),
-                  ),
-                  const Divider(color: AppColors.primaryColor, thickness: 0.3),
-                  _buildDrawerListTile(
-                    icon: Icons.logout,
-                    title: 'Sign Out',
-                    selected: false,
-                    onTap: () async {
-                      try {
-                        final prefs = await SharedPreferences.getInstance();
-                        await prefs.remove('token');
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => const HomeScreen()),
-                        );
-                      } catch (error) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Failed to sign out. Please try again.')),
-                        );
-                      }
-                    },
-                  ),
-                ],
-              ),
+          ),
+          const Divider(color: AppColors.primaryColor, thickness: 0.3),
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                _buildDrawerListTile(
+                  icon: Icons.account_circle_rounded,
+                  title: 'Profile',
+                  selected: _selectedIndex == 0,
+                  onTap: () => _onItemTapped(0),
+                ),
+                _buildDrawerListTile(
+                  icon: Icons.collections_bookmark_rounded,
+                  title: 'Course',
+                  selected: _selectedIndex == 1,
+                  onTap: () => _onItemTapped(1),
+                ),
+                _buildDrawerListTile(
+                  icon: Icons.account_balance_wallet,
+                  title: 'Achievement',
+                  selected: _selectedIndex == 2,
+                  onTap: () => _onItemTapped(2),
+                ),
+                _buildDrawerListTile(
+                  icon: Icons.settings,
+                  title: 'Setting',
+                  selected: _selectedIndex == 3,
+                  onTap: () => _onItemTapped(3),
+                ),
+                const Divider(color: AppColors.primaryColor, thickness: 0.3),
+                _buildDrawerListTile(
+                  icon: Icons.logout,
+                  title: 'Sign Out',
+                  selected: false,
+                  onTap: () async {
+                    try {
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.remove('token');
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => const HomeScreen()),
+                      );
+                    } catch (error) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Failed to sign out. Please try again.')),
+                      );
+                    }
+                  },
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
+    ),
     );
   }
 }
