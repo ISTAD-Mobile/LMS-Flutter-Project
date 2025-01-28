@@ -19,11 +19,9 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
   bool isLoading = false;
   bool _isFormSubmitted = false;
 
-  final List<String> gradeOptions = ['Grade A','Grade B'];
-
-  String? _selectedGrade;
   String? _selectedCurrentAddress;
   String? _selectedStudyProgramAlas;
+  String? _selectedPlaceOfBirth;
 
   final fatherController = TextEditingController();
   final fatherNumberController = TextEditingController();
@@ -33,7 +31,7 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
 
   bool _validateForm() {
     return
-      _selectedGrade != null  &&
+      _selectedPlaceOfBirth != null  &&
           _selectedCurrentAddress != null &&
           _selectedStudyProgramAlas != null &&
       fatherController.text.isNotEmpty &&
@@ -49,6 +47,7 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
     super.initState();
     _loadSavedData();
     Future.microtask(() {
+      context.read<PlaceOfBirthViewModel>().fetchPlaceOfBlogs();
       context.read<CurrentAddressViewModel>().fetchCurrentAddressBlogs();
       context.read<StudyProgramAlasViewModel>().fetchAllStudyPrograms();
     });
@@ -63,9 +62,12 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
       motherNumberController.text = prefs.getString('motherPhoneNumber') ?? '';
       nameOfHighSchoolController.text = prefs.getString('highSchool') ?? '';
 
-      _selectedGrade = prefs.getString('bacIiGrade');
-      _selectedCurrentAddress = prefs.getString('address');
-      _selectedStudyProgramAlas = prefs.getString('studyProgramAlias');
+      _selectedPlaceOfBirth = prefs.getString('placeOfBirth') ?? ''; // Provide a default value
+      _selectedCurrentAddress = prefs.getString('address') ?? ''; // Provide a default value
+      _selectedStudyProgramAlas = prefs.getString('studyProgramAlias') ?? ''; // Provide a default value
+
+
+      print("when load data save ${_selectedStudyProgramAlas}");
 
     });
   }
@@ -74,8 +76,10 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
     final prefs = await SharedPreferences.getInstance();
 
     prefs.setString('address', _selectedCurrentAddress ?? '');
-    prefs.setString('bacIiGrade', _selectedGrade ?? '');
+    prefs.setString('placeOfBirth', _selectedPlaceOfBirth ?? '');
     prefs.setString('studyProgramAlias', _selectedStudyProgramAlas ?? '');
+
+    print("when save${_selectedStudyProgramAlas}");
 
     prefs.setString('fatherName', fatherController.text);
     prefs.setString('fatherPhoneNumber', fatherNumberController.text);
@@ -83,14 +87,7 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
     prefs.setString('motherPhoneNumber', motherNumberController.text);
     prefs.setString('highSchool', nameOfHighSchoolController.text);
 
-    // await prefs.remove('fatherName');
-    // await prefs.remove('fatherPhoneNumber');
-    // await prefs.remove('motherName');
-    // await prefs.remove('motherPhoneNumber');
-    // await prefs.remove('highSchool');
-
   }
-
 
   Widget _buildDropdownMenu({
     required String hint,
@@ -104,6 +101,7 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
     }
 
     bool _isFormSubmitted = false;
+
     return SizedBox(
       width: double.infinity,
       child: DropdownMenu<String>(
@@ -111,7 +109,7 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
         menuHeight: 250,
         hintText: hint,
         errorText: _isFormSubmitted && selectedValue == null ? 'Please $hint' : null,
-        textStyle: const TextStyle(fontSize: 16, color: Colors.black),
+        textStyle: const TextStyle(fontSize: 16, color: Colors.black), // Text color when selected
         menuStyle: MenuStyle(
           backgroundColor: WidgetStateProperty.all(Colors.white),
           shape: WidgetStateProperty.all(
@@ -123,9 +121,9 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
             borderRadius: BorderRadius.circular(10),
             borderSide: const BorderSide(color: Colors.grey),
           ),
-          hintStyle: const TextStyle(
+          hintStyle: TextStyle(
             fontSize: 15,
-            color: Colors.grey,
+            color: selectedValue == null || selectedValue.isEmpty ? Colors.grey : Colors.black, // Change hint color dynamically
             fontWeight: FontWeight.w400,
           ),
           contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
@@ -140,8 +138,6 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
       ),
     );
   }
-
-
   Widget _buildFormField(String label, Widget child) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,13 +164,12 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
             ],
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 2),
         child,
         const SizedBox(height: 15),
       ],
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -206,74 +201,81 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Additional Information',
+                  'ពត៌មានបន្ថែម',
                   style: TextStyle(
                     color: AppColors.primaryColor,
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
+                    fontFamily: 'NotoSansKhmer',
                   ),
                 ),
                 const SizedBox(height: 20,),
                 _buildTextField(
-                  label: 'Father Name *',
+                  label: 'ឪពុកឈ្មោះ *',
                   controller: fatherController,
-                  hintText: 'Dara Phan'
+                  hintText: 'ដារ៉ា ផាន់'
                 ),
                 _buildTextField(
-                    label: 'Father Contact Number (Optional) *',
+                    label: 'លេខទូរស័ព្ទឪពុក (បើមាន) *',
                     controller: fatherNumberController,
                     hintText: '0983728749',
                   keyboardType: TextInputType.phone,
                 ),
                 _buildTextField(
-                    label: 'Mother Name *',
+                    label: 'ម្តាយឈ្មោះ *',
                     controller: motherController,
-                    hintText: 'Sokchea Kim'
+                    hintText: 'សុជា គីម'
                 ),
                 _buildTextField(
-                    label: 'Mother Contact Number (Optional) *',
+                    label: 'លេខទូរស័ព្ទម្ដាយ (បើមាន) *',
                     controller: motherNumberController,
                     hintText: '0963762849',
                   keyboardType: TextInputType.phone,
                 ),
                 _buildTextField(
-                    label: 'Name of Your High School *',
+                    label: 'ឈ្មោះសាលារៀនរបស់ប្អូន *',
                     controller: nameOfHighSchoolController,
-                    hintText: 'Bak Touk High School'
+                    hintText: 'វិទ្យាល័យបាក់ទូក'
                 ),
                 _buildFormField(
-                  'StudyProgramAlias *',
-                  Consumer<StudyProgramAlasViewModel>(
-                    builder: (context, viewModel, _) => _buildDropdownMenu(
-                      hint: 'it-expert',
-                      options: viewModel.studyProgramNames,
-                      selectedValue: _selectedStudyProgramAlas,
-                      onSelected: (value) => setState(() => _selectedStudyProgramAlas = value),
-                    ),
-                  ),
-                ),
-                _buildFormField(
-                  'Current address *',
+                  'មកពីខេត្ត/ក្រុង *',
                   Consumer<PlaceOfBirthViewModel>(
                     builder: (context, viewModel, _) => _buildDropdownMenu(
-                      hint: 'Phnom Penh',
+                      hint: _selectedPlaceOfBirth?.isNotEmpty == true
+                          ? _selectedPlaceOfBirth!
+                          : 'សូមជ្រើសរើសខេត្ត/ក្រុង',
                       options: viewModel.placeOfBirthList,
-                      selectedValue: _selectedCurrentAddress,
-                      onSelected: (value) => setState(() => _selectedCurrentAddress = value),
+                      selectedValue: _selectedPlaceOfBirth,
+                      onSelected: (value) async {
+                        setState(() {
+                          _selectedPlaceOfBirth = value;
+                        });
+
+                        final prefs = await SharedPreferences.getInstance();
+                        await prefs.setString('place Address', value ?? '');
+                      },
                     ),
                   ),
                 ),
-                _buildDropdownField(
-                  label: 'Grade (Optional) *',
-                  value: _selectedGrade,
-                  items: gradeOptions,
-                  isFormSubmitted: _isFormSubmitted,
-                  hintText: 'Grade A',
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedGrade = value;
-                    });
-                  },
+                _buildFormField(
+                  'អាសយដ្ឋានបច្ចុប្បន្ន *',
+                  Consumer<CurrentAddressViewModel>(
+                    builder: (context, viewModel, _) => _buildDropdownMenu(
+                      hint: _selectedCurrentAddress?.isNotEmpty == true
+                          ? _selectedCurrentAddress!
+                          : 'សូមជ្រើសរើសខេត្ត/ក្រុង',
+                      options: viewModel.currentAddressList,
+                      selectedValue: _selectedCurrentAddress,
+                      onSelected: (value) async {
+                        setState(() {
+                          _selectedCurrentAddress = value;
+                        });
+
+                        final prefs = await SharedPreferences.getInstance();
+                        await prefs.setString('current Address', value ?? '');
+                      },
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 5),
                 Align(
@@ -294,7 +296,7 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                           ),
                         ),
                         child: const Text(
-                          "Previous",
+                          "ថយក្រោយ",
                           style: TextStyle(color: AppColors.defaultGrayColor),
                         ),
                       ),
@@ -318,7 +320,7 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                           ),
                         ),
                         child: const Text(
-                          'Next',
+                          'បន្ទាប់',
                           style: TextStyle(fontSize: 16, color: AppColors.defaultWhiteColor),
                         ),
                       ),
@@ -330,100 +332,6 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-
-  Widget _buildDropdownField({
-    required String label,
-    required String? value,
-    required List<String> items,
-    required void Function(String?) onChanged,
-    bool isLoading = false,
-    String? hintText,
-    required bool isFormSubmitted,
-  }) {
-    if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Label with asterisk for required fields
-          RichText(
-            text: TextSpan(
-              text: label.endsWith('*')
-                  ? label.substring(0, label.length - 1)
-                  : label,
-              style: const TextStyle(
-                fontSize: 16,
-                color: AppColors.primaryColor,
-                fontWeight: FontWeight.bold,
-              ),
-              children: [
-                if (label.endsWith('*'))
-                  const TextSpan(
-                    text: '*',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 8),
-
-          // Custom-styled dropdown
-          SizedBox(
-            width: double.infinity,
-            child: DropdownMenu<String>(
-              width: double.infinity,
-              menuHeight: 250,
-              hintText: hintText ?? 'Select an option',
-              textStyle: const TextStyle(fontSize: 16, color: Colors.black),
-              dropdownMenuEntries: items.map((item) {
-                return DropdownMenuEntry(
-                  value: item,
-                  label: item,
-                );
-              }).toList(),
-              inputDecorationTheme: InputDecorationTheme(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Colors.grey),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Colors.grey),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Colors.blue, width: 2),
-                ),
-                errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Colors.red),
-                ),
-              ),
-              errorText: isFormSubmitted && value == null
-                  ? 'Please select an option'
-                  : null,
-              menuStyle: MenuStyle(
-                backgroundColor: WidgetStateProperty.all(Colors.white),
-                shape: WidgetStateProperty.all(
-                  RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-              ),
-              onSelected: onChanged,
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -464,7 +372,7 @@ Widget _buildTextField({
               ],
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 2),
           TextFormField(
             controller: controller,
             keyboardType: keyboardType,

@@ -22,7 +22,7 @@ class _EnrollStep1 extends State<EnrollStep1> {
     return true;
   }
 
-  String? fullName;
+  String? nameEn;
   String? gender;
   String? phone;
   String? email;
@@ -60,7 +60,7 @@ class _EnrollStep1 extends State<EnrollStep1> {
   Future<void> _loadSavedData() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      fullName = prefs.getString('fullName');
+      nameEn = prefs.getString('fullName');
       _selectedGender = prefs.getString('gender');
       phone = prefs.getString('phone');
       email = prefs.getString('email');
@@ -69,7 +69,7 @@ class _EnrollStep1 extends State<EnrollStep1> {
 
   Future<void> _saveStep1Data() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('fullName', fullName?.toString() ?? '');
+    prefs.setString('fullName', nameEn?.toString() ?? '');
     prefs.setString('gender', gender ?? '');
     prefs.setString('phone', phone ?? '');
     prefs.setString('email', email ?? '');

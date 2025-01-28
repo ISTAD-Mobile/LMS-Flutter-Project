@@ -6,6 +6,7 @@ import 'package:lms_mobile/viewModel/admission/degree_viewmodel.dart';
 import 'package:lms_mobile/viewModel/admission/shift_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../viewModel/admission/study_program_alas.dart';
 import '../../../viewModel/enroll/place_of_birth_view_model.dart';
 
 class RegisterStep1 extends StatefulWidget {
@@ -19,15 +20,19 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
 
   String? _selectedGender;
   String? _selectedShift;
-  String? _selectedSpaceOfBirth;
+  String? _selectedPlaceOfBirth;
   String? _selectedDegree;
+  String? _studyProgramAlias;
+  String? _selectedGrade;
 
   String? nameKh;
   String? nameEn;
   String? phone;
   String? email;
-  String? guardianContact;
-  String? classStudent;
+  String? dob;
+  String? guardianContact = '';
+  String? classStudent = '';
+  final List<String> gradeOptions = ['និទ្ទេស A','និទ្ទេស B','និទ្ទេស C', 'និទ្ទេស D', 'និទ្ទេស E', 'ជាប់អូតូ','ផ្សេងៗ'];
 
   bool _isFormSubmitted = false;
   String result = '';
@@ -35,13 +40,14 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
   final FocusNode _focusNode = FocusNode();
   bool _isExpanded = false;
 
-  final List<String> genderOptions = ['Female', 'Male', 'Other'];
+  final List<String> genderOptions = ['ស្រី', 'ប្រុស', 'ផ្សេងៗ'];
   final nameKhController = TextEditingController();
   final nameEnController = TextEditingController();
   final contactNumberController = TextEditingController();
   final emailController = TextEditingController();
   final guardianContactController = TextEditingController();
   final classStudentController = TextEditingController();
+  final dobController = TextEditingController();
 
   static const int _minAge = 16;
   static const int _maxAge = 100;
@@ -55,17 +61,19 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
       context.read<PlaceOfBirthViewModel>().fetchPlaceOfBlogs();
       context.read<ShiftViewModel>().fetchAllShifts();
       context.read<DegreeViewModel>().fetchAllDegrees();
+      context.read<StudyProgramAlasViewModel>().fetchAllStudyPrograms();
     });
   }
 
   Future<void> _loadSavedData() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
+      final String? birthDateString = prefs.getString('dob');
+      _studyProgramAlias = prefs.getString('studyProgram');
       _selectedGender = prefs.getString('gender');
       _selectedShift = prefs.getString('shiftAlias');
       _selectedDegree = prefs.getString('degreeAlias');
-      _selectedSpaceOfBirth = prefs.getString('birthPlace');
-      String? birthDateString = prefs.getString('dob');
+      _selectedPlaceOfBirth = prefs.getString('birthPlace');
       _selectedBirthDate =
       birthDateString != null ? DateTime.tryParse(birthDateString) : null;
 
@@ -73,6 +81,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
       nameEnController.text = prefs.getString('nameEn') ?? '';
       contactNumberController.text = prefs.getString('phoneNumber') ?? '';
       emailController.text = prefs.getString('email') ?? '';
+      dobController.text = prefs.getString('dob') ?? '';
       guardianContactController.text = prefs.getString('guardianContact') ?? '';
       classStudentController.text = prefs.getString('classStudent') ?? '';
     });
@@ -85,7 +94,8 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
     prefs.setString('gender', _selectedGender ?? '');
     prefs.setString('shiftAlias', _selectedShift ?? '');
     prefs.setString('degreeAlias', _selectedDegree ?? '');
-    prefs.setString('birthPlace', _selectedSpaceOfBirth ?? '');
+    prefs.setString('birthPlace', _selectedPlaceOfBirth ?? '');
+    prefs.setString('studyProgramAlias', _studyProgramAlias ?? '');
 
     prefs.setString('nameKh', nameKhController.text);
     prefs.setString('nameEn', nameEnController.text);
@@ -93,6 +103,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
     prefs.setString('email', emailController.text);
     prefs.setString('classStudent', classStudentController.text);
     prefs.setString('guardianContact', guardianContactController.text);
+    prefs.setString('grade', _selectedGrade ?? '');
   }
 
   @override
@@ -103,6 +114,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
     emailController.dispose();
     guardianContactController.dispose();
     classStudentController.dispose();
+    dobController.dispose();
 
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
@@ -121,18 +133,19 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
       _selectedGender != null &&
           _selectedDegree != null &&
           _selectedShift != null &&
-          _selectedSpaceOfBirth != null &&
+          _selectedPlaceOfBirth != null &&
           _selectedBirthDate != null &&
+          _selectedGrade != null &&
 
           nameKhController.text.isNotEmpty &&
           nameEnController.text.isNotEmpty &&
           contactNumberController.text.isNotEmpty &&
           emailController.text.isNotEmpty &&
           guardianContactController.text.isNotEmpty &&
+          dobController.text.isNotEmpty &&
           classStudentController.text.isNotEmpty &&
           contactNumberController.text.isNotEmpty;
   }
-
 
   void _showDatePicker() {
     final now = DateTime.now();
@@ -196,62 +209,81 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Personal Information',
+                const Text(
+                  'ព័ត៌មានផ្ទាល់ខ្លួន',
                   style: TextStyle(
-                    color: Colors.indigo[900],
+                    color: AppColors.primaryColor,
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
+                    fontFamily: 'NotoSansKhmer',
                   ),
                 ),
                 const SizedBox(height: 16),
                 _buildTextField(
-                  label: 'Name (KH) *',
+                  label: 'គោត្តនាម និងនាម (ជាភាសាខ្មែរ) *',
                   controller: nameKhController,
                   hintText: 'លាង ណៃគីម',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your name in Khmer';
+                      return 'ត្រូវការបំពេញគោត្តនាម និងនាមជាភាសាខ្មែរ';
                     }
 
                     final khmerRegex = RegExp(r'^[\u1780-\u17FF\s]+$');
                     if (!khmerRegex.hasMatch(value)) {
-                      return 'This field is required';
+                      return 'ត្រូវការបំពេញ';
                     }
                     return null;
                   },
                 ),
                 _buildTextField(
-                  label: 'Name (EN) *',
+                  label: 'គោត្តនាម និងនាម (ភាសាអង់គ្លេស) *',
                   controller: nameEnController,
                   hintText: 'Leang Naikim',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'This field is required';
+                      return 'ត្រូវការបំពេញគោត្តនាម និងនាមជាភាសាអង់គ្លេស';
                     }
                     String pattern = r'^[a-zA-Z\s]+$';
                     RegExp regex = RegExp(pattern);
 
                     if (!regex.hasMatch(value)) {
-                      return 'This field is required';
+                      return 'ត្រូវការបំពេញ';
                     }
 
                     return null;
                   },
                 ),
+                _buildDropdownField(
+                  label: 'ភេទ *',
+                  value: _selectedGender,
+                  items: genderOptions,
+                  hintText: _selectedGender?.isNotEmpty == true
+                      ? _selectedGender!
+                      : 'ភេទ',
+                  isLoading: false,
+                  isFormSubmitted: _isFormSubmitted,
+                  onSelected: (value) async {
+                    setState(() {
+                      _selectedGender = value;
+                    });
+
+                    final prefs = await SharedPreferences.getInstance();
+                    await prefs.setString('gender', value ?? '');
+                  },
+                ),
                 _buildTextField(
-                  label: 'Email *',
+                  label: 'អុីមែល *',
                   controller: emailController,
                   hintText: 'leangnaikim168@gmail.com',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'This field is required';
+                      return 'ត្រូវការបំពេញ';
                     }
                     return null;
                   },
                 ),
                 _buildFormField(
-                  label: 'Date of Birth *',
+                  label: 'ថ្ងៃខែឆ្នាំកំណើត *',
                   child: GestureDetector(
                     onTap: _showDatePicker,
                     child: Container(
@@ -270,7 +302,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                                 .year}-${_selectedBirthDate!.month.toString()
                                 .padLeft(2, '0')}-${_selectedBirthDate!.day
                                 .toString().padLeft(2, '0')}'
-                                : 'Select Date of Birth',
+                                : 'ជ្រើសរើសថ្ងៃខែឆ្នាំកំណើត',
                             style: const TextStyle(fontSize: 16 ),
                           ),
                           const Icon(CupertinoIcons.calendar,
@@ -280,110 +312,128 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                     ),
                   ),
                 ),
+                _buildFormFieldAddress(
+                  'ទីកន្លែងកំណើត  *',
+                  Consumer<PlaceOfBirthViewModel>(
+                    builder: (context, viewModel, _) =>
+                        _buildDropdownMenu(
+                          hint: _selectedPlaceOfBirth?.isNotEmpty == true
+                              ? _selectedPlaceOfBirth!
+                              : 'សូមជ្រើសរើសខេត្ត/ក្រុង',
+                          options: viewModel.placeOfBirthList,
+                          selectedValue: _selectedPlaceOfBirth,
+                          onSelected: (value) async {
+                            setState(() {
+                              _selectedPlaceOfBirth = value;
+                            });
+
+                            final prefs = await SharedPreferences.getInstance();
+                            await prefs.setString('Date of Birth', value ?? '');
+                          },
+                        ),
+                  ),
+                ),
                 _buildTextField(
-                  label: 'Contact Number (Telegram) *',
+                  label: 'លេខទូរស័ព្ទ ទំនាក់ទំនង (Telegram) *',
                   controller: contactNumberController,
                   keyboardType: TextInputType.phone,
                   hintText: '092382489',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'This field is required';
+                      return 'ត្រូវការបំពេញ';
                     }
 
                     String phonePattern = r'^[0-9]{9,15}$';
                     RegExp regex = RegExp(phonePattern);
 
                     if (!regex.hasMatch(value)) {
-                      return 'This field is required';
-                    }
-
-                    return null;
-                  },
-                ),
-                _buildTextField(
-                  label: 'Guardian Contact *',
-                  controller: guardianContactController,
-                  keyboardType: TextInputType.phone,
-                  hintText: '092382489',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'This field is required';
-                    }
-
-                    String phonePattern = r'^[0-9]{9,15}$';
-                    RegExp regex = RegExp(phonePattern);
-
-                    if (!regex.hasMatch(value)) {
-                      return 'This field is required';
-                    }
-
-                    return null;
-                  },
-                ),
-                _buildTextField(
-                  label: 'Class Student *',
-                  controller: classStudentController,
-                  hintText: 'class student',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'This field is required';
+                      return 'ត្រូវការបំពេញ';
                     }
 
                     return null;
                   },
                 ),
                 _buildFormFieldAddress(
-                  'Shift *',
+                  'កម្មវិធីសិក្សា *',
+                  Consumer<StudyProgramAlasViewModel>(
+                    builder: (context, viewModel, _) => _buildDropdownMenu(
+                      hint: _studyProgramAlias?.isNotEmpty == true
+                          ? _studyProgramAlias!
+                          : 'ជ្រើសរើសកម្មវិធីសិក្សា',
+                      options: viewModel.studyProgramNames,
+                      selectedValue: _studyProgramAlias,
+                      onSelected: (value) async {
+                        setState(() {
+                          _studyProgramAlias = value;
+                        });
+
+                        final prefs = await SharedPreferences.getInstance();
+                        await prefs.setString('studyProgram', value ?? '');
+                        print("Saved StudyProgram: $value");
+                      },
+                    ),
+                  ),
+                ),
+                _buildFormFieldAddress(
+                  'វេនសិក្សា *',
                   Consumer<ShiftViewModel>(
                     builder: (context, viewModel, _) =>
                         _buildDropdownMenu(
-                          hint: 'weekday-morning',
+                          hint: _selectedShift?.isNotEmpty == true
+                              ? _selectedShift!
+                              : 'ជ្រើសរើសវេនសិក្សា',
                           options: viewModel.shiftNames,
                           selectedValue: _selectedShift,
-                          onSelected: (value) =>
-                              setState(() =>
-                              _selectedShift = value),
+                          onSelected: (value) async {
+                            setState(() {
+                              _selectedShift = value;
+                            });
+
+                            final prefs = await SharedPreferences.getInstance();
+                            await prefs.setString('Shift', value ?? '');
+                          },
                         ),
                   ),
                 ),
                 _buildFormFieldAddress(
-                  'Degree *',
+                  'កម្រិតសញ្ញាបត្រ *',
                   Consumer<DegreeViewModel>(
                     builder: (context, viewModel, _) =>
                         _buildDropdownMenu(
-                          hint: 'master',
+                          hint: _selectedDegree?.isNotEmpty == true
+                              ? _selectedDegree!
+                              : 'ជ្រើសរើសកម្រិតសញ្ញាបត្រ',
                           options: viewModel.degreeNames,
                           selectedValue: _selectedDegree,
-                          onSelected: (value) =>
-                              setState(() => _selectedDegree = value),
+                          onSelected: (value) async {
+                            setState(() {
+                              _selectedDegree = value;
+                            });
+
+                            final prefs = await SharedPreferences.getInstance();
+                            await prefs.setString('Degree', value ?? '');
+                          },
                         ),
                   ),
                 ),
-                  _buildDropdownField(
-                    label: 'Gender *',
-                    value: _selectedGender,
-                    items: genderOptions,
-                    hintText: 'Female',
-                    isLoading: false,
-                    isFormSubmitted: _isFormSubmitted,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _selectedGender = newValue;
-                      });
-                    },
-                  ),
-                _buildFormFieldAddress(
-                  'Place of birth *',
-                  Consumer<PlaceOfBirthViewModel>(
-                    builder: (context, viewModel, _) =>
-                        _buildDropdownMenu(
-                          hint: 'Phnom Penh',
-                          options: viewModel.placeOfBirthList,
-                          selectedValue: _selectedSpaceOfBirth,
-                          onSelected: (value) =>
-                              setState(() => _selectedSpaceOfBirth = value),
-                        ),
-                  ),
+                _buildDropdownField(
+                  label: 'ទទួលបាននិទ្ទេសរួម (បើមាន) *',
+                  value: _selectedGrade,
+                  items: gradeOptions,
+                  isFormSubmitted: _isFormSubmitted,
+                  hintText: _selectedGrade?.isNotEmpty == true
+                      ? _selectedGrade!
+                      : 'ជ្រើសរើសនិទ្ទេស',
+                  onSelected: (String? newValue) async {
+                    setState(() {
+                      _selectedGrade = newValue;
+                    });
+
+                    // Save to SharedPreferences
+                    final prefs = await SharedPreferences.getInstance();
+                    await prefs.setString('grade', newValue ?? '');
+                    print("Saved Grade: $newValue");
+                  },
                 ),
                 const SizedBox(height: 5),
                 Align(
@@ -408,7 +458,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                         }
                       },
                       child: Text(
-                        'Next',
+                        'បន្ទាប់',
                         style: TextStyle(fontSize: 16, color: AppColors
                             .defaultWhiteColor),
                       ),
@@ -458,7 +508,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
             ],
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 2),
         child,
         const SizedBox(height: 15),
       ],
@@ -494,7 +544,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
             ],
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 2),
         child,
         const SizedBox(height: 15),
       ],
@@ -535,7 +585,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
               ],
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 2),
           TextFormField(
             controller: controller,
             keyboardType: keyboardType,
@@ -586,7 +636,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
     required String label,
     required String? value,
     required List<String> items,
-    required void Function(String?) onChanged,
+    required void Function(String?) onSelected,
     bool isLoading = false,
     String? hintText,
     required bool isFormSubmitted,
@@ -622,15 +672,14 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
               ],
             ),
           ),
-          const SizedBox(height: 8),
-
+          const SizedBox(height: 2),
           // Custom-styled dropdown
           SizedBox(
             width: double.infinity,
             child: DropdownMenu<String>(
               width: double.infinity,
               menuHeight: 250,
-              hintText: hintText ?? 'Select an option',
+              hintText: hintText ?? 'ជ្រើសរើសជម្រើស',
               textStyle: const TextStyle(fontSize: 16, color: Colors.black),
               dropdownMenuEntries: items.map((item) {
                 return DropdownMenuEntry(
@@ -662,7 +711,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                 ),
               ),
               errorText: isFormSubmitted && value == null
-                  ? 'Please select an option'
+                  ? 'ត្រូវការបំពេញ'
                   : null,
               menuStyle: MenuStyle(
                 backgroundColor: WidgetStateProperty.all(Colors.white),
@@ -671,7 +720,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                       borderRadius: BorderRadius.circular(10)),
                 ),
               ),
-              onSelected: onChanged,
+              onSelected: onSelected,
             ),
           ),
         ],
@@ -692,6 +741,7 @@ Widget _buildDropdownMenu({
   }
 
   bool _isFormSubmitted = false;
+
   return SizedBox(
     width: double.infinity,
     child: DropdownMenu<String>(
@@ -699,7 +749,7 @@ Widget _buildDropdownMenu({
       menuHeight: 250,
       hintText: hint,
       errorText: _isFormSubmitted && selectedValue == null ? 'Please $hint' : null,
-      textStyle: const TextStyle(fontSize: 16, color: Colors.black),
+      textStyle: const TextStyle(fontSize: 16, color: Colors.black), // Text color when selected
       menuStyle: MenuStyle(
         backgroundColor: WidgetStateProperty.all(Colors.white),
         shape: WidgetStateProperty.all(
@@ -711,9 +761,9 @@ Widget _buildDropdownMenu({
           borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(color: Colors.grey),
         ),
-        hintStyle: const TextStyle(
+        hintStyle: TextStyle(
           fontSize: 15,
-          color: Colors.grey,
+          color: selectedValue == null || selectedValue.isEmpty ? Colors.grey : Colors.black, // Change hint color dynamically
           fontWeight: FontWeight.w400,
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),

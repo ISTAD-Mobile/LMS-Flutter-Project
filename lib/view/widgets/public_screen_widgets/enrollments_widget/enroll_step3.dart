@@ -58,7 +58,7 @@ class _EnrollStep3State extends State<EnrollStep3> {
     final prefs = await SharedPreferences.getInstance();
 
     // Collect data from all steps
-    final fullName = prefs.getString('fullName');
+    final nameEn = prefs.getString('nameEn');
     final email = prefs.getString('email');
     final gender = prefs.getString('gender');
     final phone = prefs.getInt('phoneNumber');
@@ -68,13 +68,13 @@ class _EnrollStep3State extends State<EnrollStep3> {
     final education = prefs.getString('education');
     final university = prefs.getString('university');
 
-    if (fullName == null || email == null || gender == null || phone == null || birthDate == null || birthAddress == null || currentAddress == null || education == null || university == null) {
+    if (nameEn == null || email == null || gender == null || phone == null || birthDate == null || birthAddress == null || currentAddress == null || education == null || university == null) {
 
       return;
     }
 
     final enrollmentData = {
-      'fullName': fullName,
+      'nameEn': nameEn,
       'email': email,
       'gender': gender,
       'phone': phone,
@@ -88,7 +88,7 @@ class _EnrollStep3State extends State<EnrollStep3> {
     print('Submitting Enrollment Data: $enrollmentData');
   }
 
-  String? fullName;
+  String? nameEn;
   String? email;
   String? gender;
   String? phone;
@@ -121,7 +121,7 @@ class _EnrollStep3State extends State<EnrollStep3> {
   Future<void> _loadSavedData() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      fullName = prefs.getString('fullName') ?? '';
+      nameEn = prefs.getString('nameEn') ?? '';
       email = prefs.getString('email') ?? '';
       gender = prefs.getString('gender') ?? '';
       phone = prefs.getString('phoneNumber') ?? '';
@@ -166,7 +166,7 @@ class _EnrollStep3State extends State<EnrollStep3> {
         photoUri: '',
         universityInfo: _createAddressModel(_selectedUniversity!, 'EDUCATION'),
         email: email ?? '',
-        nameEn: fullName ?? '',
+        nameEn: nameEn ?? '',
         nameKh: null,
         gender: gender ?? '',
         phoneNumber: phone ?? '',
@@ -264,7 +264,7 @@ class _EnrollStep3State extends State<EnrollStep3> {
     return CurrentAddress(
       id: 1,
       shortName: address,
-      fullName: address,
+      nameEn: address,
       locationType: locationType,
     );
   }
@@ -616,7 +616,7 @@ class _EnrollStep3State extends State<EnrollStep3> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => EnrollStep2(
+                builder: (context) => const EnrollStep2(
                 ),
               ),
             );
