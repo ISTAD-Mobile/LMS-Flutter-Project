@@ -1,16 +1,16 @@
 import 'dart:convert';
-import '../../data/network/post_service.dart';
-import '../../model/enrollmentRequest/register_model.dart';
+import 'package:lms_mobile/data/network/post_service.dart';
+import '../../model/enrollmentRequest/enroll.dart';
 import '../../resource/app_url.dart';
 
-class EnrollRepository {
-  var enrollService = EnrollService();
+class EnrollStep2Repo {
+  var enrollStep2 = EnrollStep2Service();
 
-  Future<Map<String, dynamic>?> postEnrollment(EnrollmentModel data) async {
+  Future<Map<String, dynamic>?> postEnrollmentStep2(EnrollmentModelStep2 data) async {
     var enrollRequest = data.toJson();
     try {
-      var response = await enrollService.postEnrollment(
-        AppUrl.postBlogRegisterUrl,
+      var response = await enrollStep2.postEnrollmentStep2(
+        AppUrl.postBlogEnrollmentUrl,
         enrollRequest,
       );
 

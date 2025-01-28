@@ -1,25 +1,16 @@
-import 'dart:convert';
+class EnrollmentModelStep2 {
+  final int classId;
+  final int studentId;
 
-EnrollModel enrollModelFromJson(String str) => EnrollModel.fromJson(json.decode(str));
-
-String enrollModelToJson(EnrollModel data) => json.encode(data.toJson());
-
-class EnrollModel {
-  int classId;
-  int studentId;
-
-  EnrollModel({
+  EnrollmentModelStep2({
     required this.classId,
     required this.studentId,
   });
 
-  factory EnrollModel.fromJson(Map<String, dynamic> json) => EnrollModel(
-    classId: json["classId"],
-    studentId: json["studentId"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "classId": classId,
-    "studentId": studentId,
-  };
+  Map<String, dynamic> toJson() {
+    return {
+      'classId': classId,
+      'studentId': studentId,
+    };
+  }
 }

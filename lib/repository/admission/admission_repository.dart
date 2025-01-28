@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:lms_mobile/model/admission/admission_form.dart';
 import 'package:lms_mobile/resource/app_url.dart';
-import '../../data/network/admission_service.dart';
+import '../../data/network/post_service.dart';
 
 class AdmissionRepository {
   var admissionService = AdmissionService();

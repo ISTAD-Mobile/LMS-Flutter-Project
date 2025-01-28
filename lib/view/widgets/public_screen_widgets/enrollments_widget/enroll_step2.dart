@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:lms_mobile/model/enrollmentRequest/register_model.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/viewModel/enroll/current_address_view_model.dart';
 import 'package:lms_mobile/viewModel/enroll/university_view_model.dart';
 import 'package:lms_mobile/viewModel/enroll/place_of_birth_view_model.dart';
+import '../../../../viewModel/enroll/enroll_view_model.dart';
 import 'enroll_step1.dart';
 import 'enroll_step3.dart';
 
@@ -26,11 +28,7 @@ class _CourseEnrollForm extends State<EnrollStep2> {
   String? _selectedEducation;
   String? _selectedUniversity;
 
-  final dateOfBirthController = TextEditingController();
-  final placeOfBirthController = TextEditingController();
-  final currentAddressController = TextEditingController();
-  final educationController = TextEditingController();
-  final universityController = TextEditingController();
+  final enrollmentViewmodel = EnrollViewModel();
 
   static const int _minAge = 16;
   static const int _maxAge = 100;
@@ -55,8 +53,10 @@ class _CourseEnrollForm extends State<EnrollStep2> {
 
   Future<void> _loadSavedData() async {
     final prefs = await SharedPreferences.getInstance();
+
     setState(() {
-      _selectedBirthDate = DateTime.tryParse(prefs.getString('birthDate') ?? '');
+      String? birthDateString = prefs.getString('dob');
+      _selectedBirthDate = birthDateString != null ? DateTime.tryParse(birthDateString) : null;
       _selectedBirthAddress = prefs.getString('birthAddress');
       _selectedCurrentAddress = prefs.getString('currentAddress');
       _selectedEducation = prefs.getString('education');
@@ -64,14 +64,58 @@ class _CourseEnrollForm extends State<EnrollStep2> {
     });
   }
 
-  Future<void> _saveStep2Data() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('birthDate', _selectedBirthDate?.toIso8601String() ?? '');
-    prefs.setString('birthAddress', _selectedBirthAddress ?? '');
-    prefs.setString('currentAddress', _selectedCurrentAddress ?? '');
-    prefs.setString('education', _selectedEducation ?? '');
-    prefs.setString('university', _selectedUniversity ?? '');
+  bool _validateForm() {
+    return _selectedBirthDate != null &&
+        _selectedBirthAddress != null &&
+        _selectedCurrentAddress != null &&
+        _selectedEducation != null &&
+        _selectedUniversity != null;
   }
+
+  Future<void> _saveStep2DataEnrollment() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    var enrollmentModel = EnrollmentModel(
+      email: prefs.getString('email') ?? '',
+      nameEn: prefs.getString('nameEn') ?? '',
+      gender: prefs.getString('gender') ?? '',
+      dob: prefs.getString('dob') != null
+          ? DateTime.tryParse(prefs.getString('dob')!)
+          : null,
+      pob: CurrentAddress(id: 1, shortName: 'Default', fullName: 'Default Address'),
+      currentAddress: CurrentAddress(id: 1, shortName: 'Default', fullName: 'Default Address'),
+      phoneNumber: prefs.getString('phoneNumber') ?? '',
+      photoUri: prefs.getString('photoUri') ?? '',
+      universityInfo: CurrentAddress(id: 1, shortName: 'Default', fullName: 'Default University Info'), 
+    );
+
+    try {
+      final response = await enrollmentViewmodel.postEnrollment(enrollmentModel);
+      print('Response: ${response.toString()}');
+
+      if (response != null && response['code'] == 200) {
+        var responseData = response['data'];
+        var id = responseData['id'];
+        print('Enrollment Successful!');
+        print('Response ID: $id');
+        print('Response Data: ${responseData.toString()}');
+
+        prefs.setInt('studentId', id);
+
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to submit the form.')),
+        );
+      }
+    } catch (e) {
+      print('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred: $e')),
+      );
+    }
+  }
+
+
 
   void _showDatePicker() {
     final now = DateTime.now();
@@ -275,6 +319,7 @@ class _CourseEnrollForm extends State<EnrollStep2> {
     );
   }
 
+
   Widget _buildNavigationButtons() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -299,17 +344,32 @@ class _CourseEnrollForm extends State<EnrollStep2> {
           ),
         ),
         ElevatedButton(
-          onPressed: () async {
+          onPressed: _validateForm()
+              ? () async {
             setState(() => _isFormSubmitted = true);
-            if (_formKey.currentState!.validate() && _validateForm()) {
-              await _saveStep2Data();
-              Navigator.push(
+
+            if (_formKey.currentState!.validate()) {
+              try {
+                await _saveStep2DataEnrollment();
+
+                Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const EnrollStep3(uuid: '',),
-                  )
+                  MaterialPageRoute(
+                    builder: (context) =>  EnrollStep3(uuid: '',),
+                  ),
+                );
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Error: $e')),
+                );
+              }
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Please fill out all fields.')),
               );
             }
-          },
+          }
+              : null,
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.primaryColor,
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
@@ -326,11 +386,5 @@ class _CourseEnrollForm extends State<EnrollStep2> {
     );
   }
 
-  bool _validateForm() {
-    return _selectedBirthDate != null &&
-        _selectedBirthAddress != null &&
-        _selectedCurrentAddress != null &&
-        _selectedEducation != null &&
-        _selectedUniversity != null;
-  }
+
 }
