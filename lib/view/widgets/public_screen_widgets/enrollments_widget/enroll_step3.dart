@@ -133,7 +133,7 @@ class _EnrollStep3State extends State<EnrollStep3> {
     return CurrentAddress(
       id: 1,
       shortName: address,
-      fullName: address,
+      nameEn: address,
       locationType: locationType,
     );
   }

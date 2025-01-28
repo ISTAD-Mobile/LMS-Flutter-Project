@@ -82,11 +82,11 @@ class _CourseEnrollForm extends State<EnrollStep2> {
       dob: prefs.getString('dob') != null
           ? DateTime.tryParse(prefs.getString('dob')!)
           : null,
-      pob: CurrentAddress(id: 1, shortName: 'Default', fullName: 'Default Address'),
-      currentAddress: CurrentAddress(id: 1, shortName: 'Default', fullName: 'Default Address'),
+      pob: CurrentAddress(id: 1, shortName: 'Default', nameEn: 'Default Address',),
+      currentAddress: CurrentAddress(id: 1, shortName: 'Default', nameEn: 'Default Address'),
       phoneNumber: prefs.getString('phoneNumber') ?? '',
       photoUri: prefs.getString('photoUri') ?? '',
-      universityInfo: CurrentAddress(id: 1, shortName: 'Default', fullName: 'Default University Info'), 
+      universityInfo: CurrentAddress(id: 1, shortName: 'Default', nameEn: 'Default University Info'),
     );
 
     try {

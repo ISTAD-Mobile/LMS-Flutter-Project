@@ -56,27 +56,27 @@ class EnrollmentModel {
 class CurrentAddress {
   int id;
   String shortName;
-  String fullName;
+  String nameEn;
   String? locationType;
 
   CurrentAddress({
     required this.id,
     required this.shortName,
-    required this.fullName,
+    required this.nameEn,
     this.locationType,
   });
 
   factory CurrentAddress.fromJson(Map<String, dynamic> json) => CurrentAddress(
     id: json["id"],
     shortName: json["shortName"],
-    fullName: json["fullName"],
+    nameEn: json["nameEn"],
     locationType: json["locationType"],
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
     "shortName": shortName,
-    "fullName": fullName,
+    "nameEn": nameEn,
     "locationType": locationType,
   };
 }
