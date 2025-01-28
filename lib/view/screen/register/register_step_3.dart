@@ -87,6 +87,7 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
         await prefs.remove('knownIstad');
         await prefs.remove('guardianRelationShip');
         await prefs.remove('diplomaSession');
+        prefs.clear();
 
         return {
           'telegramLink': telegramLink,
