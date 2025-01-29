@@ -189,6 +189,8 @@ class _EnrollStep3State extends State<EnrollStep3> {
         );
 
         if (enrollVM.status == Status.COMPLETED) {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.clear();
           // Remove loading indicator
           Navigator.pop(context);
 
