@@ -30,8 +30,6 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
   String? phone;
   String? email;
   String? dob;
-  String? guardianContact = '';
-  String? classStudent = '';
   final List<String> gradeOptions = ['និទ្ទេស A','និទ្ទេស B','និទ្ទេស C', 'និទ្ទេស D', 'និទ្ទេស E', 'ជាប់អូតូ','ផ្សេងៗ'];
 
   bool _isFormSubmitted = false;
@@ -45,8 +43,6 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
   final nameEnController = TextEditingController();
   final contactNumberController = TextEditingController();
   final emailController = TextEditingController();
-  final guardianContactController = TextEditingController();
-  final classStudentController = TextEditingController();
   final dobController = TextEditingController();
 
   static const int _minAge = 16;
@@ -82,8 +78,6 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
       contactNumberController.text = prefs.getString('phoneNumber') ?? '';
       emailController.text = prefs.getString('email') ?? '';
       dobController.text = prefs.getString('dob') ?? '';
-      guardianContactController.text = prefs.getString('guardianContact') ?? '';
-      classStudentController.text = prefs.getString('classStudent') ?? '';
     });
   }
 
@@ -101,8 +95,6 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
     prefs.setString('nameEn', nameEnController.text);
     prefs.setString('phoneNumber', contactNumberController.text);
     prefs.setString('email', emailController.text);
-    prefs.setString('classStudent', classStudentController.text);
-    prefs.setString('guardianContact', guardianContactController.text);
     prefs.setString('grade', _selectedGrade ?? '');
   }
 
@@ -112,8 +104,6 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
     nameKhController.dispose();
     contactNumberController.dispose();
     emailController.dispose();
-    guardianContactController.dispose();
-    classStudentController.dispose();
     dobController.dispose();
 
     _focusNode.removeListener(_onFocusChange);
@@ -127,24 +117,35 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
     });
   }
 
-
   bool _validateForm() {
-    return
-      _selectedGender != null &&
-          _selectedDegree != null &&
-          _selectedShift != null &&
-          _selectedPlaceOfBirth != null &&
-          _selectedBirthDate != null &&
-          _selectedGrade != null &&
+    if (!_formKey.currentState!.validate()) {
+      print('Form validation failed');
+      return false;
+    }
 
-          nameKhController.text.isNotEmpty &&
-          nameEnController.text.isNotEmpty &&
-          contactNumberController.text.isNotEmpty &&
-          emailController.text.isNotEmpty &&
-          guardianContactController.text.isNotEmpty &&
-          dobController.text.isNotEmpty &&
-          classStudentController.text.isNotEmpty &&
-          contactNumberController.text.isNotEmpty;
+    print('Gender: $_selectedGender');
+    print('Degree: $_selectedDegree');
+    print('Shift: $_selectedShift');
+    print('Place of Birth: $_selectedPlaceOfBirth');
+    print('Birth Date: $_selectedBirthDate');
+    print('Grade: $_selectedGrade');
+    print('Study Program: $_studyProgramAlias');
+    print('Name KH: ${nameKhController.text.trim()}');
+    print('Name EN: ${nameEnController.text.trim()}');
+    print('Contact: ${contactNumberController.text.trim()}');
+    print('Email: ${emailController.text.trim()}');
+
+    return _selectedGender != null &&
+        _selectedDegree != null &&
+        _selectedShift != null &&
+        _selectedPlaceOfBirth != null &&
+        _selectedBirthDate != null &&
+        _selectedGrade != null &&
+        _studyProgramAlias != null &&
+        nameKhController.text.trim().isNotEmpty &&
+        nameEnController.text.trim().isNotEmpty &&
+        contactNumberController.text.trim().isNotEmpty &&
+        emailController.text.trim().isNotEmpty;
   }
 
   void _showDatePicker() {
@@ -442,18 +443,34 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                     child: ElevatedButton(
                       onPressed: () async {
                         setState(() => _isFormSubmitted = true);
-                        if (_formKey.currentState!.validate() &&
-                            _validateForm()) {
+                        if (_formKey.currentState!.validate() && _validateForm()) {
                           await _saveStep1DataAdmission();
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                                builder: (context) => RegisterStep2()),
+                            MaterialPageRoute(builder: (context) => RegisterStep2()),
                           );
                         } else {
+                          // Create a detailed error message
+                          String missingFields = '';
+                          if (_selectedGender == null) missingFields += '\n- ភេទ';
+                          if (_selectedDegree == null) missingFields += '\n- កម្រិតសញ្ញាបត្រ';
+                          if (_selectedShift == null) missingFields += '\n- វេនសិក្សា';
+                          if (_selectedPlaceOfBirth == null) missingFields += '\n- ទីកន្លែងកំណើត';
+                          if (_selectedBirthDate == null) missingFields += '\n- ថ្ងៃខែឆ្នាំកំណើត';
+                          if (_selectedGrade == null) missingFields += '\n- និទ្ទេស';
+                          if (_studyProgramAlias == null) missingFields += '\n- កម្មវិធីសិក្សា';
+                          if (nameKhController.text.trim().isEmpty) missingFields += '\n- ឈ្មោះជាភាសាខ្មែរ';
+                          if (nameEnController.text.trim().isEmpty) missingFields += '\n- ឈ្មោះជាភាសាអង់គ្លេស';
+                          if (contactNumberController.text.trim().isEmpty) missingFields += '\n- លេខទូរស័ព្ទ';
+                          if (emailController.text.trim().isEmpty) missingFields += '\n- អុីមែល';
+
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Please complete the form')),
+                            SnackBar(
+                              backgroundColor: Colors.red,
+                              content: Text('សូមបំពេញព័ត៌មានដែលនៅខ្វះខាត:$missingFields'),
+                              duration: const Duration(seconds: 5),
+                              behavior: SnackBarBehavior.floating,
+                            ),
                           );
                         }
                       },
