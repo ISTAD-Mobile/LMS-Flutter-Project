@@ -494,6 +494,7 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
 
   final getToKnowIstadController = TextEditingController();
   final guardianRelationShipController = TextEditingController();
+  final diplomaSessionController = TextEditingController(text: "2024");
   var imageFile;
 
   final admissionViewModel = AdmissionViewmodel();
@@ -509,17 +510,25 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
     setState(() {
       getToKnowIstadController.text = prefs.getString('knownIstad') ?? '';
       guardianRelationShipController.text = prefs.getString('guardianRelationShip') ?? '';
+      diplomaSessionController.text = prefs.getString('diplomaSession') ?? '2024';
     });
   }
 
   Future<Map<String, dynamic>?> _saveStep3DataAdmission() async {
     final prefs = await SharedPreferences.getInstance();
+    prefs.setString('diplomaSession', diplomaSessionController.text.isNotEmpty
+        ? diplomaSessionController.text
+        : '2024');
+    prefs.setString('knownIstad',getToKnowIstadController.text);
+    prefs.setString('guardianRelationShip', guardianRelationShipController.text);
+    String diplomaSession = prefs.getString('diplomaSession') ?? '2024';
 
     prefs.getKeys().forEach((key) {
       print('$key: ${prefs.getString(key) ?? 'Not Found'}');
     });
 
     var admissionRequest = AdmissionRequest(
+      diplomaSession: diplomaSession,
       knownIstad: getToKnowIstadController.text,
       guardianRelationShip: guardianRelationShipController.text,
       vocationTrainingIiiCertificate: imageFile ?? '',
@@ -559,6 +568,7 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
         await prefs.remove('guardianRelationShip');
         await prefs.remove('diplomaSession');
         prefs.clear();
+
         return {
           'telegramLink': telegramLink,
           'studentName': studentName,
@@ -579,6 +589,7 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
       return null;
     }
   }
+
 
   bool _validateForm() {
     return getToKnowIstadController.text.isNotEmpty &&

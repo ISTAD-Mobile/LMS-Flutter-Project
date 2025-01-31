@@ -72,17 +72,15 @@ class _CourseEnrollForm extends State<EnrollStep2> {
         _selectedUniversity != null;
   }
 
-  Future<void> _saveStep2DataEnrollment() async {
+  Future<int?> _saveStep2DataEnrollment() async {
     final prefs = await SharedPreferences.getInstance();
 
     var enrollmentModel = EnrollmentModel(
       email: prefs.getString('email') ?? '',
       nameEn: prefs.getString('nameEn') ?? '',
       gender: prefs.getString('gender') ?? '',
-      dob: prefs.getString('dob') != null
-          ? DateTime.tryParse(prefs.getString('dob')!)
-          : null,
-      pob: CurrentAddress(id: 1, shortName: 'Default', nameEn: 'Default Address',),
+      dob: prefs.getString('dob') != null ? DateTime.tryParse(prefs.getString('dob')!) : null,
+      pob: CurrentAddress(id: 1, shortName: 'Default', nameEn: 'Default Address'),
       currentAddress: CurrentAddress(id: 1, shortName: 'Default', nameEn: 'Default Address'),
       phoneNumber: prefs.getString('phoneNumber') ?? '',
       photoUri: prefs.getString('photoUri') ?? '',
@@ -91,27 +89,18 @@ class _CourseEnrollForm extends State<EnrollStep2> {
 
     try {
       final response = await enrollmentViewmodel.postEnrollment(enrollmentModel);
-      print('Response: ${response.toString()}');
 
       if (response != null && response['code'] == 200) {
         var responseData = response['data'];
         var id = responseData['id'];
-        print('Enrollment Successful!');
-        print('Response ID: $id');
-        print('Response Data: ${responseData.toString()}');
-
         prefs.setInt('studentId', id);
-
+        return id;
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to submit the form.')),
-        );
+        throw Exception('Failed to submit enrollment');
       }
     } catch (e) {
       print('Error: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An error occurred: $e')),
-      );
+      rethrow;
     }
   }
 
@@ -350,14 +339,20 @@ class _CourseEnrollForm extends State<EnrollStep2> {
 
             if (_formKey.currentState!.validate()) {
               try {
-                await _saveStep2DataEnrollment();
+                int? id = await _saveStep2DataEnrollment();
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>  EnrollStep3(uuid: '',),
-                  ),
-                );
+                if (id != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EnrollStep3(studentId: id.toString()),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Enrollment failed. Please try again.')),
+                  );
+                }
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Error: $e')),
@@ -382,6 +377,7 @@ class _CourseEnrollForm extends State<EnrollStep2> {
             style: TextStyle(color: Colors.white, fontSize: 16),
           ),
         ),
+
       ],
     );
   }

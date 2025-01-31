@@ -46,8 +46,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
   final contactNumberController = TextEditingController();
   final emailController = TextEditingController();
   final guardianContactController = TextEditingController();
-  final classStudentController = TextEditingController();
-  final dobController = TextEditingController();
+  final classStudentController = TextEditingController(text: "class student");
 
   static const int _minAge = 16;
   static const int _maxAge = 100;
@@ -68,22 +67,22 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
   Future<void> _loadSavedData() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      final String? birthDateString = prefs.getString('dob');
+      String? birthDateString = prefs.getString('dob');
+      _selectedBirthDate =
+      birthDateString != null ? DateTime.tryParse(birthDateString) : null;
       _studyProgramAlias = prefs.getString('studyProgram');
       _selectedGender = prefs.getString('gender');
       _selectedShift = prefs.getString('shiftAlias');
       _selectedDegree = prefs.getString('degreeAlias');
       _selectedPlaceOfBirth = prefs.getString('birthPlace');
-      _selectedBirthDate =
-      birthDateString != null ? DateTime.tryParse(birthDateString) : null;
+      _selectedGrade = prefs.getString('bacIiGrade');
 
       nameKhController.text = prefs.getString('nameKh') ?? '';
       nameEnController.text = prefs.getString('nameEn') ?? '';
       contactNumberController.text = prefs.getString('phoneNumber') ?? '';
       emailController.text = prefs.getString('email') ?? '';
-      dobController.text = prefs.getString('dob') ?? '';
       guardianContactController.text = prefs.getString('guardianContact') ?? '';
-      classStudentController.text = prefs.getString('classStudent') ?? '';
+      classStudentController.text = prefs.getString('classStudent') ?? 'class student';
     });
   }
 
@@ -96,14 +95,18 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
     prefs.setString('degreeAlias', _selectedDegree ?? '');
     prefs.setString('birthPlace', _selectedPlaceOfBirth ?? '');
     prefs.setString('studyProgramAlias', _studyProgramAlias ?? '');
+    prefs.setString('bacIiGrade', _selectedGrade ?? '');
 
     prefs.setString('nameKh', nameKhController.text);
     prefs.setString('nameEn', nameEnController.text);
     prefs.setString('phoneNumber', contactNumberController.text);
     prefs.setString('email', emailController.text);
-    prefs.setString('classStudent', classStudentController.text);
+    prefs.setString('classStudent', classStudentController.text.isNotEmpty
+        ? classStudentController.text
+        : 'class student');
     prefs.setString('guardianContact', guardianContactController.text);
-    prefs.setString('grade', _selectedGrade ?? '');
+    prefs.setString('bacIiGrade', _selectedGrade ?? '');
+
   }
 
   @override
@@ -114,7 +117,6 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
     emailController.dispose();
     guardianContactController.dispose();
     classStudentController.dispose();
-    dobController.dispose();
 
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
@@ -142,8 +144,6 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
           contactNumberController.text.isNotEmpty &&
           emailController.text.isNotEmpty &&
           guardianContactController.text.isNotEmpty &&
-          dobController.text.isNotEmpty &&
-          classStudentController.text.isNotEmpty &&
           contactNumberController.text.isNotEmpty;
   }
 
@@ -338,6 +338,26 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                   controller: contactNumberController,
                   keyboardType: TextInputType.phone,
                   hintText: '092382489',
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'ត្រូវការបំពេញ';
+                    }
+
+                    String phonePattern = r'^[0-9]{9,15}$';
+                    RegExp regex = RegExp(phonePattern);
+
+                    if (!regex.hasMatch(value)) {
+                      return 'ត្រូវការបំពេញ';
+                    }
+
+                    return null;
+                  },
+                ),
+                _buildTextField(
+                  label: 'លេខទូរស័ព្ទ ទំនាក់ទំនង (Telegram) *',
+                  controller: guardianContactController,
+                  keyboardType: TextInputType.phone,
+                  hintText: '0923824897',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'ត្រូវការបំពេញ';

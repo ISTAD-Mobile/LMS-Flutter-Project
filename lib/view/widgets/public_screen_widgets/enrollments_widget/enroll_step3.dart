@@ -10,8 +10,8 @@ import 'enroll_step2.dart';
 import 'enroll_successful_screen.dart';
 
 class EnrollStep3 extends StatefulWidget {
-  final String uuid;
-  const EnrollStep3({super.key, required this.uuid});
+  final String studentId;
+  const EnrollStep3({super.key, required this.studentId});
 
   @override
   State<EnrollStep3> createState() => _EnrollStep3State();
@@ -61,7 +61,6 @@ class _EnrollStep3State extends State<EnrollStep3> {
     final university = prefs.getString('university');
 
     if (fullName == null || email == null || gender == null || phone == null || birthDate == null || birthAddress == null || currentAddress == null || education == null || university == null) {
-
       return;
     }
 
@@ -101,12 +100,12 @@ class _EnrollStep3State extends State<EnrollStep3> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       print('Fetching available courses...');
       Provider.of<AvailableCourseViewModel>(context, listen: false).fetchAvailableCourseAllBlogs();
-      if (widget.uuid != null && widget.uuid.isNotEmpty) {
-        print('Fetching course details for UUID: ${widget.uuid}');
+      if (widget.studentId != null && widget.studentId.isNotEmpty) {
+        print('Fetching course details for UUID: ${widget.studentId}');
         Provider.of<AvailableCourseViewModel>(context, listen: false)
-            .fetchCourseDetail(widget.uuid);
+            .fetchCourseDetail(widget.studentId);
       } else {
-        print('Error: UUID is null or empty. UUID value: ${widget.uuid}');
+        print('Error: UUID is null or empty. UUID value: ${widget.studentId}');
       }
     });
   }

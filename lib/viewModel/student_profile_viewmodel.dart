@@ -2,20 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:lms_mobile/model/student_profile_model.dart';
 import 'package:lms_mobile/repository/student_profile_repository.dart';
 
-import 'package:flutter/material.dart';
-import 'package:lms_mobile/model/student_profile_model.dart';
-import 'package:lms_mobile/repository/student_profile_repository.dart';
-
-
-import 'package:flutter/material.dart';
-import 'package:lms_mobile/model/student_profile_model.dart';
-import 'package:lms_mobile/repository/student_profile_repository.dart';
-
 class StudenProfileDataViewModel extends ChangeNotifier {
   final StudentProfileRepository userRepository;
   StudentProfileModel? _user;
   bool _isLoading = false;
   String? _errorMessage;
+  bool _isDisposed = false; // Track if disposed
 
   StudenProfileDataViewModel({required this.userRepository});
 
@@ -38,8 +30,16 @@ class StudenProfileDataViewModel extends ChangeNotifier {
   }
 
   void _setLoading(bool value) {
+    if (_isDisposed) return; // Prevent updates after disposal
     _isLoading = value;
-    Future.microtask(() => notifyListeners());
+    Future.microtask(() {
+      if (!_isDisposed) notifyListeners();
+    });
+  }
+
+  @override
+  void dispose() {
+    _isDisposed = true;
+    super.dispose();
   }
 }
-

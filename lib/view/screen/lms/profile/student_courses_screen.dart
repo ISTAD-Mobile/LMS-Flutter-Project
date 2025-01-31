@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../data/color/color_screen.dart';
 import '../../../../data/network/student_role_services/student_course_service.dart';
@@ -317,6 +316,7 @@ class _StudentCoursesScreenState extends State<StudentCoursesScreen> {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 10.0),
                 child: CourseCard(
+                  uuid: course.uuid,
                   title: course.title,
                   description: course.description,
                   year: course.year.toString(),
@@ -427,6 +427,7 @@ Widget _buildWelcomeBannerWithData(StudentCoursesModel data) {
 
 
 class CourseCard extends StatelessWidget {
+  final String uuid;
   final String title;
   final String description;
   final String year;
@@ -437,6 +438,7 @@ class CourseCard extends StatelessWidget {
 
   const CourseCard({
     super.key,
+    required this.uuid,
     required this.title,
     required this.description,
     required this.year,
@@ -453,16 +455,7 @@ class CourseCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CourseDetailScreen(
-              title: title,
-              description: description,
-              year: year,
-              semester: semester,
-              credits: credits,
-              theory: '',
-              practice: '',
-              thumbnailUrl: thumbnailUrl,
-            ),
+            builder: (context) => StudentCourseDetailView(uuid: uuid),
           ),
         );
       },
