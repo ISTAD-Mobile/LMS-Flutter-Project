@@ -1,92 +1,166 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import '../../../../../data/color/color_screen.dart';
 import '../../../../../repository/student_profile_setting_repository.dart';
 import '../../../../../viewModel/student_profile_setting_viewmodel.dart';
 import 'profile_setting_screen.dart';
 
-class StaticProfileViewScreen extends StatelessWidget {
-  final String accessToken;
+class StaticProfileViewScreen extends StatefulWidget {
+  final String token;
+  final Widget? drawer;
+  final Function() refreshCallback;
 
-  const StaticProfileViewScreen({required this.accessToken, Key? key}) : super(key: key);
+  const StaticProfileViewScreen({
+    required this.token,
+    required this.refreshCallback,
+    this.drawer,
+    super.key,
+  });
+
+  @override
+  _StaticProfileViewScreenState createState() => _StaticProfileViewScreenState();
+}
+
+class _StaticProfileViewScreenState extends State<StaticProfileViewScreen> {
+  bool _showBackIcon = false;
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => StudentSettingViewModel(
-          repository: StudentSettingRepository(accessToken: accessToken))..fetchUserData(),
+        repository: StudentSettingRepository(token: widget.token),
+      )..fetchUserData(),
       child: Scaffold(
         backgroundColor: AppColors.defaultWhiteColor,
+        appBar: AppBar(
+          backgroundColor: AppColors.defaultWhiteColor,
+          elevation: 0,
+          surfaceTintColor: Colors.transparent,
+          automaticallyImplyLeading: _showBackIcon,
+          title: const Text(
+            'Student Setting',
+            style: TextStyle(
+              color: AppColors.primaryColor,
+              fontSize: 18,
+            ),
+          ),
+        ),
+        drawer: widget.drawer,
         body: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(20.0),
-            child: Consumer<StudentSettingViewModel>(
-              builder: (context, viewModel, child) {
-                if (viewModel.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (viewModel.errorMessage.isNotEmpty) {
-                  return Center(child: Text(viewModel.errorMessage));
-                } else if (viewModel.userData == null) {
-                  return const Center(child: Text('No user data available'));
-                }
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Consumer<StudentSettingViewModel>(
+                  builder: (context, viewModel, child) {
+                    if (viewModel.isLoading) {
+                      return Center(
+                        child: Lottie.asset(
+                          'assets/animation/loading.json',
+                          width: 100,
+                          height: 100,
+                        ),
+                      );
+                    } else if (viewModel.errorMessage.isNotEmpty) {
+                      return Center(child: Text(viewModel.errorMessage));
+                    } else if (viewModel.userData == null) {
+                      return const Center(child: Text('No user data available'));
+                    }
 
-                final userData = viewModel.userData!;
+                    final userData = viewModel.userData!;
 
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Student Setting',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primaryColor,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Center(
-                      child: CircleAvatar(
-                        radius: 50,
-                        backgroundImage: userData.profileImage != null
-                            ? NetworkImage(userData.profileImage!)
-                            : const AssetImage('assets/images/placeholder.jpg'),
-                        child: userData.profileImage == null ? Icon(Icons.person) : null,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    _buildInfoField(label: 'Gender', value: userData.gender),
-                    _buildInfoField(label: 'Place Of Birth', value: userData.birthPlace),
-                    _buildInfoField(label: 'Current Address', value: userData.currentAddress),
-                    _buildInfoField(label: 'Personal Number', value: userData.phoneNumber),
-                    _buildInfoField(label: 'Family Number', value: userData.familyPhoneNumber),
-                    _buildInfoField(label: 'Biography', value: userData.biography),
-                    _buildInfoField(label: 'GuardianRelationship', value: userData.guardianRelationShip),
-                    const SizedBox(height: 20),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SettingScreen(accessToken: accessToken),
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 20),
+                        Center(
+                          child: CircleAvatar(
+                            radius: 50,
+                            backgroundImage: userData.profileImage != null
+                                ? NetworkImage(userData.profileImage!)
+                                : const AssetImage('assets/images/placeholder.jpg') as ImageProvider,
+                            child: userData.profileImage == null
+                                ? const Icon(Icons.person)
+                                : null,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        _buildInfoField(label: 'Gender', value: userData.gender),
+                        _buildInfoField(label: 'Place Of Birth', value: userData.birthPlace),
+                        _buildInfoField(label: 'Current Address', value: userData.currentAddress),
+                        _buildInfoField(label: 'Personal Number', value: userData.phoneNumber),
+                        _buildInfoField(label: 'Family Number', value: userData.familyPhoneNumber),
+                        _buildInfoField(label: 'Biography', value: userData.biography),
+                        _buildInfoField(label: 'GuardianRelationship', value: userData.guardianRelationShip),
+                        const SizedBox(height: 20),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SettingScreen(
+                                    token: widget.token,
+                                  ),
+                                ),
+                              ).then((_) {
+                                setState(() {
+                                  _showBackIcon = false; // Ensure the back icon remains hidden
+                                });
+                                widget.refreshCallback();
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(horizontal: 38, vertical: 12),
+                              backgroundColor: AppColors.primaryColor,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 38, vertical: 12),
-                          backgroundColor: AppColors.primaryColor,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            child: const Text(
+                              'Edit',
+                              style: TextStyle(
+                                color: AppColors.defaultWhiteColor,
+                                fontSize: 16.0,
+                              ),
+                            ),
+                          ),
+                          // ElevatedButton(
+                          //   onPressed: () {
+                          //     Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute(
+                          //         builder: (context) => SettingScreen(
+                          //           token: widget.token,
+                          //         ),
+                          //       ),
+                          //     ).then((_) {
+                          //       setState(() {
+                          //         _showBackIcon = true;
+                          //       });
+                          //       widget.refreshCallback();
+                          //     });
+                          //   },
+                          //   style: ElevatedButton.styleFrom(
+                          //     padding: const EdgeInsets.symmetric(horizontal: 38, vertical: 12),
+                          //     backgroundColor: AppColors.primaryColor,
+                          //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          //   ),
+                          //   child: const Text(
+                          //     'Edit',
+                          //     style: TextStyle(
+                          //       color: AppColors.defaultWhiteColor,
+                          //       fontSize: 16.0,
+                          //     ),
+                          //   ),
+                          // ),
                         ),
-                        child: const Text(
-                          'Edit',
-                          style: TextStyle(color: AppColors.defaultWhiteColor, fontSize: 16.0),
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              },
+                      ],
+                    );
+                  },
+                ),
+              ],
             ),
           ),
         ),
@@ -126,4 +200,3 @@ class StaticProfileViewScreen extends StatelessWidget {
     );
   }
 }
-

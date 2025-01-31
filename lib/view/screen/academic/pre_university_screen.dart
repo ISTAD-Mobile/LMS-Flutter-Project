@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lms_mobile/view/screen/about/my_home_about_istad_screen.dart';
 import '../../../data/color/color_screen.dart';
-import '../../home.dart';
-import '../lms/auth/first_log_in_screen.dart';
-import 'my_home_academic_screen.dart';
 
 class PreUniversityPage extends StatefulWidget {
   const PreUniversityPage({Key? key}) : super(key: key);

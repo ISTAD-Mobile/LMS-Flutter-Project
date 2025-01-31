@@ -242,7 +242,7 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                     hintText: 'Bak Touk High School'
                 ),
                 _buildFormField(
-                  'StudyProgramAlias *',
+                  'StudyProgram *',
                   Consumer<StudyProgramAlasViewModel>(
                     builder: (context, viewModel, _) => _buildDropdownMenu(
                       hint: 'it-expert',

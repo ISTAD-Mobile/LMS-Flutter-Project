@@ -6,7 +6,6 @@ import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/viewModel/enroll/current_address_view_model.dart';
 import 'package:lms_mobile/viewModel/enroll/university_view_model.dart';
 import 'package:lms_mobile/viewModel/enroll/place_of_birth_view_model.dart';
-import '../../../screen/enrollments/enrollment_provider.dart';
 import 'enroll_step1.dart';
 import 'enroll_step3.dart';
 
@@ -26,6 +25,12 @@ class _CourseEnrollForm extends State<EnrollStep2> {
   String? _selectedCurrentAddress;
   String? _selectedEducation;
   String? _selectedUniversity;
+
+  final dateOfBirthController = TextEditingController();
+  final placeOfBirthController = TextEditingController();
+  final currentAddressController = TextEditingController();
+  final educationController = TextEditingController();
+  final universityController = TextEditingController();
 
   static const int _minAge = 16;
   static const int _maxAge = 100;
@@ -145,8 +150,16 @@ class _CourseEnrollForm extends State<EnrollStep2> {
       appBar: AppBar(
         backgroundColor: AppColors.defaultWhiteColor,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const EnrollStep1(
+                ),
+              ),
+            );
+          },
         ),
         title: const Text(
           'Enrollment Screen',
@@ -267,7 +280,12 @@ class _CourseEnrollForm extends State<EnrollStep2> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         ElevatedButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const EnrollStep1()),
+            );
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.grey[200],
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
@@ -286,9 +304,9 @@ class _CourseEnrollForm extends State<EnrollStep2> {
             if (_formKey.currentState!.validate() && _validateForm()) {
               await _saveStep2Data();
               Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => EnrollStep3(formData: EnrollmentFormData()),
-               )
+                  context,
+                  MaterialPageRoute(builder: (context) => const EnrollStep3(uuid: '',),
+                  )
               );
             }
           },
@@ -300,7 +318,7 @@ class _CourseEnrollForm extends State<EnrollStep2> {
             ),
           ),
           child: const Text(
-            'Next',
+            'Select Course',
             style: TextStyle(color: Colors.white, fontSize: 16),
           ),
         ),

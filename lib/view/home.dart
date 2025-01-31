@@ -14,7 +14,9 @@ import 'package:lms_mobile/view/widgets/public_screen_widgets/home/video_backgro
 import 'package:lms_mobile/view/widgets/studentsWidget/drawer.dart';
 import 'package:lms_mobile/viewModel/course_viewmodel.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../../../data/color/color_screen.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -40,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final token = prefs.getString('accessToken');
     if (token != null && token.isNotEmpty) {
       // Token exists, navigate to LMS content
-      return StudentScreen(accessToken: token, title: '',);
+      return StudentScreen(token: token, title: '', userEmail: '',);
     } else {
       // No token, navigate to LoginScreen
       return const LoginScreen();

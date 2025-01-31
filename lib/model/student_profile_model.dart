@@ -10,7 +10,7 @@ class StudentProfileModel {
   StudentProfileModel({
     required this.profileImage,
     required this.nameEn,
-    this.nameKh,
+    required this.nameKh,
     required this.dob,
     required this.degree,
     required this.major,
@@ -22,7 +22,7 @@ class StudentProfileModel {
     return StudentProfileModel(
       profileImage: json['profileImage'] ?? '',
       nameEn: json['nameEn'] ?? '',
-      nameKh: json['nameKh'],
+      nameKh: json['nameKh'] ?? '',
       dob: json['dob'] ?? '',
       degree: json['degree'] ?? '',
       major: json['major'] ?? '',

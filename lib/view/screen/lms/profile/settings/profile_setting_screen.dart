@@ -14,11 +14,13 @@ import '../../../../../viewModel/updata_student_profile_setting_viewmodel.dart';
 
 class SettingScreen extends StatefulWidget {
 
-  final String accessToken;
-  const SettingScreen({required this.accessToken, Key? key}) : super(key: key);
+  final String token;
+  const SettingScreen({required this.token, Key? key}) : super(key: key);
+
+  get refreshCallback => 'refreshCallback';
 
   @override
-  _StudentSettingsState createState() => _StudentSettingsState(accessToken: accessToken);
+  _StudentSettingsState createState() => _StudentSettingsState(accessToken: token);
 }
 
 class _StudentSettingsState extends State<SettingScreen> {
@@ -47,7 +49,7 @@ class _StudentSettingsState extends State<SettingScreen> {
   void initState() {
     super.initState();
     viewModel = UpdataStudentProfileSettingViewmodel(
-      repository: UpdateStudentProfileSettingRepository(accessToken: widget.accessToken),
+      repository: UpdateStudentProfileSettingRepository(token: widget.token),
     );
     viewModel.fetchUserData();
   }
@@ -96,7 +98,7 @@ class _StudentSettingsState extends State<SettingScreen> {
     return ChangeNotifierProvider(
       create: (_) {
         final viewModel = UpdataStudentProfileSettingViewmodel(
-          repository: UpdateStudentProfileSettingRepository(accessToken: widget.accessToken)
+            repository: UpdateStudentProfileSettingRepository(token: widget.token)
         );
         viewModel.fetchUserData();
         return viewModel;
@@ -286,14 +288,21 @@ class _StudentSettingsState extends State<SettingScreen> {
                                     // Show success Snackbar
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                        content: const Text('Your data has been saved successfully!'),
+                                        backgroundColor: AppColors.successColor,
+                                        content: const Text('Your data has been saved successfully!', style: TextStyle(
+                                          color: AppColors.defaultWhiteColor,
+                                        ),),
                                         duration: const Duration(seconds: 2),
                                       ),
                                     );
+                                    // widget.refreshCallback?.call();
                                     Navigator.pushReplacement(
                                       context,
-                                      MaterialPageRoute(builder: (context) => StaticProfileViewScreen(accessToken: accessToken)),
-                                    );
+                                      MaterialPageRoute(builder: (context) => StaticProfileViewScreen(token: accessToken, refreshCallback: () {
+                                        setState(() {
+                                          viewModel.fetchUserData();
+                                      });
+                                      }),),);
                                   } catch (error) {
                                     // Handle errors (optional)
                                     ScaffoldMessenger.of(context).showSnackBar(
@@ -380,9 +389,10 @@ class _StudentSettingsState extends State<SettingScreen> {
 
   Widget _buildDropdownField({
     required String label,
-    required String value,
+    required String? value,
     required List<String> items,
     required ValueChanged<String?> onChanged,
+    String? hintText,
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
@@ -397,27 +407,55 @@ class _StudentSettingsState extends State<SettingScreen> {
             ),
           ),
           const SizedBox(height: 8),
-          DropdownButtonFormField<String>(
-            value: value,
-            items: items.map((item) {
-              return DropdownMenuItem<String>(
+          DropdownMenu<String>(
+            width: double.infinity,
+            menuHeight: 250,
+            initialSelection: value,
+            hintText: hintText ?? 'Select an option',
+            textStyle: const TextStyle(fontSize: 16, color: Colors.black),
+            dropdownMenuEntries: items.map((item) {
+              return DropdownMenuEntry(
                 value: item,
-                child: Text(item),
+                label: item,
               );
             }).toList(),
-            onChanged: onChanged,
-            decoration: InputDecoration(
+            inputDecorationTheme: InputDecorationTheme(
+              hintStyle: const TextStyle(
+                fontSize: 15,
+                color: Colors.grey,
+                fontWeight: FontWeight.w400,
+              ),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.0),
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Colors.grey),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Colors.grey),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Colors.blue, width: 2),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Colors.red),
               ),
             ),
+            menuStyle: MenuStyle(
+              backgroundColor: WidgetStateProperty.all(Colors.white),
+              shape: WidgetStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+            onSelected: (selectedValue) {
+              onChanged(selectedValue);
+            },
           ),
         ],
       ),
     );
   }
-
-
-
 }
-

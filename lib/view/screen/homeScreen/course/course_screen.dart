@@ -76,6 +76,8 @@ class _HomeScreenState extends State<ShortCoursePage> {
                         style: TextStyle(color: Colors.red),
                       ),
                     );
+                  case Status.IDLE:
+                    throw UnimplementedError();
                 }
               },
             ),

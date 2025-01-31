@@ -3,9 +3,9 @@ import 'package:http/http.dart' as http;
 import 'package:lms_mobile/model/student_profile_model.dart';
 
 class StudentProfileRepository {
-  final String accessToken;
+  final String token;
 
-  StudentProfileRepository({required this.accessToken});
+  StudentProfileRepository({required this.token});
 
   // Fetch user data from the API
   Future<StudentProfileModel> fetchUserData() async {
@@ -15,18 +15,13 @@ class StudentProfileRepository {
       var response = await http.get(
         url,
         headers: {
-          "Authorization": "Bearer $accessToken",
+          "Authorization": "Bearer $token",
         },
       );
 
       if (response.statusCode == 200) {
-        // Decode the response body as UTF-8
         String decodedResponse = utf8.decode(response.bodyBytes);
-
-        // Now, parse the decoded string into JSON
         var jsonResponse = jsonDecode(decodedResponse);
-
-        // Return the StudentProfileModel from the decoded JSON
         return StudentProfileModel.fromJson(jsonResponse);
       } else {
         throw Exception("Failed to fetch user data. Status code: ${response.statusCode}");

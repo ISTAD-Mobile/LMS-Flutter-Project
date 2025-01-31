@@ -22,10 +22,19 @@ class JobvacancyDetialRepository {
       );
 
       print('Status code detail: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      print('Response body (raw): ${response.body}');
 
       if (response.statusCode == 200) {
-        final jsonData = jsonDecode(response.body);
+        // Decode response body as UTF-8
+        String decodedResponse = utf8.decode(response.bodyBytes);
+
+        // Print decoded response for debugging
+        print('Decoded response: $decodedResponse');
+
+        // Parse the decoded response to JSON
+        final jsonData = jsonDecode(decodedResponse);
+
+        // Return the JobvacancyDetailModel from the decoded JSON
         return JobvacancyDetailModel.fromJson(jsonData);
       } else {
         // Handle different status codes for better error feedback

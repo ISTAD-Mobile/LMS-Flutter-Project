@@ -36,6 +36,7 @@ dependencies:
   carousel_slider: ^5.0.0
   image_picker: ^1.1.2
   flutter_typeahead: ^5.2.0
+  shared_preferences: ^2.4.0
 #  flutter_keyboard_visibility: ^5.4.1
 
 
@@ -52,9 +53,10 @@ dependencies:
   skeletonizer: ^1.4.2
   dotted_border: ^2.1.0
   flutter_secure_storage: ^9.2.2
-  shared_preferences: ^2.3.4
   jwt_decoder: ^2.0.1
-  flutter_riverpod: ^2.6.1
+  khmer_fonts: ^0.0.6
+  fluttertoast: ^8.2.10
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:

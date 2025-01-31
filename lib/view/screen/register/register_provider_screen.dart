@@ -1,6 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'dart:convert';
-
 class AdmissionFormData {
 
   String? nameEn;
@@ -28,17 +25,6 @@ class AdmissionFormData {
   String? diplomaSession;
   String? vocationTrainingIiiCertificate;
   String? guardianRelationShip;
-
-  // String? anyValuableCertificate;
-  // String? avatar;
-  // String? biography;
-  // String? highSchoolCertificate;
-  // String? identity;
-  // bool? isDeleted;
-  // String? recommendClass;
-  // String? associate;
-  // String? studentName;
-  // String? telegramLink;
 
   Map<String, dynamic> toJson() => {
     "guardianContact": guardianContact,
@@ -95,13 +81,3 @@ class AdmissionFormData {
     return admission;
   }
 }
-
-// class RegisterStateNotifier extends ChangeNotifier {
-//   Map<String,dynamic> formData = {};
-//   void updateFormData(String key , dynamic value) {
-//     formData[key] = value ;
-//     notifyListeners();
-//   }
-//
-//   static String
-// }
