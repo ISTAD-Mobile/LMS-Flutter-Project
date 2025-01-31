@@ -30,8 +30,6 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
   String? phone;
   String? email;
   String? dob;
-  String? guardianContact = '';
-  String? classStudent = '';
   final List<String> gradeOptions = ['និទ្ទេស A','និទ្ទេស B','និទ្ទេស C', 'និទ្ទេស D', 'និទ្ទេស E', 'ជាប់អូតូ','ផ្សេងៗ'];
 
   bool _isFormSubmitted = false;
@@ -45,8 +43,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
   final nameEnController = TextEditingController();
   final contactNumberController = TextEditingController();
   final emailController = TextEditingController();
-  final guardianContactController = TextEditingController();
-  final classStudentController = TextEditingController(text: "class student");
+  final dobController = TextEditingController();
 
   static const int _minAge = 16;
   static const int _maxAge = 100;
@@ -67,22 +64,20 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
   Future<void> _loadSavedData() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      String? birthDateString = prefs.getString('dob');
-      _selectedBirthDate =
-      birthDateString != null ? DateTime.tryParse(birthDateString) : null;
+      final String? birthDateString = prefs.getString('dob');
       _studyProgramAlias = prefs.getString('studyProgram');
       _selectedGender = prefs.getString('gender');
       _selectedShift = prefs.getString('shiftAlias');
       _selectedDegree = prefs.getString('degreeAlias');
       _selectedPlaceOfBirth = prefs.getString('birthPlace');
-      _selectedGrade = prefs.getString('bacIiGrade');
+      _selectedBirthDate =
+      birthDateString != null ? DateTime.tryParse(birthDateString) : null;
 
       nameKhController.text = prefs.getString('nameKh') ?? '';
       nameEnController.text = prefs.getString('nameEn') ?? '';
       contactNumberController.text = prefs.getString('phoneNumber') ?? '';
       emailController.text = prefs.getString('email') ?? '';
-      guardianContactController.text = prefs.getString('guardianContact') ?? '';
-      classStudentController.text = prefs.getString('classStudent') ?? 'class student';
+      dobController.text = prefs.getString('dob') ?? '';
     });
   }
 
@@ -95,18 +90,12 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
     prefs.setString('degreeAlias', _selectedDegree ?? '');
     prefs.setString('birthPlace', _selectedPlaceOfBirth ?? '');
     prefs.setString('studyProgramAlias', _studyProgramAlias ?? '');
-    prefs.setString('bacIiGrade', _selectedGrade ?? '');
 
     prefs.setString('nameKh', nameKhController.text);
     prefs.setString('nameEn', nameEnController.text);
     prefs.setString('phoneNumber', contactNumberController.text);
     prefs.setString('email', emailController.text);
-    prefs.setString('classStudent', classStudentController.text.isNotEmpty
-        ? classStudentController.text
-        : 'class student');
-    prefs.setString('guardianContact', guardianContactController.text);
-    prefs.setString('bacIiGrade', _selectedGrade ?? '');
-
+    prefs.setString('grade', _selectedGrade ?? '');
   }
 
   @override
@@ -115,8 +104,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
     nameKhController.dispose();
     contactNumberController.dispose();
     emailController.dispose();
-    guardianContactController.dispose();
-    classStudentController.dispose();
+    dobController.dispose();
 
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
@@ -129,22 +117,35 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
     });
   }
 
-
   bool _validateForm() {
-    return
-      _selectedGender != null &&
-          _selectedDegree != null &&
-          _selectedShift != null &&
-          _selectedPlaceOfBirth != null &&
-          _selectedBirthDate != null &&
-          _selectedGrade != null &&
+    if (!_formKey.currentState!.validate()) {
+      print('Form validation failed');
+      return false;
+    }
 
-          nameKhController.text.isNotEmpty &&
-          nameEnController.text.isNotEmpty &&
-          contactNumberController.text.isNotEmpty &&
-          emailController.text.isNotEmpty &&
-          guardianContactController.text.isNotEmpty &&
-          contactNumberController.text.isNotEmpty;
+    print('Gender: $_selectedGender');
+    print('Degree: $_selectedDegree');
+    print('Shift: $_selectedShift');
+    print('Place of Birth: $_selectedPlaceOfBirth');
+    print('Birth Date: $_selectedBirthDate');
+    print('Grade: $_selectedGrade');
+    print('Study Program: $_studyProgramAlias');
+    print('Name KH: ${nameKhController.text.trim()}');
+    print('Name EN: ${nameEnController.text.trim()}');
+    print('Contact: ${contactNumberController.text.trim()}');
+    print('Email: ${emailController.text.trim()}');
+
+    return _selectedGender != null &&
+        _selectedDegree != null &&
+        _selectedShift != null &&
+        _selectedPlaceOfBirth != null &&
+        _selectedBirthDate != null &&
+        _selectedGrade != null &&
+        _studyProgramAlias != null &&
+        nameKhController.text.trim().isNotEmpty &&
+        nameEnController.text.trim().isNotEmpty &&
+        contactNumberController.text.trim().isNotEmpty &&
+        emailController.text.trim().isNotEmpty;
   }
 
   void _showDatePicker() {
@@ -353,26 +354,6 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                     return null;
                   },
                 ),
-                _buildTextField(
-                  label: 'លេខទូរស័ព្ទ ទំនាក់ទំនង (Telegram) *',
-                  controller: guardianContactController,
-                  keyboardType: TextInputType.phone,
-                  hintText: '0923824897',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'ត្រូវការបំពេញ';
-                    }
-
-                    String phonePattern = r'^[0-9]{9,15}$';
-                    RegExp regex = RegExp(phonePattern);
-
-                    if (!regex.hasMatch(value)) {
-                      return 'ត្រូវការបំពេញ';
-                    }
-
-                    return null;
-                  },
-                ),
                 _buildFormFieldAddress(
                   'កម្មវិធីសិក្សា *',
                   Consumer<StudyProgramAlasViewModel>(
@@ -462,18 +443,34 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                     child: ElevatedButton(
                       onPressed: () async {
                         setState(() => _isFormSubmitted = true);
-                        if (_formKey.currentState!.validate() &&
-                            _validateForm()) {
+                        if (_formKey.currentState!.validate() && _validateForm()) {
                           await _saveStep1DataAdmission();
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                                builder: (context) => RegisterStep2()),
+                            MaterialPageRoute(builder: (context) => RegisterStep2()),
                           );
                         } else {
+                          // Create a detailed error message
+                          String missingFields = '';
+                          if (_selectedGender == null) missingFields += '\n- ភេទ';
+                          if (_selectedDegree == null) missingFields += '\n- កម្រិតសញ្ញាបត្រ';
+                          if (_selectedShift == null) missingFields += '\n- វេនសិក្សា';
+                          if (_selectedPlaceOfBirth == null) missingFields += '\n- ទីកន្លែងកំណើត';
+                          if (_selectedBirthDate == null) missingFields += '\n- ថ្ងៃខែឆ្នាំកំណើត';
+                          if (_selectedGrade == null) missingFields += '\n- និទ្ទេស';
+                          if (_studyProgramAlias == null) missingFields += '\n- កម្មវិធីសិក្សា';
+                          if (nameKhController.text.trim().isEmpty) missingFields += '\n- ឈ្មោះជាភាសាខ្មែរ';
+                          if (nameEnController.text.trim().isEmpty) missingFields += '\n- ឈ្មោះជាភាសាអង់គ្លេស';
+                          if (contactNumberController.text.trim().isEmpty) missingFields += '\n- លេខទូរស័ព្ទ';
+                          if (emailController.text.trim().isEmpty) missingFields += '\n- អុីមែល';
+
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Please complete the form')),
+                            SnackBar(
+                              backgroundColor: Colors.red,
+                              content: Text('សូមបំពេញព័ត៌មានដែលនៅខ្វះខាត:$missingFields'),
+                              duration: const Duration(seconds: 5),
+                              behavior: SnackBarBehavior.floating,
+                            ),
                           );
                         }
                       },

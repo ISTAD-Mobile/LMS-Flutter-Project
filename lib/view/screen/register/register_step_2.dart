@@ -18,7 +18,6 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
 
   bool isLoading = false;
   bool _isFormSubmitted = false;
-
   String? _selectedCurrentAddress;
   String? _selectedStudyProgramAlas;
   String? _selectedPlaceOfBirth;
@@ -30,16 +29,29 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
   final nameOfHighSchoolController = TextEditingController();
 
   bool _validateForm() {
-    return
-      _selectedPlaceOfBirth != null  &&
-          _selectedCurrentAddress != null &&
-          _selectedStudyProgramAlas != null &&
-      fatherController.text.isNotEmpty &&
-        fatherNumberController.text.isNotEmpty &&
-        motherController.text.isNotEmpty &&
-        motherNumberController.text.isNotEmpty &&
-        nameOfHighSchoolController.text.isNotEmpty
-    ;
+    // Print the state of each required field
+    print('Place of Birth: $_selectedPlaceOfBirth');
+    print('Current Address: $_selectedCurrentAddress');
+    print('Study Program: $_selectedStudyProgramAlas');
+    print('Father Name: ${fatherController.text.trim()}');
+    print('Father Phone: ${fatherNumberController.text.trim()}');
+    print('Mother Name: ${motherController.text.trim()}');
+    print('Mother Phone: ${motherNumberController.text.trim()}');
+    print('High School: ${nameOfHighSchoolController.text.trim()}');
+
+    if (!_formKey.currentState!.validate()) {
+      print('Form validation failed');
+      return false;
+    }
+
+    return _selectedPlaceOfBirth != null &&
+        _selectedCurrentAddress != null &&
+        _selectedStudyProgramAlas != null &&
+        fatherController.text.trim().isNotEmpty &&
+        fatherNumberController.text.trim().isNotEmpty &&
+        motherController.text.trim().isNotEmpty &&
+        motherNumberController.text.trim().isNotEmpty &&
+        nameOfHighSchoolController.text.trim().isNotEmpty;
   }
 
   @override
@@ -65,8 +77,6 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
       _selectedPlaceOfBirth = prefs.getString('placeOfBirth') ?? ''; // Provide a default value
       _selectedCurrentAddress = prefs.getString('address') ?? ''; // Provide a default value
       _selectedStudyProgramAlas = prefs.getString('studyProgramAlias') ?? ''; // Provide a default value
-
-
       print("when load data save ${_selectedStudyProgramAlas}");
 
     });
@@ -107,16 +117,14 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    bool _isFormSubmitted = false;
-
     return SizedBox(
       width: double.infinity,
       child: DropdownMenu<String>(
         width: 398,
         menuHeight: 250,
         hintText: hint,
-        errorText: _isFormSubmitted && selectedValue == null ? 'Please $hint' : null,
-        textStyle: const TextStyle(fontSize: 16, color: Colors.black), // Text color when selected
+        errorText: _isFormSubmitted && selectedValue == null ? 'ត្រូវការជ្រើសរើស' : null,
+        textStyle: const TextStyle(fontSize: 16, color: Colors.black),
         menuStyle: MenuStyle(
           backgroundColor: WidgetStateProperty.all(Colors.white),
           shape: WidgetStateProperty.all(
@@ -151,7 +159,7 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
       children: [
         RichText(
           text: TextSpan(
-            text: label.endsWith('*')
+            text: label.endsWith('')
                 ? label.substring(0, label.length - 1)
                 : label,
             style: const TextStyle(
@@ -160,9 +168,9 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
               fontWeight: FontWeight.bold,
             ),
             children: [
-              if (label.endsWith('*'))
+              if (label.endsWith(''))
                 const TextSpan(
-                  text: ' *',
+                  text: ' ',
                   style: TextStyle(
                     color: Colors.red,
                     fontWeight: FontWeight.bold,
@@ -218,34 +226,52 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                 ),
                 const SizedBox(height: 20,),
                 _buildTextField(
-                  label: 'ឪពុកឈ្មោះ *',
+                  label: 'ឪពុកឈ្មោះ ',
                   controller: fatherController,
-                  hintText: 'ដារ៉ា ផាន់'
+                  hintText: 'ដារ៉ា ផាន់',
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'ត្រូវការបំពេញ';
+                    }
+                    return null;
+                  },
                 ),
+
                 _buildTextField(
-                    label: 'លេខទូរស័ព្ទឪពុក (បើមាន) *',
-                    controller: fatherNumberController,
-                    hintText: '0983728749',
+                  label: 'លេខទូរស័ព្ទឪពុក (បើមាន) ',
+                  controller: fatherNumberController,
+                  hintText: '0983728749',
                   keyboardType: TextInputType.phone,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'ត្រូវការបំពេញ';
+                    }
+                    String phonePattern = r'^[0-9]{9,15}$';
+                    RegExp regex = RegExp(phonePattern);
+                    if (!regex.hasMatch(value)) {
+                      return 'ត្រូវការបំពេញលេខទូរស័ព្ទត្រឹមត្រូវ';
+                    }
+                    return null;
+                  },
                 ),
                 _buildTextField(
-                    label: 'ម្តាយឈ្មោះ *',
+                    label: 'ម្តាយឈ្មោះ ',
                     controller: motherController,
                     hintText: 'សុជា គីម'
                 ),
                 _buildTextField(
-                    label: 'លេខទូរស័ព្ទម្ដាយ (បើមាន) *',
+                    label: 'លេខទូរស័ព្ទម្ដាយ (បើមាន) ',
                     controller: motherNumberController,
                     hintText: '0963762849',
                   keyboardType: TextInputType.phone,
                 ),
                 _buildTextField(
-                    label: 'ឈ្មោះសាលារៀនរបស់ប្អូន *',
+                    label: 'ឈ្មោះសាលារៀនរបស់ប្អូន ',
                     controller: nameOfHighSchoolController,
                     hintText: 'វិទ្យាល័យបាក់ទូក'
                 ),
                 _buildFormField(
-                  'មកពីខេត្ត/ក្រុង *',
+                  'មកពីខេត្ត/ក្រុង ',
                   Consumer<PlaceOfBirthViewModel>(
                     builder: (context, viewModel, _) => _buildDropdownMenu(
                       hint: _selectedPlaceOfBirth?.isNotEmpty == true
@@ -265,7 +291,7 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                   ),
                 ),
                 _buildFormField(
-                  'អាសយដ្ឋានបច្ចុប្បន្ន *',
+                  'អាសយដ្ឋានបច្ចុប្បន្ន ',
                   Consumer<CurrentAddressViewModel>(
                     builder: (context, viewModel, _) => _buildDropdownMenu(
                       hint: _selectedCurrentAddress?.isNotEmpty == true
@@ -317,6 +343,26 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                               context,
                               MaterialPageRoute(builder: (context) => RegisterStep3()),
                             );
+                          } else {
+                            // Create a detailed error message
+                            String missingFields = '';
+                            if (_selectedPlaceOfBirth == null) missingFields += '\n- មកពីខេត្ត/ក្រុង';
+                            if (_selectedCurrentAddress == null) missingFields += '\n- អាសយដ្ឋានបច្ចុប្បន្ន';
+                            if (_selectedStudyProgramAlas == null) missingFields += '\n- កម្មវិធីសិក្សា';
+                            if (fatherController.text.trim().isEmpty) missingFields += '\n- ឪពុកឈ្មោះ';
+                            if (fatherNumberController.text.trim().isEmpty) missingFields += '\n- លេខទូរស័ព្ទឪពុក';
+                            if (motherController.text.trim().isEmpty) missingFields += '\n- ម្តាយឈ្មោះ';
+                            if (motherNumberController.text.trim().isEmpty) missingFields += '\n- លេខទូរស័ព្ទម្ដាយ';
+                            if (nameOfHighSchoolController.text.trim().isEmpty) missingFields += '\n- ឈ្មោះសាលារៀន';
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text('សូមបំពេញព័ត៌មានដែលនៅខ្វះខាត:$missingFields'),
+                                duration: const Duration(seconds: 5),
+                                behavior: SnackBarBehavior.floating,
+                              ),
+                            );
                           }
                         },
                         style: ElevatedButton.styleFrom(
@@ -344,7 +390,6 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
   }
 }
 
-
 Widget _buildTextField({
     required String label,
     required TextEditingController controller,
@@ -359,7 +404,7 @@ Widget _buildTextField({
         children: [
           RichText(
             text: TextSpan(
-              text: label.endsWith('*')
+              text: label.endsWith('')
                   ? label.substring(0, label.length - 1)
                   : label,
               style: const TextStyle(
@@ -368,9 +413,9 @@ Widget _buildTextField({
                 fontWeight: FontWeight.bold,
               ),
               children: [
-                if (label.endsWith('*'))
+                if (label.endsWith(''))
                   const TextSpan(
-                    text: ' *',
+                    text: ' ',
                     style: TextStyle(
                       color: Colors.red,
                       fontWeight: FontWeight.bold,
