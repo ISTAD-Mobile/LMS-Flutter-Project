@@ -1,6 +1,3 @@
-// To parse this JSON data, do
-//
-//     final uploadImageResponse = uploadImageResponseFromJson(jsonString);
 
 import 'dart:convert';
 

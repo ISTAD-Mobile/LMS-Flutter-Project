@@ -5,10 +5,6 @@ import 'package:lms_mobile/view/widgets/public_screen_widgets/home/project_arche
 import '../../../../data/color/color_screen.dart';
 import '../../../widgets/public_screen_widgets/home/project_archeivement_gen2.dart';
 
-void main() {
-  runApp(ProjectListScreenHome());
-}
-
 class ProjectListScreenHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -255,15 +251,8 @@ class ProjectListScreen extends StatelessWidget {
           },
           icon: const Icon(Icons.arrow_back,color: AppColors.primaryColor),
         ),
-        // title: const Text(
-        //   "Back",
-        //   style: TextStyle(fontSize: 16, color: AppColors.primaryColor),
-        // ),
       ),
       body: Container(
-        // decoration: BoxDecoration(
-        //   color: AppColors.backgroundColor,
-        // ),
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -320,7 +309,6 @@ class ProjectListScreen extends StatelessWidget {
           ),
         ),
       ),
-
     );
   }
 }

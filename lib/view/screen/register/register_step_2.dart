@@ -89,15 +89,13 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
     prefs.setString('placeOfBirth', _selectedPlaceOfBirth ?? '');
     prefs.setString('studyProgramAlias', _selectedStudyProgramAlas ?? '');
 
-    print("when save${_selectedStudyProgramAlas}");
-
     prefs.setString('fatherName', fatherController.text);
     prefs.setString('fatherPhoneNumber', fatherNumberController.text);
     prefs.setString('motherName', motherController.text);
     prefs.setString('motherPhoneNumber', motherNumberController.text);
     prefs.setString('highSchool', nameOfHighSchoolController.text);
-
   }
+
 
   Widget _buildDropdownMenu({
     required String hint,

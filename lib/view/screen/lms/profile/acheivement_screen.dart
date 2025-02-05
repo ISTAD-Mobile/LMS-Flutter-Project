@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/repository/student_profile_repository.dart';
 import 'package:lms_mobile/viewModel/achievement/year_of_study_achievement_viewmodel.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../data/color/color_screen.dart';
@@ -60,7 +59,6 @@ class _AcheivementScreenState extends State<AcheivementScreen> {
       ),
     );
   }
-
 
   Widget _buildWelcomeBanner() {
     return Consumer<StudenProfileDataViewModel>(
@@ -185,7 +183,7 @@ class _AcheivementScreenState extends State<AcheivementScreen> {
               const SizedBox(height: 10),
               Text(
                 'Official Transcript'.toUpperCase(),
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                   color: AppColors.defaultBlackColor,
@@ -285,7 +283,6 @@ class _AcheivementScreenState extends State<AcheivementScreen> {
     );
   }
 
-
   // Student Info Section
   Widget _buildStudentInfo() {
     return Consumer<StudenProfileDataViewModel>(builder: (context, viewModel, child) {
@@ -343,7 +340,6 @@ class _AcheivementScreenState extends State<AcheivementScreen> {
   }
 
 }
-
 
 Widget _buildWelcomeBannerAchievementSkeleton() {
   return Container(

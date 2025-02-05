@@ -7,7 +7,8 @@ import '../../widgets/public_screen_widgets/enrollments_widget/enrollment_provid
 
 
 class EnrollScreen extends StatefulWidget {
-  const EnrollScreen({super.key});
+  final String id;
+  const EnrollScreen({super.key,required this.id});
 
   @override
   State<EnrollScreen> createState() => _EnrollScreenState();
@@ -16,13 +17,14 @@ class EnrollScreen extends StatefulWidget {
 class _EnrollScreenState extends State<EnrollScreen> {
   late final List<Widget> _steps;
 
+  late String id;
   @override
   void initState() {
     super.initState();
     _steps = [
       EnrollStep1(),
       EnrollStep2(),
-      EnrollStep3(uuid: '',),
+      EnrollStep3(studentId: id, classId: '',),
     ];
   }
 

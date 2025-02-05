@@ -506,8 +506,6 @@ class BachelorProgramHome extends StatelessWidget {
   }
 }
 
-
-
 class _CurriculumListTile extends StatelessWidget {
   final String subject;
   final String credit;
@@ -537,7 +535,6 @@ const DataCellTextStyle = TextStyle(
   color: AppColors.defaultGrayColor,
   fontWeight: FontWeight.normal,
 );
-
 
 const DataTableHeaderStyle = TextStyle(
   fontSize: 19,

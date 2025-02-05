@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:lms_mobile/model/enrollmentRequest/register_model.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/viewModel/enroll/current_address_view_model.dart';
 import 'package:lms_mobile/viewModel/enroll/university_view_model.dart';
 import 'package:lms_mobile/viewModel/enroll/place_of_birth_view_model.dart';
+import '../../../../viewModel/enroll/enroll_view_model.dart';
 import 'enroll_step1.dart';
 import 'enroll_step3.dart';
 
@@ -26,11 +28,7 @@ class _CourseEnrollForm extends State<EnrollStep2> {
   String? _selectedEducation;
   String? _selectedUniversity;
 
-  final dateOfBirthController = TextEditingController();
-  final placeOfBirthController = TextEditingController();
-  final currentAddressController = TextEditingController();
-  final educationController = TextEditingController();
-  final universityController = TextEditingController();
+  final enrollmentViewmodel = EnrollViewModel();
 
   static const int _minAge = 16;
   static const int _maxAge = 100;
@@ -55,8 +53,10 @@ class _CourseEnrollForm extends State<EnrollStep2> {
 
   Future<void> _loadSavedData() async {
     final prefs = await SharedPreferences.getInstance();
+
     setState(() {
-      _selectedBirthDate = DateTime.tryParse(prefs.getString('birthDate') ?? '');
+      String? birthDateString = prefs.getString('dob');
+      _selectedBirthDate = birthDateString != null ? DateTime.tryParse(birthDateString) : null;
       _selectedBirthAddress = prefs.getString('birthAddress');
       _selectedCurrentAddress = prefs.getString('currentAddress');
       _selectedEducation = prefs.getString('education');
@@ -64,13 +64,51 @@ class _CourseEnrollForm extends State<EnrollStep2> {
     });
   }
 
-  Future<void> _saveStep2Data() async {
+  bool _validateForm() {
+    return _selectedBirthDate != null &&
+        _selectedBirthAddress != null &&
+        _selectedCurrentAddress != null &&
+        _selectedEducation != null &&
+        _selectedUniversity != null;
+  }
+
+  Future<int?> _saveStep2DataEnrollment() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('birthDate', _selectedBirthDate?.toIso8601String() ?? '');
-    prefs.setString('birthAddress', _selectedBirthAddress ?? '');
-    prefs.setString('currentAddress', _selectedCurrentAddress ?? '');
-    prefs.setString('education', _selectedEducation ?? '');
-    prefs.setString('university', _selectedUniversity ?? '');
+
+    // Save selected values to SharedPreferences
+    await prefs.setString('dob', _selectedBirthDate?.toIso8601String() ?? '');
+    await prefs.setString('birthAddress', _selectedBirthAddress ?? '');
+    await prefs.setString('currentAddress', _selectedCurrentAddress ?? '');
+    await prefs.setString('education', _selectedEducation ?? '');
+    await prefs.setString('university', _selectedUniversity ?? '');
+
+    var enrollmentModel = EnrollmentModel(
+      email: prefs.getString('email') ?? '',
+      nameEn: prefs.getString('nameEn') ?? '',
+      gender: prefs.getString('gender') ?? '',
+      dob: _selectedBirthDate,
+      pob: CurrentAddress(id: 1, shortName: _selectedBirthAddress ?? 'Default', nameEn: _selectedBirthAddress ?? 'Default Address'),
+      currentAddress: CurrentAddress(id: 1, shortName: _selectedCurrentAddress ?? 'Default', nameEn: _selectedCurrentAddress ?? 'Default Address'),
+      phoneNumber: prefs.getString('phoneNumber') ?? '',
+      photoUri: prefs.getString('photoUri') ?? '',
+      universityInfo: CurrentAddress(id: 1, shortName: _selectedUniversity ?? 'Default', nameEn: _selectedUniversity ?? 'Default University Info'),
+    );
+
+    try {
+      final response = await enrollmentViewmodel.postEnrollment(enrollmentModel);
+
+      if (response != null && response['code'] == 200) {
+        var responseData = response['data'];
+        var id = responseData['id'];
+        prefs.setInt('studentId', id);
+        return id;
+      } else {
+        throw Exception('Failed to submit enrollment');
+      }
+    } catch (e) {
+      print('Error: $e');
+      rethrow;
+    }
   }
 
   void _showDatePicker() {
@@ -186,10 +224,20 @@ class _CourseEnrollForm extends State<EnrollStep2> {
                   'Place of birth',
                   Consumer<PlaceOfBirthViewModel>(
                     builder: (context, viewModel, _) => _buildDropdownMenu(
-                      hint: 'Select place of birth',
+                      hint: _selectedBirthAddress?.isNotEmpty == true
+                          ? _selectedBirthAddress!
+                          : 'Select place of birth',
                       options: viewModel.placeOfBirthList,
                       selectedValue: _selectedBirthAddress,
-                      onSelected: (value) => setState(() => _selectedBirthAddress = value),
+                      // onSelected: (value) => setState(() => _selectedBirthAddress = value),
+                      onSelected: (value) async {
+                        setState(() {
+                          _selectedBirthAddress = value;
+                        });
+
+                        final prefs = await SharedPreferences.getInstance();
+                        await prefs.setString('Birth Address', value ?? '');
+                      },
                     ),
                   ),
                 ),
@@ -197,30 +245,60 @@ class _CourseEnrollForm extends State<EnrollStep2> {
                   'Current address',
                   Consumer<CurrentAddressViewModel>(
                     builder: (context, viewModel, _) => _buildDropdownMenu(
-                      hint: 'Select current address',
+                      hint: _selectedCurrentAddress?.isNotEmpty == true
+                          ? _selectedCurrentAddress!
+                          : 'Select current address',
                       options: viewModel.currentAddressList,
                       selectedValue: _selectedCurrentAddress,
-                      onSelected: (value) => setState(() => _selectedCurrentAddress = value),
+                      onSelected: (value) async {
+                        setState(() {
+                          _selectedCurrentAddress = value;
+                        });
+
+                        final prefs = await SharedPreferences.getInstance();
+                        await prefs.setString('Current Address', value ?? '');
+                      },
+                      // onSelected: (value) => setState(() => _selectedCurrentAddress = value),
                     ),
                   ),
                 ),
                 _buildFormField(
                   'Education',
                   _buildDropdownMenu(
-                    hint: 'Select education',
+                    hint: _selectedEducation?.isNotEmpty == true
+                        ? _selectedEducation!
+                        : 'Select education',
                     options: educationOptions,
                     selectedValue: _selectedEducation,
-                    onSelected: (value) => setState(() => _selectedEducation = value),
+                    onSelected: (value) async {
+                      setState(() {
+                        _selectedEducation = value;
+                      });
+
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.setString('Education', value ?? '');
+                    },
+                    // onSelected: (value) => setState(() => _selectedEducation = value),
                   ),
                 ),
                 _buildFormField(
                   'University',
                   Consumer<UniversityViewModel>(
                     builder: (context, viewModel, _) => _buildDropdownMenu(
-                      hint: 'Select University',
+                      hint: _selectedUniversity?.isNotEmpty == true
+                          ? _selectedUniversity!
+                          : 'Select University',
                       options: viewModel.universityList,
                       selectedValue: _selectedUniversity,
-                      onSelected: (value) => setState(() => _selectedUniversity = value),
+                      onSelected: (value) async {
+                        setState(() {
+                          _selectedUniversity = value;
+                        });
+
+                        final prefs = await SharedPreferences.getInstance();
+                        await prefs.setString('University', value ?? '');
+                      },
+                      // onSelected: (value) => setState(() => _selectedUniversity = value),
                     ),
                   ),
                 ),
@@ -281,10 +359,7 @@ class _CourseEnrollForm extends State<EnrollStep2> {
       children: [
         ElevatedButton(
           onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const EnrollStep1()),
-            );
+            Navigator.pop(context);
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.grey[200],
@@ -301,12 +376,40 @@ class _CourseEnrollForm extends State<EnrollStep2> {
         ElevatedButton(
           onPressed: () async {
             setState(() => _isFormSubmitted = true);
-            if (_formKey.currentState!.validate() && _validateForm()) {
-              await _saveStep2Data();
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const EnrollStep3(uuid: '',),
-                  )
+
+            if (_validateForm()) {
+              try {
+                int? id = await _saveStep2DataEnrollment();
+
+                if (id != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EnrollStep3(studentId: id.toString(), classId: ''),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Enrollment failed. Please try again.'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Error: $e'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Please fill out all fields.', style: TextStyle(color: Colors.white)),
+                  backgroundColor: Colors.red,
+                ),
               );
             }
           },
@@ -321,16 +424,8 @@ class _CourseEnrollForm extends State<EnrollStep2> {
             'Select Course',
             style: TextStyle(color: Colors.white, fontSize: 16),
           ),
-        ),
+        )
       ],
     );
-  }
-
-  bool _validateForm() {
-    return _selectedBirthDate != null &&
-        _selectedBirthAddress != null &&
-        _selectedCurrentAddress != null &&
-        _selectedEducation != null &&
-        _selectedUniversity != null;
   }
 }

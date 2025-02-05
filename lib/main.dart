@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:lms_mobile/repository/enroll/enroll_repository.dart';
-import 'package:lms_mobile/repository/enroll/enroll_step3_repo.dart';
 import 'package:lms_mobile/repository/login_repo.dart';
 import 'package:lms_mobile/repository/student_profile_repository.dart';
 import 'package:lms_mobile/repository/student_profile_setting_repository.dart';
@@ -15,8 +13,6 @@ import 'package:lms_mobile/viewModel/course_details_viewmodel.dart';
 import 'package:lms_mobile/viewModel/course_viewmodel.dart';
 import 'package:lms_mobile/viewModel/enroll/available_course_view_model.dart';
 import 'package:lms_mobile/viewModel/enroll/current_address_view_model.dart';
-import 'package:lms_mobile/viewModel/enroll/enroll_view_model.dart';
-import 'package:lms_mobile/viewModel/enroll/enrollment_view_model.dart';
 import 'package:lms_mobile/viewModel/enroll/place_of_birth_view_model.dart';
 import 'package:lms_mobile/viewModel/enroll/university_view_model.dart';
 import 'package:lms_mobile/viewModel/jobvacancy_detail_viewmodel.dart';
@@ -25,12 +21,8 @@ import 'package:lms_mobile/viewModel/login_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:lms_mobile/view/widgets/sytem_screen/no_internet.dart';
 import 'data/color/color_screen.dart';
-import 'data/network/enrollment_service.dart';
 
 void main() {
-  final enrollmentService = EnrollmentService();
-  final enrollmentRepository = EnrollmentRepository(enrollmentService);
-  final enrollRepository = EnrollRepository(enrollmentService);
   runApp(
     MultiProvider(
       providers: [
@@ -46,12 +38,6 @@ void main() {
         ChangeNotifierProvider(create: (_) => CourseDetailsViewmodel()),
         ChangeNotifierProvider(create: (_) => JobvacancyDetailViewmodel()),
         ChangeNotifierProvider(create: (context) => AvailableCourseViewModel()),
-        ChangeNotifierProvider(
-          create: (_) => EnrollmentViewModel(enrollmentRepository),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => EnrollViewModel(enrollRepository),
-        ),
         Provider<StudentProfileRepository>(create: (_) => StudentProfileRepository(token: '')),
         Provider<StudentSettingRepository>(create: (_) => StudentSettingRepository(token: '')),
         ChangeNotifierProvider(

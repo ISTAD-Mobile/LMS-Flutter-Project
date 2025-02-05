@@ -23,8 +23,7 @@ class _EnrollStep1 extends State<EnrollStep1> {
   }
 
   String? nameEn;
-  String? gender;
-  String? phone;
+  String? phoneNumber;
   String? email;
 
   bool _isFormSubmitted = false;
@@ -34,7 +33,7 @@ class _EnrollStep1 extends State<EnrollStep1> {
   bool _isExpanded = false;
 
   bool _validateForm() {
-    return _fullNameController.text.isNotEmpty &&
+    return nameEnController.text.isNotEmpty &&
         _selectedGender != null &&
         phoneNumberController.text.isNotEmpty &&
         emailController.text.isNotEmpty;
@@ -45,7 +44,7 @@ class _EnrollStep1 extends State<EnrollStep1> {
   final List<String> genderOptions = ['Female', 'Male', 'Other'];
 
   final List<String> _previousNames = [];
-  final TextEditingController _fullNameController = TextEditingController();
+  final nameEnController = TextEditingController();
   final emailController = TextEditingController();
   final genderController = TextEditingController();
   final phoneNumberController = TextEditingController();
@@ -60,26 +59,33 @@ class _EnrollStep1 extends State<EnrollStep1> {
   Future<void> _loadSavedData() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      nameEn = prefs.getString('fullName');
+      nameEnController.text = prefs.getString('nameEn') ?? '';
+      phoneNumberController.text = prefs.getString('phoneNumber') ?? '';
+      emailController.text = prefs.getString('email') ?? '';
+
       _selectedGender = prefs.getString('gender');
-      phone = prefs.getString('phone');
-      email = prefs.getString('email');
     });
   }
 
-  Future<void> _saveStep1Data() async {
+  Future<void> _saveStep1DataEnroll() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('fullName', nameEn?.toString() ?? '');
-    prefs.setString('gender', gender ?? '');
-    prefs.setString('phone', phone ?? '');
-    prefs.setString('email', email ?? '');
+
+    prefs.setString('nameEn', nameEnController.text);
+    prefs.setString('phoneNumber', phoneNumberController.text);
+    prefs.setString('email', emailController.text);
+
+    prefs.setString('gender', _selectedGender ?? '');
+
+    print('NameEn: ${nameEnController.text}');
+    print('Gender: $_selectedGender');
+    print('phoneNumber: ${phoneNumberController.text}');
+    print('Email: ${emailController.text}');
   }
 
   @override
   void dispose() {
-    _fullNameController.dispose();
+    nameEnController.dispose();
     emailController.dispose();
-    genderController.dispose();
     phoneNumberController.dispose();
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
@@ -145,7 +151,7 @@ class _EnrollStep1 extends State<EnrollStep1> {
                     const SizedBox(height: 24),
                     // Full Name Field
                     const Text(
-                      'Full Name',
+                      'NameEn',
                       style: TextStyle(
                         color: AppColors.primaryColor,
                         fontSize: 16,
@@ -154,7 +160,7 @@ class _EnrollStep1 extends State<EnrollStep1> {
                     ),
                     const SizedBox(height: 8),
                     TextFormField(
-                      controller: _fullNameController,
+                      controller: nameEnController,
                       focusNode: _focusNode,
                       decoration: InputDecoration(
                         hintText: 'Chan SomNan',
@@ -181,7 +187,7 @@ class _EnrollStep1 extends State<EnrollStep1> {
                         ),
                       ),
                       onChanged: (value) {
-                        setState(() {}); // Trigger rebuild to update suggestions
+                        setState(() {});
                       },
                       onFieldSubmitted: (value) {
                         _addToPreviousNames(value);
@@ -197,19 +203,19 @@ class _EnrollStep1 extends State<EnrollStep1> {
                         return null;
                       },
                     ),
-                    if (_isExpanded && _fullNameController.text.isNotEmpty)
+                    if (_isExpanded && nameEnController.text.isNotEmpty)
                       Container(
                         margin: const EdgeInsets.only(top: 0),
                         child: Column(
                           children: _previousNames
-                              .where((name) => name.toLowerCase().startsWith(_fullNameController.text.toLowerCase()))
+                              .where((name) => name.toLowerCase().startsWith(nameEnController.text.toLowerCase()))
                               .map((name) => ListTile(
                             title: Text(name),
                             onTap: () {
                               setState(() {
-                                _fullNameController.text = name;
-                                _fullNameController.selection = TextSelection.fromPosition(
-                                  TextPosition(offset: _fullNameController.text.length),
+                                nameEnController.text = name;
+                                nameEnController.selection = TextSelection.fromPosition(
+                                  TextPosition(offset: nameEnController.text.length),
                                 );
                               });
                               _focusNode.unfocus();
@@ -283,7 +289,9 @@ class _EnrollStep1 extends State<EnrollStep1> {
                       width: double.infinity,
                       child: DropdownMenu<String>(
                         width: 398,
-                        hintText: 'Select Gender',
+                        hintText: _selectedGender?.isNotEmpty == true
+                            ? _selectedGender!
+                            : 'Select Gender',
                         errorText: _isFormSubmitted && _selectedGender == null ? 'Please select gender' : null,
                         textStyle: const TextStyle(
                           fontSize: 16,
@@ -297,7 +305,6 @@ class _EnrollStep1 extends State<EnrollStep1> {
                             ),
                           ),
                         ),
-                        controller: genderController,
                         inputDecorationTheme: InputDecorationTheme(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -344,11 +351,13 @@ class _EnrollStep1 extends State<EnrollStep1> {
                               ),
                             ),
                         ).toList(),
-                        onSelected: (String? value) {
+                        onSelected: (value) async {
                           setState(() {
                             _selectedGender = value;
                           });
-                          FocusManager.instance.primaryFocus?.unfocus();
+
+                          final prefs = await SharedPreferences.getInstance();
+                          await prefs.setString('gender', value ?? '');
                         },
                         enableSearch: true,
                         requestFocusOnTap: true,
@@ -409,25 +418,11 @@ class _EnrollStep1 extends State<EnrollStep1> {
                       alignment: Alignment.centerRight,
                       child: SizedBox(
                         child: ElevatedButton(
-                          // onPressed: () async {
-                          //   setState(() => _isFormSubmitted = true);
-                          //   if (_formKey.currentState!.validate() && _validateForm()) {
-                          //     await _saveStep1Data();
-                          //     Navigator.push(
-                          //       context,
-                          //       MaterialPageRoute(builder: (context) => const EnrollStep2()),
-                          //     );
-                          //   } else {
-                          //     ScaffoldMessenger.of(context).showSnackBar(
-                          //       const SnackBar(content: Text('Please complete the form')),
-                          //     );
-                          //   }
-                          // },
                           onPressed: () async {
                             setState(() => _isFormSubmitted = true);
                             if (_formKey.currentState!.validate() && _validateForm()) {
-                              await _saveStep1Data();
-                              Navigator.push(  // Use push instead of pushReplacement
+                              await _saveStep1DataEnroll();
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) => const EnrollStep2()),
                               );

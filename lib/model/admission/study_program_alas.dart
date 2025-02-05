@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final studyProgramAlasModel = studyProgramAlasModelFromJson(jsonString);
-
 import 'dart:convert';
 
 List<StudyProgramAlasModel> studyProgramAlasModelFromJson(String str) => List<StudyProgramAlasModel>.from(json.decode(str).map((x) => StudyProgramAlasModel.fromJson(x)));

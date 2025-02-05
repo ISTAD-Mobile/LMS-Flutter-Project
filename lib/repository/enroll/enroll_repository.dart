@@ -1,49 +1,42 @@
-import '../../data/network/enrollment_service.dart';
+import 'dart:convert';
+import '../../data/network/post_service.dart';
 import '../../model/enrollmentRequest/register_model.dart';
 import '../../resource/app_url.dart';
 
-class EnrollmentRepository {
-  final EnrollmentService _service;
+class EnrollRepository {
+  var enrollService = EnrollService();
 
-  EnrollmentRepository(this._service);
-
-  Future<EnrollmentModel> postEnrollment(EnrollmentModel enrollment) async {
+  Future<Map<String, dynamic>?> postEnrollment(EnrollmentModel data) async {
+    var enrollRequest = data.toJson();
     try {
-      final enrollmentRequest = enrollmentModelToJson(enrollment);
-      final response = await _service.postEnrollment(
-          AppUrl.postBlogRegisterUrl,
-          enrollmentRequest
+      var response = await enrollService.postEnrollment(
+        AppUrl.postBlogRegisterUrl,
+        enrollRequest,
       );
 
       if (response != null) {
-        return EnrollmentModel.fromJson(response);
-      } else {
-        throw Exception('Failed to load enrollment data');
+        if (response is Map<String, dynamic>) {
+          return response;
+        }
+
+        if (response is String) {
+          try {
+            var decodedResponse = json.decode(response);
+            if (decodedResponse is Map<String, dynamic>) {
+              return decodedResponse;
+            }
+          } catch (e) {
+            print('Error decoding response: $e');
+          }
+        }
       }
-    } catch (e) {
-      throw Exception('Repository error: $e');
+
+      print('Error: Invalid response format or missing data');
+      return null;
+    } catch (error) {
+      print('Error in enrollment Repository: $error');
+      return null;
     }
   }
 }
-
-// class EnrollmentRepository {
-//   var enrollmentService = EnrollmentService();
-//
-//   Future<EnrollmentModel> postEnrollment(Map<String, dynamic> data) async {
-//     try {
-//       var enrollmentRequest = enrollmentModelToJson(data as EnrollmentModel);
-//
-//       dynamic response = await enrollmentService.postEnrollment(
-//           AppUrl.postBlogRegisterUrl, enrollmentRequest);
-//
-//       if (response != null) {
-//         return EnrollmentModel.fromJson(response);
-//       } else {
-//         throw Exception('Failed to load enrollment data');
-//       }
-//     } catch (e) {
-//       rethrow;
-//     }
-//   }
-
 

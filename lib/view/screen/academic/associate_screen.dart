@@ -1,18 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
-
 import '../register/register_step_1.dart';
 
-void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: AssociatePage(),
-  ));
-}
-
-
 class AssociatePage extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -185,38 +175,10 @@ class AssociatePage extends StatelessWidget {
                         ),
                       ),
                       padding: const EdgeInsets.all(16),
-                      margin: const EdgeInsets.all(16),
-                      // child: Column(
-                      //   crossAxisAlignment: CrossAxisAlignment.start,
-                      //   children: [
-                      //     const Text(
-                      //       "អាជីពការងារដែលនិស្សិតអាចទទួលបានក្រោយបញ្ចប់ការសិក្សា៖",
-                      //       style: TextStyle(fontSize: 16, color: AppColors.primaryColor99,fontFamily: 'NotoSansKhmer',fontWeight: FontWeight.w700),
-                      //     ),
-                      //     const SizedBox(height: 10),
-                      //     ...[
-                      //       '• UI and UX Designer',
-                      //       '• Web Developer',
-                      //       '• Software Developer',
-                      //       '• IT Technician',
-                      //       '• Frontend Developer',
-                      //       '• Backend Developer',
-                      //       '• Full Stack Developer',
-                      //       '• Penetration Tester',
-                      //       '• Security Analyst',
-                      //       '• Application Security Engineer',
-                      //       '• System Administrator',
-                      //     ].map((career) => Text(
-                      //       career,
-                      //       style: const TextStyle(fontSize: 16, color: AppColors.defaultGrayColor),
-                      //     )),
-                      //   ],
-                      // ),
-
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             "អាជីពការងារដែលនិស្សិតអាចទទួលបានក្រោយបញ្ចប់ការសិក្សា៖",
                             style: TextStyle(
                               fontSize: 16,
@@ -243,7 +205,6 @@ class AssociatePage extends StatelessWidget {
                         ],
                       ),
                     ),
-
                     const SizedBox(height: 20),
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -289,11 +250,6 @@ class AssociatePage extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                             side: BorderSide.none,
                           ),
-                          // shape: RoundedRectangleBorder(
-                          //   side: const BorderSide(color: AppColors.primaryColor, width: 1),
-                          //   borderRadius: BorderRadius.circular(10),
-                          // ),
-
                           title: Text(
                             'Year 1',
                             style: TextStyle(
@@ -661,7 +617,6 @@ class _CurriculumListTile extends StatelessWidget {
   }
 }
 
-
 Widget _buildCourseList(List<String> courses) {
   return Column(
     children: courses
@@ -686,7 +641,6 @@ Widget _buildCourseList(List<String> courses) {
           ],
         ),
       ),
-    )
-        .toList(),
+    ).toList(),
   );
 }

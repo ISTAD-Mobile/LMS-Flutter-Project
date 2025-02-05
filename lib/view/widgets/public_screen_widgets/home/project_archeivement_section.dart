@@ -8,7 +8,6 @@ import '../../../screen/homeScreen/project_achievement/project_achievement_scree
 class ProjectArcheivementHome extends StatelessWidget {
    ProjectArcheivementHome({Key? key}) : super(key: key);
 
-
   final List<ProjectGenerationOne> generations = [
     ProjectGenerationOne(
       projects: [

@@ -9,7 +9,6 @@ class JobVacancyRepository {
   Future<JobvacancyResponse> getAllJobVacancies() async {
     try {
       final jobVacancyData = await jobvacancyService.getApiJobvacancy(JobVocancyUrl.getJobvacancyByUrl);
-      print("Job Vacancy Repo: $jobVacancyData");
       return jobvacancyResponseFromJson(jobVacancyData);
     } catch (exception) {
       print("Error in JobVacancyRepository: $exception");
