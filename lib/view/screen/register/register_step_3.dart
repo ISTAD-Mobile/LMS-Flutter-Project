@@ -15,16 +15,15 @@ class RegisterStep3 extends StatefulWidget {
   @override
   _StudentAdmissionScreenState createState() => _StudentAdmissionScreenState();
 }
+
 class _StudentAdmissionScreenState extends State<RegisterStep3> {
   final _formKey = GlobalKey<FormState>();
 
   final getToKnowIstadController = TextEditingController();
   final guardianRelationShipController = TextEditingController();
-  final diplomaSessionController = TextEditingController();
   var imageFile;
 
   final admissionViewModel = AdmissionViewmodel();
-
   @override
   void initState() {
     super.initState();
@@ -35,87 +34,87 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       getToKnowIstadController.text = prefs.getString('knownIstad') ?? '';
-      guardianRelationShipController.text = prefs.getString('guardianRelationShip') ?? '';
-      diplomaSessionController.text = prefs.getString('diplomaSession') ?? '';
+      guardianRelationShipController.text =
+          prefs.getString('guardianRelationShip') ?? '';
     });
   }
 
   Future<Map<String, dynamic>?> _saveStep3DataAdmission() async {
     final prefs = await SharedPreferences.getInstance();
 
-    prefs.getKeys().forEach((key) {
-      print('$key: ${prefs.getString(key) ?? 'Not Found'}');
-    });
-
     var admissionRequest = AdmissionRequest(
       knownIstad: getToKnowIstadController.text,
       guardianRelationShip: guardianRelationShipController.text,
-      diplomaSession: diplomaSessionController.text,
-      vocationTrainingIiiCertificate: imageFile ?? '',
-      gender: prefs.getString('gender') ?? '',
-      shiftAlias: prefs.getString('shiftAlias') ?? '',
-      degreeAlias: prefs.getString('degreeAlias') ?? '',
-      classStudent: prefs.getString('classStudent') ?? '',
-      email: prefs.getString('email') ?? '',
-      guardianContact: prefs.getString('guardianContact') ?? '',
-      nameEn: prefs.getString('nameEn') ?? '',
-      nameKh: prefs.getString('nameKh') ?? '',
+      vocationTrainingIiiCertificate: imageFile,
+      // diplomaSession: diplomaSessionController.text,
+      gender: prefs.getString('gender') ?? 'Unknown',
+      shiftAlias: prefs.getString('shiftAlias') ?? 'Unknown',
+      degreeAlias: prefs.getString('degreeAlias') ?? 'Unknown',
+      email: prefs.getString('email') ?? 'Unknown',
+      nameEn: prefs.getString('nameEn') ?? 'Unknown',
+      nameKh: prefs.getString('nameKh') ?? 'Unknown',
       dob: prefs.getString('dob') != null
           ? DateTime.tryParse(prefs.getString('dob')!)
           : null,
-      birthPlace: prefs.getString('birthPlace') ?? '',
-      studyProgramAlias: prefs.getString('studyProgramAlias') ?? '',
-      motherName: prefs.getString('motherName') ?? '',
-      motherPhoneNumber: prefs.getString('motherPhoneNumber') ?? '',
-      fatherName: prefs.getString('fatherName') ?? '',
-      fatherPhoneNumber: prefs.getString('fatherPhoneNumber') ?? '',
-      address: prefs.getString('address') ?? '',
-      bacIiGrade: prefs.getString('bacIiGrade') ?? '',
-      phoneNumber: prefs.getString('phoneNumber') ?? '',
-      highSchool: prefs.getString('highSchool') ?? '',
+      birthPlace: prefs.getString('birthPlace') ?? 'Unknown',
+      studyProgramAlias: prefs.getString('studyProgramAlias') ?? 'Unknown',
+      motherName: prefs.getString('motherName') ?? 'Unknown',
+      motherPhoneNumber: prefs.getString('motherPhoneNumber') ?? 'Unknown',
+      fatherName: prefs.getString('fatherName') ?? 'Unknown',
+      fatherPhoneNumber: prefs.getString('fatherPhoneNumber') ?? 'Unknown',
+      address: prefs.getString('address') ?? 'Unknown',
+      bacIiGrade: prefs.getString('bacIiGrade') ?? 'Unknown',
+      phoneNumber: prefs.getString('phoneNumber') ?? 'Unknown',
+      highSchool: prefs.getString('highSchool') ?? 'Unknown',
     );
 
-    try {
-      final response = await admissionViewModel.postAdmission(admissionRequest);
-      if (response != null) {
-        final telegramLink = response['telegramLink'];
-        final studentName = response['studentName'];
+    print('Full admission request: ${admissionRequest.toJson()}');
 
-        print('Telegram Link: $telegramLink');
-        print('Student Name: $studentName');
+    final response = await admissionViewModel.postAdmission(admissionRequest);
+    print('Received response: $response');
 
-        await prefs.remove('knownIstad');
-        await prefs.remove('guardianRelationShip');
-        await prefs.remove('diplomaSession');
-        prefs.clear();
+    if (response != null) {
+      final telegramLink = response['telegramLink'];
+      final studentName = response['studentName'];
 
-        return {
-          'telegramLink': telegramLink,
-          'studentName': studentName,
-        };
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to submit the form.')),
-        );
-        return null;
-      }
-    } catch (e) {
-      print('Error: $e');
+      // Clear preferences only on successful submission
+      await prefs.clear();
+
+      return {
+        'telegramLink': telegramLink,
+        'studentName': studentName,
+      };
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('An error occurred while submitting the form.'),
+          content: Text('Submission failed. Please try again.'),
+          backgroundColor: Colors.red,
         ),
       );
       return null;
     }
   }
 
-
   bool _validateForm() {
-    return getToKnowIstadController.text.isNotEmpty &&
-        guardianRelationShipController.text.isNotEmpty &&
-        diplomaSessionController.text.isNotEmpty ;
+    if (!_formKey.currentState!.validate()) {
+      print('Form validation failed');
+      return false;
+    }
+
+    // Print the state of each required field for debugging
+    print('Known ISTAD: ${getToKnowIstadController.text.trim()}');
+    print(
+        'Guardian Relationship: ${guardianRelationShipController.text.trim()}');
+    print('Image File: $imageFile');
+
+    return getToKnowIstadController.text
+        .trim()
+        .isNotEmpty &&
+        guardianRelationShipController.text
+            .trim()
+            .isNotEmpty;
   }
+
 
   bool _isFormSubmitted = false;
 
@@ -156,7 +155,6 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
   }
 
   bool _isSubmitting = false;
-
   String isImageUploade = "";
   bool isLoading = false;
 
@@ -169,7 +167,8 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
       appBar: AppBar(
         backgroundColor: AppColors.defaultWhiteColor,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: AppColors.defaultGrayColor),
+          icon: const Icon(
+              Icons.arrow_back_ios, color: AppColors.defaultGrayColor),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -189,19 +188,14 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTextField(
-                  label: 'Get to know ISTAD through: *',
+                  label: 'ស្គាល់ ISTAD តាមរយៈ ',
                   controller: getToKnowIstadController,
-                  hintText: 'Please specify how you knew about ISTAD',
+                  hintText: 'សូមបញ្ជាក់ពីរបៀបដែលអ្នកបានដឹងអំពី ISTAD',
                 ),
                 _buildTextField(
-                  label: 'GuardianRelationShip *',
+                  label: 'អ្នកណែនាំឲ្យចុះឈ្មោះរៀន (បើមាន) ',
                   controller: guardianRelationShipController,
-                  hintText: 'Teacher or Friend ...etc',
-                ),
-                _buildTextField(
-                  label: 'DiplomaSession *',
-                  controller: diplomaSessionController,
-                  hintText: '2025',
+                  hintText: 'គ្រូ ឬ មិត្ត ...ផ្សេងៗ',
                 ),
                 SizedBox(height: 10,),
                 Row(
@@ -210,21 +204,20 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
                     Column(
                       children: [
                         const Text(
-                          "Sample Photo",
-                          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                          "គំរូរូបភាព",
+                          style: TextStyle(fontSize: 15, fontWeight: FontWeight
+                              .w500),
                         ),
                         const SizedBox(height: 10),
                         Container(
                           width: 135,
                           height: 160,
                           decoration: BoxDecoration(
-                            // border: Border.all(color: Colors.grey),
                             color: Colors.grey.shade200,
                           ),
                           child: Image.asset(
                             'assets/images/cher_muyleang.png',
                             fit: BoxFit.cover,
-                            // color: AppColors.defaultGrayColor,
                             width: 20,
                             height: 20,
                           ),
@@ -240,17 +233,21 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
                               final imageResponse = viewModel.response;
 
                               if (imageResponse.status == Status.LOADING) {
-                                return const Center(child: CircularProgressIndicator());
+                                return const Center(
+                                    child: CircularProgressIndicator());
                               } else if (imageResponse.status == Status.ERROR) {
                                 return Center(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const Icon(Icons.error_outline, color: Colors.red, size: 50),
+                                      const Icon(Icons.error_outline,
+                                          color: Colors.red, size: 50),
                                       const SizedBox(height: 10),
                                       Text(
-                                        "Error: ${imageResponse.message ?? 'Something went wrong'}",
-                                        style: const TextStyle(color: Colors.red),
+                                        "Error: ${imageResponse.message ??
+                                            'Something went wrong'}",
+                                        style: const TextStyle(
+                                            color: Colors.red),
                                       ),
                                       ElevatedButton(
                                         onPressed: _pickImage,
@@ -267,7 +264,8 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
                                       height: 200,
                                       width: 180,
                                       decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.grey.shade300),
+                                        border: Border.all(
+                                            color: Colors.grey.shade300),
                                         borderRadius: BorderRadius.circular(12),
                                         image: _imageBytes != null
                                             ? DecorationImage(
@@ -278,7 +276,8 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
                                       ),
                                       child: _imageBytes == null
                                           ? const Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment
+                                            .center,
                                         children: [
                                           Icon(
                                             Icons.cloud_upload_outlined,
@@ -287,16 +286,19 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
                                           ),
                                           SizedBox(height: 5),
                                           Text(
-                                            "Avatar",
-                                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                                            "រូបថត",
+                                            style: TextStyle(fontSize: 16,
+                                                fontWeight: FontWeight.w500),
                                           ),
                                           SizedBox(height: 5),
                                           Padding(
                                             padding: EdgeInsets.all(5),
                                             child: Text(
-                                              "JPG, PNG or PDF, file size no more than 10MB",
+                                              "ប្រភេទឯកសារ JPG, PNG or PDF, ទំហំឯកសារមិនលើសពី 10MB",
                                               textAlign: TextAlign.center,
-                                              style: TextStyle(color: Colors.grey, fontSize: 12),
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 12),
                                             ),
                                           ),
                                         ],
@@ -323,14 +325,16 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.grey.shade100,
-                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 25),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
-                          side: BorderSide(color: Colors.grey.shade300, width: 1),
+                          side: BorderSide(color: Colors.grey.shade300,
+                              width: 1),
                         ),
                       ),
                       child: const Text(
-                        "Previous",
+                        "ថយក្រោយ",
                         style: TextStyle(color: AppColors.defaultGrayColor),
                       ),
                     ),
@@ -344,35 +348,71 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
                             _isSubmitting = true;
                           });
 
-                          final response = await _saveStep3DataAdmission();
+                          try {
+                            // Print all form data for debugging
+                            print('Form Data:');
+                            print('Known ISTAD: ${getToKnowIstadController.text.trim()}');
+                            print('Guardian Relationship: ${guardianRelationShipController.text.trim()}');
+                            print('Image File: $imageFile');
 
-                          setState(() {
-                            _isSubmitting = false;
-                          });
+                            final response = await _saveStep3DataAdmission();
+                            setState(() {
+                              _isSubmitting = false;
+                            });
 
-                          if (response != null) {
-                            final telegramLink = response['telegramLink'] ?? 'Default Telegram Link';
-                            final studentName = response['studentName'] ?? 'Unknown Student';
+                            if (response != null) {
+                              final telegramLink = response['telegramLink'] ?? 'Default Telegram Link';
+                              final studentName = response['studentName'] ?? 'Unknown Student';
 
-                            print('Telegram Link: $telegramLink');
-                            print('Student Name: $studentName');
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SuccessfullyAdmissionPage(
-                                  telegramLink: telegramLink,
-                                  studentName: studentName,
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SuccessfullyAdmissionPage(
+                                    telegramLink: telegramLink,
+                                    studentName: studentName,
+                                  ),
                                 ),
-                              ),
-                            );
-                          } else {
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Submission failed. Please try again.'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          } catch (e) {
+                            setState(() {
+                              _isSubmitting = false;
+                            });
+
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Submission failed. Please try again.')),
+                              SnackBar(
+                                content: Text('An error occurred: $e'),
+                                backgroundColor: Colors.red,
+                              ),
                             );
                           }
                         } else {
+                          // Create a detailed error message for missing fields
+                          String missingFields = '';
+                          if (getToKnowIstadController.text.trim().isEmpty) {
+                            missingFields += '\n- ស្គាល់ ISTAD តាមរយៈ';
+                          }
+                          if (guardianRelationShipController.text.trim().isEmpty) {
+                            missingFields += '\n- អ្នកណែនាំឲ្យចុះឈ្មោះរៀន';
+                          }
+                          if (imageFile == null) {
+                            missingFields += '\n- រូបថត';
+                          }
+
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Please fill out all required fields')),
+                            SnackBar(
+                              content: Text('សូមបំពេញព័ត៌មានដែលនៅខ្វះខាត:$missingFields'),
+                              backgroundColor: Colors.red,
+                              duration: const Duration(seconds: 5),
+                              behavior: SnackBarBehavior.floating,
+                            ),
                           );
                         }
                       },
@@ -384,7 +424,10 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
                           side: BorderSide(color: AppColors.primaryColor, width: 1),
                         ),
                       ),
-                      child: const Text('Submit',style: TextStyle(color: AppColors.defaultWhiteColor),),
+                      child: const Text(
+                        'ចុះឈ្មោះ',
+                        style: TextStyle(color: AppColors.defaultWhiteColor),
+                      ),
                     ),
                   ],
                 ),
@@ -410,7 +453,7 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
         children: [
           RichText(
             text: TextSpan(
-              text: label.endsWith('*')
+              text: label.endsWith('')
                   ? label.substring(0, label.length - 1)
                   : label,
               style: const TextStyle(
@@ -419,9 +462,9 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
                 fontWeight: FontWeight.bold,
               ),
               children: [
-                if (label.endsWith('*'))
+                if (label.endsWith(''))
                   const TextSpan(
-                    text: ' *',
+                    text: ' ',
                     style: TextStyle(
                       color: Colors.red,
                       fontWeight: FontWeight.bold,
@@ -434,14 +477,21 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
           TextFormField(
             controller: controller,
             keyboardType: keyboardType,
-            validator: validator,
+            validator: (value) {
+              if (value == null || value
+                  .trim()
+                  .isEmpty) {
+                return 'ត្រូវការបំពេញ';
+              }
+              return null;
+            },
             cursorColor: AppColors.primaryColor,
             decoration: InputDecoration(
               hintText: hintText,
               hintStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 15,
+                color: Colors.grey,
+                fontWeight: FontWeight.w400,
+                fontSize: 15,
               ),
               filled: true,
               fillColor: Colors.transparent,
@@ -459,7 +509,8 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: AppColors.primaryColor, width: 2.0),
+                borderSide: const BorderSide(
+                    color: AppColors.primaryColor, width: 2.0),
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -470,7 +521,9 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
                 borderSide: const BorderSide(color: Colors.red, width: 2.0),
               ),
               contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 12, vertical: 16),
+                horizontal: 12,
+                vertical: 16,
+              ),
             ),
           ),
         ],
@@ -478,5 +531,3 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
     );
   }
 }
-
-

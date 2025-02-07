@@ -4,10 +4,6 @@ import 'package:lms_mobile/view/screen/register/register_step_1.dart';
 import 'package:lms_mobile/view/screen/register/register_step_2.dart';
 import 'package:lms_mobile/view/screen/register/register_step_3.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -27,7 +23,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
   int _currentStep = 0;
 
   final List<Widget> _steps = [
-    RegisterStep1(),
+    const RegisterStep1(),
     RegisterStep2(),
     RegisterStep3(),
   ];
@@ -38,12 +34,12 @@ class _RegistrationFormState extends State<RegistrationForm> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.popUntil(context, (route) => route.isFirst);
           },
         ),
-        title: Text(
+        title: const Text(
           'Student Admission',
           style: TextStyle(color: AppColors.primaryColor, fontSize: 16),
         ),

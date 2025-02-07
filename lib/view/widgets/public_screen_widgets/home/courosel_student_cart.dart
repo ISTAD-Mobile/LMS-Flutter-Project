@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 
-
 class TestimonialPage extends StatefulWidget {
   const TestimonialPage({Key? key}) : super(key: key);
 
@@ -113,9 +112,9 @@ class _TestimonialPageState extends State<TestimonialPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.only(right: 16,left: 16,bottom: 16),
-            child: const Text(
+          const Padding(
+            padding: EdgeInsets.only(right: 16,left: 16,bottom: 16),
+            child: Text(
               'HEAR FROM OUR STUDENT',
               style: TextStyle(
                 fontSize: 20,

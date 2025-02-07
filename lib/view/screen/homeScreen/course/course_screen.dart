@@ -37,7 +37,7 @@ class _HomeScreenState extends State<ShortCoursePage> {
       body: Container(
         color: AppColors.backgroundColor,
         child: Padding(
-          padding: EdgeInsets.only(right: 16,left: 16),
+          padding: const EdgeInsets.only(right: 16,left: 16),
           child: ChangeNotifierProvider(
             create: (context) => courseViewModel,
             child: Consumer<CourseViewmodel>(
@@ -56,7 +56,7 @@ class _HomeScreenState extends State<ShortCoursePage> {
                   case Status.COMPLETED:
                     final courses = viewModel.course.data?.courseList ?? [];
                     return courses.isEmpty
-                        ? Center(child: Text('No courses available'))
+                        ? const Center(child: Text('No courses available'))
                         : ListView.builder(
                       scrollDirection: Axis.vertical,
                       itemCount: courses.length,
@@ -73,7 +73,7 @@ class _HomeScreenState extends State<ShortCoursePage> {
                     return Center(
                       child: Text(
                         'An error occurred: ${viewModel.course.message}',
-                        style: TextStyle(color: Colors.red),
+                        style: const TextStyle(color: Colors.red),
                       ),
                     );
                   case Status.IDLE:

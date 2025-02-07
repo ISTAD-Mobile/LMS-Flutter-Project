@@ -5,7 +5,6 @@ import 'package:lms_mobile/model/course.dart';
 
 import '../../../screen/homeScreen/course/course_details_screen.dart';
 
-
 class ShortCourseCard extends StatelessWidget {
   final Course course;
 
@@ -76,7 +75,7 @@ class ShortCourseCard extends StatelessWidget {
                     course.description,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                       color: AppColors.defaultGrayColor,
                     ),
@@ -149,7 +148,7 @@ class ShortCourseCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10,),
+                  const SizedBox(height: 10,),
                   Container(
                     padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
                     decoration: BoxDecoration(
@@ -157,8 +156,8 @@ class ShortCourseCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Container(
-                      child: Text('20% Schoolarship',
-                        style: const TextStyle(
+                      child: const Text('20% Schoolarship',
+                        style: TextStyle(
                           fontSize: 14,
                           color: AppColors.defaultWhiteColor,
                           fontWeight: FontWeight.w500,

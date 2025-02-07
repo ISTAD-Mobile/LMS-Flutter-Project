@@ -1,76 +1,28 @@
 import 'package:flutter/material.dart';
-import '../../model/enrollmentRequest/enroll.dart';
-import '../../repository/enroll/enroll_step3_repo.dart';
-import '../../data/response/status.dart';
+import 'package:lms_mobile/repository/enroll/enroll_repository.dart';
+import '../../data/response/api_response.dart';
 
 class EnrollViewModel extends ChangeNotifier {
-  final EnrollRepository _repository;
+  final _enrollmentRepository = EnrollRepository();
+  ApiResponse<Map<String, dynamic>> responseEnroll = ApiResponse.loading();
 
-  EnrollViewModel(this._repository);
+  setEnrollmentData(ApiResponse<Map<String, dynamic>> responseEnroll) {
+    this.responseEnroll = responseEnroll;
+    notifyListeners();
+  }
 
-  Status _status = Status.IDLE;
-  Status get status => _status;
+  Future<Map<String, dynamic>?> postEnrollment(data) async {
+    setEnrollmentData(ApiResponse.loading());
 
-  String? _error;
-  String? get error => _error;
-
-  EnrollModel? _enrollModel;
-  EnrollModel? get enrollModel => _enrollModel;
-
-  Future<void> enrollStudent({
-    required int classId,
-    required int studentId,
-  }) async {
     try {
-      _status = Status.LOADING;
-      notifyListeners();
+      final response = await _enrollmentRepository.postEnrollment(data);
 
-      final enrollData = EnrollModel(
-        classId: classId,
-        studentId: studentId,
-      );
-
-      _enrollModel = await _repository.postEnroll(enrollData);
-      _status = Status.COMPLETED;
-    } catch (e) {
-      _status = Status.ERROR;
-      _error = e.toString();
-      _enrollModel = null;
-    } finally {
-      notifyListeners();
+      setEnrollmentData(ApiResponse.completed(response));
+      return response;
+    } catch (error) {
+      setEnrollmentData(ApiResponse.error(error.toString()));
+      return null;
     }
   }
 }
 
-// class EnrollStep3ViewModel with ChangeNotifier {
-//   final EnrollStep3Repo _repository;
-//
-//   EnrollStep3ViewModel(this._repository);
-//
-//   Status _status = Status.IDLE;
-//   Status get status => _status;
-//
-//   String? _error;
-//   String? get error => _error;
-//
-//   Future<void> enrollStudent({
-//     required int classId,
-//     required int studentId,
-//   }) async {
-//     _status = Status.LOADING;
-//     notifyListeners();
-//
-//     try {
-//       await _repository.postEnroll({
-//         'classId': classId,
-//         'studentId': studentId,
-//       });
-//       _status = Status.COMPLETED;
-//     } catch (e) {
-//       _status = Status.ERROR;
-//       _error = e.toString();
-//     }
-//
-//     notifyListeners();
-//   }
-// }

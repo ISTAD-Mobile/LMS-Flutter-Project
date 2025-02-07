@@ -1,6 +1,3 @@
-// To parse this JSON data, do
-//
-//     final currentAddressModel = currentAddressModelFromJson(jsonString);
 
 import 'dart:convert';
 

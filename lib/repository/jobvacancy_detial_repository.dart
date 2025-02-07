@@ -10,7 +10,6 @@ class JobvacancyDetialRepository {
     final url = '$baseUrl/contents/$id';
 
     try {
-      // Log the API URL for debugging
       print('Fetching data from: $url');
 
       final response = await http.get(
@@ -20,24 +19,11 @@ class JobvacancyDetialRepository {
           'apiKey': apiKey,
         },
       );
-
-      print('Status code detail: ${response.statusCode}');
-      print('Response body (raw): ${response.body}');
-
       if (response.statusCode == 200) {
-        // Decode response body as UTF-8
         String decodedResponse = utf8.decode(response.bodyBytes);
-
-        // Print decoded response for debugging
-        print('Decoded response: $decodedResponse');
-
-        // Parse the decoded response to JSON
         final jsonData = jsonDecode(decodedResponse);
-
-        // Return the JobvacancyDetailModel from the decoded JSON
         return JobvacancyDetailModel.fromJson(jsonData);
       } else {
-        // Handle different status codes for better error feedback
         if (response.statusCode == 400) {
           throw Exception('Bad Request: Please check the UUID or request format.');
         } else if (response.statusCode == 404) {

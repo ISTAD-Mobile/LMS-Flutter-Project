@@ -131,14 +131,7 @@ class SuccessfullyAdmissionPage extends StatelessWidget {
   // Admission button widget
   Widget _buildAdmissionButton(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => RegisterStep1(),
-        //   ),
-        // );
-      },
+      onPressed: () {},
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.secondaryColor,
         shape: RoundedRectangleBorder(

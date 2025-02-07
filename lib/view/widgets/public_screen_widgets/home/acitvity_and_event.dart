@@ -82,16 +82,16 @@ class ActivityAndEventCard extends StatelessWidget {
                   children: [
                     Text(
                       activityModel.title,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 19,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
                     ),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     Text(
                       activityModel.description,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14,
                         color: Colors.white,
                       ),

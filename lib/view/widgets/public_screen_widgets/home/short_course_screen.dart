@@ -25,10 +25,6 @@ class ShortCourseScreen extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.defaultWhiteColor,
           borderRadius: BorderRadius.circular(8),
-          // border: Border.all(
-          //   width: 0.5,
-          //   color: Colors.grey.shade400,
-          // ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -154,8 +150,8 @@ class ShortCourseScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Container(
-                      child: Text('20% Schoolarship',
-                        style: const TextStyle(
+                      child: const Text('20% Schoolarship',
+                        style: TextStyle(
                           fontSize: 14,
                           color: AppColors.defaultWhiteColor,
                           fontWeight: FontWeight.w500,

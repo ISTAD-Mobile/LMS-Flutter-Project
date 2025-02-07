@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/view/widgets/public_screen_widgets/home/acitvity_and_event.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
