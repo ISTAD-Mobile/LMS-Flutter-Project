@@ -1,6 +1,3 @@
-// To parse this JSON data, do
-//
-//     final placeOfBirthModel = placeOfBirthModelFromJson(jsonString);
 
 import 'dart:convert';
 

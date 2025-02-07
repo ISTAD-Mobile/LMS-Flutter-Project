@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final degreeModel = degreeModelFromJson(jsonString);
-
 import 'dart:convert';
 
 List<DegreeModel> degreeModelFromJson(String str) => List<DegreeModel>.from(json.decode(str).map((x) => DegreeModel.fromJson(x)));

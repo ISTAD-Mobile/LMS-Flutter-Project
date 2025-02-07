@@ -40,7 +40,6 @@ class CourseDetailPage extends StatelessWidget {
                   ),
               );
             }
-
             if (viewModel.errorMessage != null) {
               return Center(child: Text('Error: ${viewModel.errorMessage}'));
             }
@@ -50,7 +49,6 @@ class CourseDetailPage extends StatelessWidget {
             }
 
             final course = viewModel.courseDetail!.data;
-
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -69,7 +67,7 @@ class CourseDetailPage extends StatelessWidget {
                         children: [
                           Text(
                             course?.title ?? 'No Title',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: AppColors.primaryColor,
@@ -79,7 +77,7 @@ class CourseDetailPage extends StatelessWidget {
                           const SizedBox(height: 8),
                           Text(
                             course?.description ?? 'No Description',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 14,
                               color: AppColors.defaultGrayColor,
                             ),
@@ -150,9 +148,6 @@ class CourseDetailPage extends StatelessWidget {
     );
   }
 
-
-
-
   Widget _buildPriceSection(CourseDetailResponse? courseDetailResponse) {
     if (courseDetailResponse == null || courseDetailResponse.data == null) {
       return const Center(child: Text('No course details available.'));
@@ -205,7 +200,7 @@ class CourseDetailPage extends StatelessWidget {
                     // Discounted price
                     TextSpan(
                       text: '  /  \$${discountedFee.toStringAsFixed(3)}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: AppColors.defaultBlackColor,
                         fontWeight: FontWeight.w500,
                       ),
@@ -245,16 +240,11 @@ class CourseDetailPage extends StatelessWidget {
     );
   }
 
-
-
   Widget _buildResetButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
-          // Navigator.of(context).push(
-          //   MaterialPageRoute(builder: (BuildContext context) => const EnrollScreen()),
-          // );
           Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => const EnrollStep1()),
           );
@@ -365,9 +355,4 @@ class CourseDetailPage extends StatelessWidget {
       ),
     );
   }
-
-
-
 }
-
-

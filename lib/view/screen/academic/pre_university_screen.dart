@@ -228,8 +228,7 @@ class _PreUniversityPageState extends State<PreUniversityPage> {
             ],
           ),
         ),
-      )
-          .toList(),
+      ).toList(),
     );
   }
 }

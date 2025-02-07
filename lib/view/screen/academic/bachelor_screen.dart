@@ -2,13 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:lms_mobile/view/screen/register/register_step_1.dart';
 
-void main() {
-  runApp(const MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: BachelorPage(),
-  ));
-}
-
 class BachelorPage extends StatelessWidget {
   const BachelorPage({super.key});
 
@@ -143,7 +136,6 @@ class BachelorPage extends StatelessWidget {
                           ],
                         ),
                       )
-
                     ],
                   ),
                   const SizedBox(height: 15),
@@ -159,33 +151,6 @@ class BachelorPage extends StatelessWidget {
                       ),
                     ),
                     padding: const EdgeInsets.all(16),
-                    // child: Column(
-                    //   crossAxisAlignment: CrossAxisAlignment.start,
-                    //   children: [
-                    //     const Text(
-                    //       "អាជីពការងារដែលនិស្សិតអាចទទួលបានក្រោយបញ្ចប់ការសិក្សា៖",
-                    //       style: TextStyle(fontSize: 16, color: AppColors.defaultGrayColor),
-                    //     ),
-                    //     const SizedBox(height: 10),
-                    //     ...[
-                    //       '• UI and UX Designer',
-                    //       '• Web Developer',
-                    //       '• Software Developer',
-                    //       '• IT Technician',
-                    //       '• Frontend Developer',
-                    //       '• Backend Developer',
-                    //       '• Full Stack Developer',
-                    //       '• Penetration Tester',
-                    //       '• Security Analyst',
-                    //       '• Application Security Engineer',
-                    //       '• System Administrator',
-                    //     ].map((career) => Text(
-                    //       career,
-                    //       style: const TextStyle(fontSize: 16, color: AppColors.defaultGrayColor),
-                    //     )),
-                    //   ],
-                    // ),
-
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -216,7 +181,6 @@ class BachelorPage extends StatelessWidget {
                       ],
                     ),
                   ),
-
                   const SizedBox(height: 30),
                   const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -803,7 +767,6 @@ class BachelorPage extends StatelessWidget {
   }
 }
 
-
 class _CurriculumListTile extends StatelessWidget {
   final String subject;
   final String credit;
@@ -834,13 +797,11 @@ const DataCellTextStyle = TextStyle(
   fontWeight: FontWeight.normal,
 );
 
-
 const DataTableHeaderStyle = TextStyle(
   fontSize: 19,
   fontWeight: FontWeight.bold,
   color: AppColors.defaultGrayColor,
 );
-
 
 Widget _buildCourseList(List<String> courses) {
   return Column(
@@ -866,7 +827,6 @@ Widget _buildCourseList(List<String> courses) {
           ],
         ),
       ),
-    )
-        .toList(),
+    ).toList(),
   );
 }

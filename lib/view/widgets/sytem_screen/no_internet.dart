@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -32,8 +28,8 @@ class NoInternetPage extends StatelessWidget {
               reverse: true,
               animate: true,
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Check your Internet',
               style: TextStyle(
                 fontSize: 18,

@@ -15,6 +15,16 @@ class StudentCoursesScreen extends StatefulWidget {
   @override
   _StudentCoursesScreenState createState() => _StudentCoursesScreenState();
 }
+class GlobalToken {
+  static final GlobalToken _instance = GlobalToken._internal();
+  String? token;
+
+  factory GlobalToken() {
+    return _instance;
+  }
+
+  GlobalToken._internal();
+}
 
 class _StudentCoursesScreenState extends State<StudentCoursesScreen> {
   late StudentCoursesViewModel viewModel;
@@ -29,6 +39,7 @@ class _StudentCoursesScreenState extends State<StudentCoursesScreen> {
   @override
   void initState() {
     super.initState();
+    GlobalToken().token = widget.token;
     final service = StudentCoursesService(token: widget.token);
     final repository = StudentCoursesRepository(service: service);
     viewModel = StudentCoursesViewModel(repository: repository);
@@ -117,7 +128,6 @@ class _StudentCoursesScreenState extends State<StudentCoursesScreen> {
       ),
     );
   }
-
 
   Widget _buildFilterSection() {
     return Padding(
@@ -323,9 +333,9 @@ class _StudentCoursesScreenState extends State<StudentCoursesScreen> {
                   semester: course.semester.toString(),
                   credits: course.credit.toString(),
                   thumbnailUrl: course.logo,
-                  userProfileUrl: data.profileImage != null && data.profileImage!.isNotEmpty
-                      ? data.profileImage
-                      : 'assets/images/placeholder.jpg',
+                  userProfileUrl: data.profileImage ?? 'assets/images/placeholder.jpg',
+                  token: widget.token, // Pass token
+                  avatar: data.avatar,
                 ),
               );
             },
@@ -366,9 +376,9 @@ Widget _buildWelcomeBannerWithData(StudentCoursesModel data) {
                 ),
               ),
               const SizedBox(height: 4),
-              Text(
+              const Text(
                 'Passionate about literature and creative writing.',
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white70,
                   fontSize: 13, // Adjusted font size to match the new style
                 ),
@@ -424,8 +434,6 @@ Widget _buildWelcomeBannerWithData(StudentCoursesModel data) {
   );
 }
 
-
-
 class CourseCard extends StatelessWidget {
   final String uuid;
   final String title;
@@ -435,6 +443,8 @@ class CourseCard extends StatelessWidget {
   final String credits;
   final String thumbnailUrl;
   final String userProfileUrl;
+  final String token; // Add token parameter
+  final String avatar;
 
   const CourseCard({
     super.key,
@@ -446,16 +456,22 @@ class CourseCard extends StatelessWidget {
     required this.credits,
     required this.thumbnailUrl,
     required this.userProfileUrl,
+    required this.token,
+    required this.avatar, // Make token required
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        print('Token in CourseCard before navigation: ${token.substring(0, 10)}...'); // Only print first 10 chars
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => StudentCourseDetailView(uuid: uuid),
+            builder: (context) => StudentCourseDetailView(
+              uuid: uuid,
+              token: token,
+            ),
           ),
         );
       },
@@ -491,7 +507,7 @@ class CourseCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   color: AppColors.defaultGrayColor,
-                  fontSize: 14, // Reduced font size
+                  fontSize: 14,
                 ),
               ),
               const SizedBox(height: 12),
@@ -500,17 +516,16 @@ class CourseCard extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 16,
-                    backgroundColor: userProfileUrl == null || userProfileUrl.isEmpty
-                        ? Colors.grey[200]
-                        : null,
-                    foregroundImage: userProfileUrl != null && userProfileUrl.isNotEmpty
-                        ? NetworkImage(userProfileUrl)
-                        : null,
-                    child: userProfileUrl == null || userProfileUrl.isEmpty
-                        ? Image.asset('assets/images/placeholder.jpg')
+                    backgroundColor: Colors.grey[200], // Lighter grey background
+                    foregroundImage: avatar.isNotEmpty ? NetworkImage(avatar) : null,
+                    child: avatar.isEmpty
+                        ? const Icon(
+                      Icons.person_outline, // Outline version of person icon
+                      color: Colors.grey,
+                      size: 20,
+                    )
                         : null,
                   ),
-
                   const SizedBox(width: 8),
                   Expanded(
                     child: Column(
@@ -571,8 +586,6 @@ class CourseCard extends StatelessWidget {
     );
   }
 }
-
-
 
 Widget _buildWelcomeBannerSkeleton() {
   return Container(
@@ -750,5 +763,3 @@ Widget _buildCoursesListSkeleton() {
     },
   );
 }
-
-

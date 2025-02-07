@@ -87,7 +87,6 @@ class _StudentSettingsState extends State<SettingScreen> {
     }
   }
 
-
   String isImageUploade = "";
   bool isLoading = false;
 
@@ -283,11 +282,10 @@ class _StudentSettingsState extends State<SettingScreen> {
                                       profileImage: profileImage,
                                     );
 
-                                    // Show success Snackbar
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: const Text('Your data has been saved successfully!'),
-                                        duration: const Duration(seconds: 2),
+                                      const SnackBar(
+                                        content: Text('Your data has been saved successfully!'),
+                                        duration: Duration(seconds: 2),
                                       ),
                                     );
                                     Navigator.pushReplacement(
@@ -377,7 +375,6 @@ class _StudentSettingsState extends State<SettingScreen> {
     );
   }
 
-
   Widget _buildDropdownField({
     required String label,
     required String? value,
@@ -449,10 +446,4 @@ class _StudentSettingsState extends State<SettingScreen> {
       ),
     );
   }
-
-
-
-
-
 }
-

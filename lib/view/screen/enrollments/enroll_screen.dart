@@ -24,7 +24,7 @@ class _EnrollScreenState extends State<EnrollScreen> {
     _steps = [
       EnrollStep1(),
       EnrollStep2(),
-      EnrollStep3(studentId: id),
+      EnrollStep3(studentId: id, classId: '',),
     ];
   }
 

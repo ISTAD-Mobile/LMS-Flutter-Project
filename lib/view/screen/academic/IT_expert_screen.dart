@@ -11,7 +11,6 @@ class ITExpertPage extends StatefulWidget {
 class _ITExpertPageState extends State<ITExpertPage> {
   int currentIndex = 0;
 
-
   void onTabTapped(int index) {
     setState(() {
       currentIndex = index;
@@ -188,8 +187,7 @@ class _ITExpertPageState extends State<ITExpertPage> {
                 ],
               ),
             ),
-          )
-          .toList(),
+          ).toList(),
     );
   }
 }

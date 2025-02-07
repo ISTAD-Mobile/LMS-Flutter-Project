@@ -75,16 +75,23 @@ class _CourseEnrollForm extends State<EnrollStep2> {
   Future<int?> _saveStep2DataEnrollment() async {
     final prefs = await SharedPreferences.getInstance();
 
+    // Save selected values to SharedPreferences
+    await prefs.setString('dob', _selectedBirthDate?.toIso8601String() ?? '');
+    await prefs.setString('birthAddress', _selectedBirthAddress ?? '');
+    await prefs.setString('currentAddress', _selectedCurrentAddress ?? '');
+    await prefs.setString('education', _selectedEducation ?? '');
+    await prefs.setString('university', _selectedUniversity ?? '');
+
     var enrollmentModel = EnrollmentModel(
       email: prefs.getString('email') ?? '',
       nameEn: prefs.getString('nameEn') ?? '',
       gender: prefs.getString('gender') ?? '',
-      dob: prefs.getString('dob') != null ? DateTime.tryParse(prefs.getString('dob')!) : null,
-      pob: CurrentAddress(id: 1, shortName: 'Default', nameEn: 'Default Address'),
-      currentAddress: CurrentAddress(id: 1, shortName: 'Default', nameEn: 'Default Address'),
+      dob: _selectedBirthDate,
+      pob: CurrentAddress(id: 1, shortName: _selectedBirthAddress ?? 'Default', nameEn: _selectedBirthAddress ?? 'Default Address'),
+      currentAddress: CurrentAddress(id: 1, shortName: _selectedCurrentAddress ?? 'Default', nameEn: _selectedCurrentAddress ?? 'Default Address'),
       phoneNumber: prefs.getString('phoneNumber') ?? '',
       photoUri: prefs.getString('photoUri') ?? '',
-      universityInfo: CurrentAddress(id: 1, shortName: 'Default', nameEn: 'Default University Info'),
+      universityInfo: CurrentAddress(id: 1, shortName: _selectedUniversity ?? 'Default', nameEn: _selectedUniversity ?? 'Default University Info'),
     );
 
     try {
@@ -103,8 +110,6 @@ class _CourseEnrollForm extends State<EnrollStep2> {
       rethrow;
     }
   }
-
-
 
   void _showDatePicker() {
     final now = DateTime.now();
@@ -219,10 +224,20 @@ class _CourseEnrollForm extends State<EnrollStep2> {
                   'Place of birth',
                   Consumer<PlaceOfBirthViewModel>(
                     builder: (context, viewModel, _) => _buildDropdownMenu(
-                      hint: 'Select place of birth',
+                      hint: _selectedBirthAddress?.isNotEmpty == true
+                          ? _selectedBirthAddress!
+                          : 'Select place of birth',
                       options: viewModel.placeOfBirthList,
                       selectedValue: _selectedBirthAddress,
-                      onSelected: (value) => setState(() => _selectedBirthAddress = value),
+                      // onSelected: (value) => setState(() => _selectedBirthAddress = value),
+                      onSelected: (value) async {
+                        setState(() {
+                          _selectedBirthAddress = value;
+                        });
+
+                        final prefs = await SharedPreferences.getInstance();
+                        await prefs.setString('Birth Address', value ?? '');
+                      },
                     ),
                   ),
                 ),
@@ -230,30 +245,60 @@ class _CourseEnrollForm extends State<EnrollStep2> {
                   'Current address',
                   Consumer<CurrentAddressViewModel>(
                     builder: (context, viewModel, _) => _buildDropdownMenu(
-                      hint: 'Select current address',
+                      hint: _selectedCurrentAddress?.isNotEmpty == true
+                          ? _selectedCurrentAddress!
+                          : 'Select current address',
                       options: viewModel.currentAddressList,
                       selectedValue: _selectedCurrentAddress,
-                      onSelected: (value) => setState(() => _selectedCurrentAddress = value),
+                      onSelected: (value) async {
+                        setState(() {
+                          _selectedCurrentAddress = value;
+                        });
+
+                        final prefs = await SharedPreferences.getInstance();
+                        await prefs.setString('Current Address', value ?? '');
+                      },
+                      // onSelected: (value) => setState(() => _selectedCurrentAddress = value),
                     ),
                   ),
                 ),
                 _buildFormField(
                   'Education',
                   _buildDropdownMenu(
-                    hint: 'Select education',
+                    hint: _selectedEducation?.isNotEmpty == true
+                        ? _selectedEducation!
+                        : 'Select education',
                     options: educationOptions,
                     selectedValue: _selectedEducation,
-                    onSelected: (value) => setState(() => _selectedEducation = value),
+                    onSelected: (value) async {
+                      setState(() {
+                        _selectedEducation = value;
+                      });
+
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.setString('Education', value ?? '');
+                    },
+                    // onSelected: (value) => setState(() => _selectedEducation = value),
                   ),
                 ),
                 _buildFormField(
                   'University',
                   Consumer<UniversityViewModel>(
                     builder: (context, viewModel, _) => _buildDropdownMenu(
-                      hint: 'Select University',
+                      hint: _selectedUniversity?.isNotEmpty == true
+                          ? _selectedUniversity!
+                          : 'Select University',
                       options: viewModel.universityList,
                       selectedValue: _selectedUniversity,
-                      onSelected: (value) => setState(() => _selectedUniversity = value),
+                      onSelected: (value) async {
+                        setState(() {
+                          _selectedUniversity = value;
+                        });
+
+                        final prefs = await SharedPreferences.getInstance();
+                        await prefs.setString('University', value ?? '');
+                      },
+                      // onSelected: (value) => setState(() => _selectedUniversity = value),
                     ),
                   ),
                 ),
@@ -308,17 +353,13 @@ class _CourseEnrollForm extends State<EnrollStep2> {
     );
   }
 
-
   Widget _buildNavigationButtons() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         ElevatedButton(
           onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const EnrollStep1()),
-            );
+            Navigator.pop(context);
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.grey[200],
@@ -333,11 +374,10 @@ class _CourseEnrollForm extends State<EnrollStep2> {
           ),
         ),
         ElevatedButton(
-          onPressed: _validateForm()
-              ? () async {
+          onPressed: () async {
             setState(() => _isFormSubmitted = true);
 
-            if (_formKey.currentState!.validate()) {
+            if (_validateForm()) {
               try {
                 int? id = await _saveStep2DataEnrollment();
 
@@ -345,26 +385,34 @@ class _CourseEnrollForm extends State<EnrollStep2> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => EnrollStep3(studentId: id.toString()),
+                      builder: (context) => EnrollStep3(studentId: id.toString(), classId: ''),
                     ),
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Enrollment failed. Please try again.')),
+                    const SnackBar(
+                      content: Text('Enrollment failed. Please try again.'),
+                      backgroundColor: Colors.red,
+                    ),
                   );
                 }
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Error: $e')),
+                  SnackBar(
+                    content: Text('Error: $e'),
+                    backgroundColor: Colors.red,
+                  ),
                 );
               }
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Please fill out all fields.')),
+                const SnackBar(
+                  content: Text('Please fill out all fields.', style: TextStyle(color: Colors.white)),
+                  backgroundColor: Colors.red,
+                ),
               );
             }
-          }
-              : null,
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.primaryColor,
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
@@ -376,11 +424,8 @@ class _CourseEnrollForm extends State<EnrollStep2> {
             'Select Course',
             style: TextStyle(color: Colors.white, fontSize: 16),
           ),
-        ),
-
+        )
       ],
     );
   }
-
-
 }

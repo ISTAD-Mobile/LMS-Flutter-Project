@@ -187,7 +187,7 @@ class _EnrollStep1 extends State<EnrollStep1> {
                         ),
                       ),
                       onChanged: (value) {
-                        setState(() {}); 
+                        setState(() {});
                       },
                       onFieldSubmitted: (value) {
                         _addToPreviousNames(value);
@@ -289,7 +289,9 @@ class _EnrollStep1 extends State<EnrollStep1> {
                       width: double.infinity,
                       child: DropdownMenu<String>(
                         width: 398,
-                        hintText: 'Select Gender',
+                        hintText: _selectedGender?.isNotEmpty == true
+                            ? _selectedGender!
+                            : 'Select Gender',
                         errorText: _isFormSubmitted && _selectedGender == null ? 'Please select gender' : null,
                         textStyle: const TextStyle(
                           fontSize: 16,
@@ -349,11 +351,13 @@ class _EnrollStep1 extends State<EnrollStep1> {
                               ),
                             ),
                         ).toList(),
-                        onSelected: (String? value) {
+                        onSelected: (value) async {
                           setState(() {
                             _selectedGender = value;
                           });
-                          FocusManager.instance.primaryFocus?.unfocus();
+
+                          final prefs = await SharedPreferences.getInstance();
+                          await prefs.setString('gender', value ?? '');
                         },
                         enableSearch: true,
                         requestFocusOnTap: true,

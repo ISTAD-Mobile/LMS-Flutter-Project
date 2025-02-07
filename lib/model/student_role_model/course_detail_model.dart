@@ -46,9 +46,6 @@ class StudentCourseDetailModel {
       position: json['position'],
       studentProfileImage: List<String>.from(json['studentProfileImage']),
       classesStart: json['classesStart'],
-      // curriculumModules: (json['curriculum']['modules'] as List)
-      //     .map((module) => Module.fromJson(module))
-      //     .toList(),
 
       curriculumModules: (json['curriculum']?['modules'] as List<dynamic>?)
               ?.map((module) => Module.fromJson(module))

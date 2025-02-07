@@ -43,7 +43,7 @@ class _AchievementScreenState extends State<YearOfStudyAchievementScreen> {
         }
 
         if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text('No data available.'));
+          return const Center(child: Text('No data available.'));
         }
 
         final achievements = snapshot.data!;

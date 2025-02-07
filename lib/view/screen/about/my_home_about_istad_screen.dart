@@ -1,12 +1,9 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
-import 'package:lms_mobile/view/screen/register/register_step_1.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 
 class HomeIstadScreen extends StatefulWidget {
   const HomeIstadScreen({super.key});
@@ -515,10 +512,6 @@ class _MapWidgetState extends State<MapWidget> {
     return Container(
       width: widget.mapWidth,
       height: widget.mapHeight,
-      // decoration: BoxDecoration(
-      //   border: Border.all(color: Colors.grey.shade400),
-      //   borderRadius: BorderRadius.circular(8),
-      // ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8),
         child: GoogleMap(

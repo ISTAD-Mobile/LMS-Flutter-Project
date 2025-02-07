@@ -117,7 +117,7 @@ class _ITExpertPageState extends State<FoundationPage> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               const Row(
@@ -213,8 +213,7 @@ class _ITExpertPageState extends State<FoundationPage> {
                 ],
               ),
             ),
-          )
-          .toList(),
+          ).toList(),
     );
   }
 }

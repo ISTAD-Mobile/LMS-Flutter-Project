@@ -11,14 +11,15 @@ class ApiService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return jsonDecode(response.body);
       } else {
+        print('Failed to load data: ${response.statusCode} ${response.body}');
         throw Exception('Failed to load data');
       }
     } catch (e) {
+      print('Error: $e');
       throw Exception('Error: $e');
     }
   }
 }
-
 
 class EnrollStep2Service {
   final ApiService _apiServices = ApiService();
@@ -46,8 +47,6 @@ class EnrollService {
   }
 }
 
-
-
 class AdmissionService {
   final ApiService _apiServices = ApiService();
 
@@ -60,4 +59,3 @@ class AdmissionService {
     return response;
   }
 }
-

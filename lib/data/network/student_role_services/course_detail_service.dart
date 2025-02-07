@@ -6,8 +6,13 @@ import '../../../model/student_role_model/course_detail_model.dart';
 class CourseService {
   static const String baseUrl = "https://dev-flutter.cstad.edu.kh/api/v1";
 
-  Future<StudentCourseDetailModel> fetchCourseDetail(String uuid) async {
-    final response = await http.get(Uri.parse('$baseUrl/students/course/$uuid'));
+  Future<StudentCourseDetailModel> fetchCourseDetail(String uuid, String token) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/students/course/$uuid'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);

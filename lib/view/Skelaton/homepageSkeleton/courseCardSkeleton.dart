@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lms_mobile/data/color/color_screen.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-
 class ShortCourseCardSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
