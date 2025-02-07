@@ -21,7 +21,7 @@ class UpdataStudentProfileSettingViewmodel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _userData = await _repository.fetchUdateData();
+      _userData = await _repository.fetchUpdateData();
     } catch (e) {
       _errorMessage = e.toString();
     } finally {
@@ -38,7 +38,8 @@ class UpdataStudentProfileSettingViewmodel extends ChangeNotifier {
     required String phoneNumber,
     required String familyPhoneNumber,
     required String biography,
-    required String profileImage
+    required String profileImage,
+    required String nameEn,
   }) async {
     _isLoading = true;
     _errorMessage = '';
@@ -53,6 +54,7 @@ class UpdataStudentProfileSettingViewmodel extends ChangeNotifier {
       familyPhoneNumber: familyPhoneNumber,
       biography: biography,
       profileImage: profileImage,
+      nameEn: nameEn,
     );
 
     try {

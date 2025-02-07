@@ -1,4 +1,4 @@
-class CourseDetailModel {
+class StudentCourseDetailModel {
   final int year;
   final int semester;
   final String courseTitle;
@@ -14,7 +14,7 @@ class CourseDetailModel {
   final String classesStart;
   final List<Module> curriculumModules;
 
-  CourseDetailModel({
+  StudentCourseDetailModel({
     required this.year,
     required this.semester,
     required this.courseTitle,
@@ -31,8 +31,8 @@ class CourseDetailModel {
     required this.curriculumModules,
   });
 
-  factory CourseDetailModel.fromJson(Map<String, dynamic> json) {
-    return CourseDetailModel(
+  factory StudentCourseDetailModel.fromJson(Map<String, dynamic> json) {
+    return StudentCourseDetailModel(
       year: json['year'],
       semester: json['semester'],
       courseTitle: json['courseTitle'],

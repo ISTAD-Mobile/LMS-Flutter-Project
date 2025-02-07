@@ -7,6 +7,7 @@ class StudentSettingModel {
   final String biography;
   final String currentAddress;
   final String birthPlace;
+  final String nameEn;
 
   StudentSettingModel({
     required this.gender,
@@ -17,6 +18,7 @@ class StudentSettingModel {
     required this.biography,
     required this.currentAddress,
     required this.birthPlace,
+    required this.nameEn,
   });
 
   factory StudentSettingModel.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class StudentSettingModel {
       biography: json['biography'],
       currentAddress: json['currentAddress'],
       birthPlace: json['birthPlace'],
+      nameEn: json['nameEn'],
     );
   }
 
@@ -42,6 +45,7 @@ class StudentSettingModel {
       'biography': biography,
       'currentAddress': currentAddress,
       'birthPlace': birthPlace,
+      'nameEn': nameEn,
     };
   }
 }

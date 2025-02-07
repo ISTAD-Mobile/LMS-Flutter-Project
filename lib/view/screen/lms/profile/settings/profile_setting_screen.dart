@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lms_mobile/view/screen/lms/profile/settings/static_profile_setting_screen.dart';
+import 'package:lottie/lottie.dart';
 import 'dart:io';
 import 'package:provider/provider.dart';
 import '../../../../../data/color/color_screen.dart';
@@ -17,8 +18,6 @@ class SettingScreen extends StatefulWidget {
   final String token;
   const SettingScreen({required this.token, Key? key}) : super(key: key);
 
-  get refreshCallback => 'refreshCallback';
-
   @override
   _StudentSettingsState createState() => _StudentSettingsState(accessToken: token);
 }
@@ -30,6 +29,7 @@ class _StudentSettingsState extends State<SettingScreen> {
   late UpdataStudentProfileSettingViewmodel viewModel;
   late Future<StudentSettingModel> _futureAlbum;
 
+
   File? _image;
   final _formKey = GlobalKey<FormState>();
 
@@ -38,12 +38,14 @@ class _StudentSettingsState extends State<SettingScreen> {
   final _personalNumberController = TextEditingController();
   final _familyNumberController = TextEditingController();
   final _placeOfBirthController = TextEditingController();
+  final _nameEnController = TextEditingController();
 
   final bioFocus = FocusNode();
   final currentAddressFocus = FocusNode();
   final personalNumberFocus = FocusNode();
   final familyNumberFocus = FocusNode();
   final placeOfBirthFocus = FocusNode();
+  final nameEnFocus = FocusNode();
 
   @override
   void initState() {
@@ -51,8 +53,12 @@ class _StudentSettingsState extends State<SettingScreen> {
     viewModel = UpdataStudentProfileSettingViewmodel(
       repository: UpdateStudentProfileSettingRepository(token: widget.token),
     );
-    viewModel.fetchUserData();
+    Future.delayed(Duration.zero, () {
+      viewModel.fetchUserData();
+    });
+
   }
+
 
 
   Future<void> _pickImage() async {
@@ -93,46 +99,67 @@ class _StudentSettingsState extends State<SettingScreen> {
   String isImageUploade = "";
   bool isLoading = false;
 
+  void _initializePages() {
+    setState(() {
+      print("Initializing pages...");
+    });
+  }
+
+
+  void fetchUpdatedData() {
+    setState(() {
+      _initializePages();
+    });
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) {
-        final viewModel = UpdataStudentProfileSettingViewmodel(
-            repository: UpdateStudentProfileSettingRepository(token: widget.token)
-        );
-        viewModel.fetchUserData();
-        return viewModel;
-      },
-      child: Consumer<UpdataStudentProfileSettingViewmodel>(
-        builder: (context, viewModel, _) {
-          if (viewModel.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (viewModel.errorMessage.isNotEmpty) {
-            return Center(child: Text(viewModel.errorMessage));
-          } else if (viewModel.userData == null) {
-            return const Center(child: Text('No user data available'));
-          }
+    return Scaffold(
+      backgroundColor: AppColors.defaultWhiteColor,
+      appBar: AppBar(
+        backgroundColor: AppColors.defaultWhiteColor,
+        elevation: 3,
+        shadowColor: Colors.black.withOpacity(0.1),
+        surfaceTintColor: Colors.transparent,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: AppColors.defaultGrayColor),
+          onPressed: () => Navigator.pop(context),
+          padding: EdgeInsets.zero,
+        ),
+        title: const Text(
+          'Student Setting',
+          style: TextStyle(color: AppColors.primaryColor, fontSize: 18),
+        ),
+      ),
+      body: ChangeNotifierProvider(
+        create: (_) {
+          final viewModel = UpdataStudentProfileSettingViewmodel(
+              repository: UpdateStudentProfileSettingRepository(token: widget.token)
+          );
+          viewModel.fetchUserData();
+          return viewModel;
+        },
+        child: Consumer<UpdataStudentProfileSettingViewmodel>(
+          builder: (context, viewModel, _) {
+            if (viewModel.isLoading) {
+              return Center(
+                child: Lottie.asset(
+                  'assets/animation/loading.json',
+                  width: 100,
+                  height: 100,
+                ),
+              );
+            } else if (viewModel.errorMessage.isNotEmpty) {
+              return Center(child: Text(viewModel.errorMessage));
+            } else if (viewModel.userData == null) {
+              return const Center(child: Text('No user data available'));
+            }
 
-          final userData = viewModel.userData!;
+            final userData = viewModel.userData!;
 
-          return Scaffold(
-            backgroundColor: AppColors.defaultWhiteColor,
-            appBar: AppBar(
-              backgroundColor: AppColors.defaultWhiteColor,
-              elevation: 3,
-              shadowColor: Colors.black.withOpacity(0.1),
-              surfaceTintColor: Colors.transparent,
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back_ios, color: AppColors.defaultGrayColor),
-                onPressed: () => Navigator.pop(context),
-                padding: EdgeInsets.zero,
-              ),
-              title: const Text(
-                'Student Setting',
-                style: TextStyle(color: AppColors.primaryColor, fontSize: 18),
-              ),
-            ),
-            body: SafeArea(
+            return SafeArea(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(20.0),
                 child: Form(
@@ -140,6 +167,7 @@ class _StudentSettingsState extends State<SettingScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Profile Image Section
                       Center(
                         child: Stack(
                           children: [
@@ -149,9 +177,8 @@ class _StudentSettingsState extends State<SettingScreen> {
                                   ? NetworkImage(isImageUploade)
                                   : (userData.profileImage != null && userData.profileImage!.isNotEmpty
                                   ? NetworkImage(userData.profileImage!)
-                                  : const AssetImage('assets/images/placeholder.jpg')),
+                                  : const AssetImage('assets/images/placeholder.jpg')) as ImageProvider,
                               onBackgroundImageError: (_, __) {
-                                // Handle any image loading errors
                                 print('Failed to load image.');
                               },
                             ),
@@ -178,15 +205,21 @@ class _StudentSettingsState extends State<SettingScreen> {
                         ),
                       ),
                       const SizedBox(height: 20),
+                      _buildTextField(
+                        value: userData.nameEn,
+                        label: 'Name',
+                        controller: _nameEnController,
+                        focusNode: nameEnFocus,
+                      ),
                       _buildDropdownField(
                         label: 'Gender',
-                        value: userData.gender.isNotEmpty && ['Male', 'Female', 'Other'].contains(userData.gender)
+                        value: userData.gender != null && ['Male', 'Female', 'Other'].contains(userData.gender)
                             ? userData.gender
-                            : 'Male', // Ensure the default value is in the list
+                            : '',
                         items: ['Male', 'Female', 'Other'],
                         onChanged: (value) {
                           setState(() {
-                            userData.gender = value ?? 'Male';
+                            userData.gender = value ?? '';
                           });
                         },
                       ),
@@ -223,10 +256,10 @@ class _StudentSettingsState extends State<SettingScreen> {
                         focusNode: familyNumberFocus,
                       ),
                       _buildDropdownField(
-                        label: 'GuardianRelationship',
+                        label: 'Guardian Relationship',
                         value: userData.guardianRelationShip.isNotEmpty && ['Mother', 'Father', 'Sibling', 'Other'].contains(userData.guardianRelationShip)
                             ? userData.guardianRelationShip
-                            : 'Other', // Ensure the default value is in the list
+                            : 'Other',
                         items: ['Mother', 'Father', 'Sibling', 'Other'],
                         onChanged: (value) {
                           setState(() {
@@ -240,18 +273,20 @@ class _StudentSettingsState extends State<SettingScreen> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            // Cancel Button
                             OutlinedButton(
                               onPressed: () {
-                                // Reset the form fields to their original values (clear user input)
                                 _personalNumberController.text = userData.phoneNumber ?? '';
                                 _familyNumberController.text = userData.familyPhoneNumber ?? '';
                                 _bioController.text = userData.biography ?? '';
                                 _currentAddressController.text = userData.currentAddress ?? '';
                                 _placeOfBirthController.text = userData.birthPlace ?? '';
 
-                                // Optionally, reset other fields or values related to image upload or changes if needed
-                                isImageUploade = '';  // Reset the image upload state if necessary
+                                setState(() {
+                                  userData.gender = userData.gender ?? '';
+                                  userData.guardianRelationShip = userData.guardianRelationShip ?? '';
+                                });
+
+                                isImageUploade = '';
                               },
                               style: OutlinedButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(horizontal: 38, vertical: 12),
@@ -283,31 +318,11 @@ class _StudentSettingsState extends State<SettingScreen> {
                                       birthPlace: _placeOfBirthController.text,
                                       gender: userData.gender.isEmpty ? 'Male' : userData.gender,
                                       profileImage: profileImage,
+                                      nameEn: _nameEnController.text,
                                     );
 
-                                    // Show success Snackbar
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        backgroundColor: AppColors.successColor,
-                                        content: const Text('Your data has been saved successfully!', style: TextStyle(
-                                          color: AppColors.defaultWhiteColor,
-                                        ),),
-                                        duration: const Duration(seconds: 2),
-                                      ),
-                                    );
-                                    // widget.refreshCallback?.call();
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => StaticProfileViewScreen(token: accessToken, refreshCallback: () {
-                                        setState(() {
-                                          viewModel.fetchUserData();
-                                      });
-                                      }),),);
                                   } catch (error) {
-                                    // Handle errors (optional)
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text('Failed to save data. Please try again.')),
-                                    );
+                                    print("Error updating user data: $error");
                                   }
                                 }
                               },
@@ -320,7 +335,7 @@ class _StudentSettingsState extends State<SettingScreen> {
                               ),
                               child: const Text(
                                 'Save',
-                                style: TextStyle(color: AppColors.defaultWhiteColor, fontSize: 16.0),
+                                style: TextStyle(color: Colors.white, fontSize: 16.0),
                               ),
                             ),
                           ],
@@ -330,12 +345,13 @@ class _StudentSettingsState extends State<SettingScreen> {
                   ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
+
 
   Widget _buildTextField({
     required String value,

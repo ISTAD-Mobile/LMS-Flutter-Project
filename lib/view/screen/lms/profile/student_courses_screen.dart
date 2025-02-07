@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../data/color/color_screen.dart';
 import '../../../../data/network/student_role_services/student_course_service.dart';
@@ -27,12 +26,16 @@ class _StudentCoursesScreenState extends State<StudentCoursesScreen> {
   int itemsPerPage = 25;
   int currentPage = 1;
 
+  late String token;
+
   @override
   void initState() {
     super.initState();
+    token = widget.token;
     final service = StudentCoursesService(token: widget.token);
     final repository = StudentCoursesRepository(service: service);
     viewModel = StudentCoursesViewModel(repository: repository);
+
   }
 
   void _resetFilter() {
@@ -81,6 +84,7 @@ class _StudentCoursesScreenState extends State<StudentCoursesScreen> {
       ),
     );
   }
+
 
   Widget _buildSearchBar() {
     return Padding(
@@ -317,6 +321,7 @@ class _StudentCoursesScreenState extends State<StudentCoursesScreen> {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 10.0),
                 child: CourseCard(
+                  uuid: course.uuid,
                   title: course.title,
                   description: course.description,
                   year: course.year.toString(),
@@ -340,93 +345,9 @@ class _StudentCoursesScreenState extends State<StudentCoursesScreen> {
   }
 }
 
-Widget _buildWelcomeBannerWithData(StudentCoursesModel data) {
-  return Container(
-    margin: const EdgeInsets.all(16.0),
-    padding: const EdgeInsets.fromLTRB(0, 16, 15, 16),
-    decoration: BoxDecoration(
-      color: AppColors.primaryColor,
-      borderRadius: BorderRadius.circular(12),
-    ),
-    child: Stack(
-      clipBehavior: Clip.none,
-      children: [
-        // Text content inside the banner
-        Padding(
-          padding: const EdgeInsets.only(left: 115.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Welcome back, ${data.nameEn}',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Passionate about literature and creative writing.',
-                style: const TextStyle(
-                  color: Colors.white70,
-                  fontSize: 13, // Adjusted font size to match the new style
-                ),
-              ),
-            ],
-          ),
-        ),
-        // Positioned Circle Avatar
-        Positioned(
-          top: 30,
-          left: 0,
-          child: CircleAvatar(
-            radius: 50,
-            backgroundColor: Colors.grey[200], // Placeholder color
-            foregroundImage: data.profileImage != null &&
-                data.profileImage!.isNotEmpty
-                ? NetworkImage(data.profileImage!)
-                : null,
-            child: data.profileImage == null ||
-                data.profileImage!.isEmpty
-                ? Image.asset('assets/images/placeholder.jpg')
-                : null,
-          ),
-        ),
-        // Display the name and courses
-        Positioned(
-          top: 95, // Adjusted to provide space below the avatar
-          left: 115.0,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                data.nameEn,
-                style: const TextStyle(
-                  color: AppColors.primaryColor,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                '${data.courses.length} Courses',
-                style: const TextStyle(
-                  color: AppColors.defaultGrayColor,
-                  fontSize: 12, // Adjusted font size
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-
 
 class CourseCard extends StatelessWidget {
+  final String uuid;
   final String title;
   final String description;
   final String year;
@@ -437,6 +358,7 @@ class CourseCard extends StatelessWidget {
 
   const CourseCard({
     super.key,
+    required this.uuid,
     required this.title,
     required this.description,
     required this.year,
@@ -453,16 +375,7 @@ class CourseCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CourseDetailScreen(
-              title: title,
-              description: description,
-              year: year,
-              semester: semester,
-              credits: credits,
-              theory: '',
-              practice: '',
-              thumbnailUrl: thumbnailUrl,
-            ),
+            builder: (context) => StudentCoursesDetailsScreen(courseUuid: uuid, token: ''),
           ),
         );
       },
@@ -517,7 +430,6 @@ class CourseCard extends StatelessWidget {
                         ? Image.asset('assets/images/placeholder.jpg')
                         : null,
                   ),
-
                   const SizedBox(width: 8),
                   Expanded(
                     child: Column(
@@ -578,6 +490,91 @@ class CourseCard extends StatelessWidget {
     );
   }
 }
+
+
+Widget _buildWelcomeBannerWithData(StudentCoursesModel data) {
+  return Container(
+    margin: const EdgeInsets.all(16.0),
+    padding: const EdgeInsets.fromLTRB(0, 16, 15, 16),
+    decoration: BoxDecoration(
+      color: AppColors.primaryColor,
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Stack(
+      clipBehavior: Clip.none,
+      children: [
+        // Text content inside the banner
+        Padding(
+          padding: const EdgeInsets.only(left: 115.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Welcome back, ${data.nameEn}',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Passionate about literature and creative writing.',
+                style: const TextStyle(
+                  color: Colors.white70,
+                  fontSize: 13,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Positioned(
+          top: 30,
+          left: 0,
+          child: CircleAvatar(
+            radius: 50,
+            backgroundColor: Colors.grey[200],
+            foregroundImage: data.profileImage != null &&
+                data.profileImage!.isNotEmpty
+                ? NetworkImage(data.profileImage!)
+                : null,
+            child: data.profileImage == null ||
+                data.profileImage!.isEmpty
+                ? Image.asset('assets/images/placeholder.jpg')
+                : null,
+          ),
+        ),
+
+        Positioned(
+          top: 95,
+          left: 115.0,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                data.nameEn,
+                style: const TextStyle(
+                  color: AppColors.primaryColor,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                '${data.courses.length} Courses',
+                style: const TextStyle(
+                  color: AppColors.defaultGrayColor,
+                  fontSize: 12, // Adjusted font size
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 
 
 

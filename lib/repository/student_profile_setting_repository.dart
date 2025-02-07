@@ -15,24 +15,24 @@ class StudentSettingRepository {
         url,
         headers: {
           "Authorization": "Bearer $token",
+          "Accept-Charset": "utf-8",
+          "Content-Type": "application/json; charset=UTF-8",
         },
       );
 
       if (response.statusCode == 200) {
-        print('Response body: ${response.body}');
-        Map<String, dynamic> userData = jsonDecode(response.body);
+        String decodedResponse = utf8.decode(response.bodyBytes);
 
-        if (userData.isEmpty) {
-          throw Exception("No data available");
-        }
+        print("Decoded UTF-8 Response: $decodedResponse");
 
-        return StudentSettingModel.fromJson(userData);
+        var jsonResponse = jsonDecode(decodedResponse);
+        return StudentSettingModel.fromJson(jsonResponse);
       } else {
-        throw Exception("Failed to fetch user data: ${response.statusCode}");
+        throw Exception("Failed to fetch user data. Status code: ${response.statusCode}");
       }
     } catch (e) {
-      print("Error: $e");
       throw Exception("Error fetching user data: $e");
     }
   }
 }
+

@@ -1,27 +1,27 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:lms_mobile/repository/student_role_repos/course_detail_repo.dart';
-
 import '../../model/student_role_model/course_detail_model.dart';
 
-class CourseDetailViewModel extends ChangeNotifier {
-  final CourseDetailRepoRepository _courseDetailRepoRepository =
-      CourseDetailRepoRepository();
-
-  CourseDetailModel? courseDetail;
+class StudentCourseDetailsViewModel extends ChangeNotifier {
+  final StudentCourseDetailsRepository repository;
+  StudentCourseDetailModel? course;
   bool isLoading = false;
+  String? errorMessage;
 
-  Future<void> fetchCourseDetail(String courseId) async {
+  StudentCourseDetailsViewModel({required this.repository});
+
+  Future<void> getCourseDetails(String courseId) async {
     isLoading = true;
     notifyListeners();
 
     try {
-      courseDetail =
-          await _courseDetailRepoRepository.getCourseDetail(courseId);
-    } catch (e) {
-      print('Error fetching course detail: $e');
-    } finally {
-      isLoading = false;
-      notifyListeners();
+      course = await repository.fetchStudentCourseDetails(courseId);
+      errorMessage = null;
+    } catch (error) {
+      errorMessage = error.toString();
     }
+
+    isLoading = false;
+    notifyListeners();
   }
 }
