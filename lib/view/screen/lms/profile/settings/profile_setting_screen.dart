@@ -207,7 +207,7 @@ class _StudentSettingsState extends State<SettingScreen> {
                       const SizedBox(height: 20),
                       _buildTextField(
                         value: userData.nameEn,
-                        label: 'Name',
+                        label: 'NameEn',
                         controller: _nameEnController,
                         focusNode: nameEnFocus,
                       ),
