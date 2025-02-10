@@ -43,5 +43,5 @@ class StudenProfileDataViewModel extends ChangeNotifier {
     _isLoading = value;
     notifyListeners(); // This ensures the UI gets updated when loading state changes
   }
-
 }
+
