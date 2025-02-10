@@ -238,7 +238,7 @@ class _EnrollStep1 extends State<EnrollStep1> {
                     TextFormField(
                       controller: emailController,
                       decoration: InputDecoration(
-                        hintText: 'example@gmail.com',
+                        hintText: 'istad@gmail.com',
                         hintStyle: const TextStyle(color: Colors.grey),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),

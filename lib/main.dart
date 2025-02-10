@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -18,11 +20,15 @@ import 'package:lms_mobile/viewModel/enroll/university_view_model.dart';
 import 'package:lms_mobile/viewModel/jobvacancy_detail_viewmodel.dart';
 import 'package:lms_mobile/viewModel/student_profile_viewModel.dart';
 import 'package:lms_mobile/viewModel/login_view_model.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:lms_mobile/view/widgets/sytem_screen/no_internet.dart';
 import 'data/color/color_screen.dart';
 
-void main() {
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await requestStoragePermission();
   runApp(
     MultiProvider(
       providers: [
@@ -49,6 +55,17 @@ void main() {
     ),
   );
 }
+
+
+Future<void> requestStoragePermission() async {
+  if (Platform.isAndroid) {
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      await Permission.storage.request();
+    }
+  }
+}
+
 
 class MyApp extends StatefulWidget {
   @override
