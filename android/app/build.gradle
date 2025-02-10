@@ -11,6 +11,12 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
+    compileSdkVersion 34
+    defaultConfig {
+        targetSdkVersion 32
+        minSdkVersion 21
+    }
+
     namespace = "com.istad.lms_flutter_project"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "25.1.8937393"
