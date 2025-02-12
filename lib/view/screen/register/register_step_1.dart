@@ -21,9 +21,9 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
   String? _selectedGender;
   String? _selectedShift;
   String? _selectedPlaceOfBirth;
-  String? _selectedDegree;
-  String? _studyProgramAlias;
-  String? _selectedGrade;
+  // String? _selectedDegree;
+  // String? _studyProgramAlias;
+  // String? _selectedGrade;
 
   String? nameKh;
   String? nameEn;
@@ -44,6 +44,8 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
   final contactNumberController = TextEditingController();
   final emailController = TextEditingController();
   final dobController = TextEditingController();
+  // final highSchoolController = TextEditingController();
+
 
   static const int _minAge = 16;
   static const int _maxAge = 100;
@@ -65,10 +67,10 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       final String? birthDateString = prefs.getString('dob');
-      _studyProgramAlias = prefs.getString('studyProgram');
+      // _studyProgramAlias = prefs.getString('studyProgram');
       _selectedGender = prefs.getString('gender');
       _selectedShift = prefs.getString('shiftAlias');
-      _selectedDegree = prefs.getString('degreeAlias');
+      // _selectedDegree = prefs.getString('degreeAlias');
       _selectedPlaceOfBirth = prefs.getString('birthPlace');
       _selectedBirthDate =
       birthDateString != null ? DateTime.tryParse(birthDateString) : null;
@@ -78,6 +80,7 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
       contactNumberController.text = prefs.getString('phoneNumber') ?? '';
       emailController.text = prefs.getString('email') ?? '';
       dobController.text = prefs.getString('dob') ?? '';
+      // highSchoolController.text = prefs.getString('highSchool') ?? '';
     });
   }
 
@@ -87,15 +90,16 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
     prefs.setString('dob', _selectedBirthDate?.toIso8601String() ?? '');
     prefs.setString('gender', _selectedGender ?? '');
     prefs.setString('shiftAlias', _selectedShift ?? '');
-    prefs.setString('degreeAlias', _selectedDegree ?? '');
+    // prefs.setString('degreeAlias', _selectedDegree ?? '');
     prefs.setString('birthPlace', _selectedPlaceOfBirth ?? '');
-    prefs.setString('studyProgramAlias', _studyProgramAlias ?? '');
+    // prefs.setString('studyProgramAlias', _studyProgramAlias ?? '');
 
     prefs.setString('nameKh', nameKhController.text);
     prefs.setString('nameEn', nameEnController.text);
     prefs.setString('phoneNumber', contactNumberController.text);
     prefs.setString('email', emailController.text);
-    prefs.setString('grade', _selectedGrade ?? '');
+    // prefs.setString('grade', _selectedGrade ?? '');
+    // prefs.setString('highSchool', highSchoolController.text);
   }
 
   @override
@@ -124,28 +128,30 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
     }
 
     print('Gender: $_selectedGender');
-    print('Degree: $_selectedDegree');
+    // print('Degree: $_selectedDegree');
     print('Shift: $_selectedShift');
     print('Place of Birth: $_selectedPlaceOfBirth');
     print('Birth Date: $_selectedBirthDate');
-    print('Grade: $_selectedGrade');
-    print('Study Program: $_studyProgramAlias');
+    // print('Grade: $_selectedGrade');
+    // print('Study Program: $_studyProgramAlias');
     print('Name KH: ${nameKhController.text.trim()}');
     print('Name EN: ${nameEnController.text.trim()}');
     print('Contact: ${contactNumberController.text.trim()}');
     print('Email: ${emailController.text.trim()}');
+    // print('High school: ${highSchoolController.text.trim()}');
 
     return _selectedGender != null &&
-        _selectedDegree != null &&
+        // _selectedDegree != null &&
         _selectedShift != null &&
         _selectedPlaceOfBirth != null &&
         _selectedBirthDate != null &&
-        _selectedGrade != null &&
-        _studyProgramAlias != null &&
+        // _selectedGrade != null &&
+        // _studyProgramAlias != null &&
         nameKhController.text.trim().isNotEmpty &&
         nameEnController.text.trim().isNotEmpty &&
         contactNumberController.text.trim().isNotEmpty &&
         emailController.text.trim().isNotEmpty;
+        // highSchoolController.text.trim().isNotEmpty;
   }
 
   void _showDatePicker() {
@@ -354,27 +360,27 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                     return null;
                   },
                 ),
-                _buildFormFieldAddress(
-                  'កម្មវិធីសិក្សា *',
-                  Consumer<StudyProgramAlasViewModel>(
-                    builder: (context, viewModel, _) => _buildDropdownMenu(
-                      hint: _studyProgramAlias?.isNotEmpty == true
-                          ? _studyProgramAlias!
-                          : 'ជ្រើសរើសកម្មវិធីសិក្សា',
-                      options: viewModel.studyProgramNames,
-                      selectedValue: _studyProgramAlias,
-                      onSelected: (value) async {
-                        setState(() {
-                          _studyProgramAlias = value;
-                        });
-
-                        final prefs = await SharedPreferences.getInstance();
-                        await prefs.setString('studyProgram', value ?? '');
-                        print("Saved StudyProgram: $value");
-                      },
-                    ),
-                  ),
-                ),
+                // _buildFormFieldAddress(
+                //   'កម្មវិធីសិក្សា *',
+                //   Consumer<StudyProgramAlasViewModel>(
+                //     builder: (context, viewModel, _) => _buildDropdownMenu(
+                //       hint: _studyProgramAlias?.isNotEmpty == true
+                //           ? _studyProgramAlias!
+                //           : 'ជ្រើសរើសកម្មវិធីសិក្សា',
+                //       options: viewModel.studyProgramNames,
+                //       selectedValue: _studyProgramAlias,
+                //       onSelected: (value) async {
+                //         setState(() {
+                //           _studyProgramAlias = value;
+                //         });
+                //
+                //         final prefs = await SharedPreferences.getInstance();
+                //         await prefs.setString('studyProgram', value ?? '');
+                //         print("Saved StudyProgram: $value");
+                //       },
+                //     ),
+                //   ),
+                // ),
                 _buildFormFieldAddress(
                   'វេនសិក្សា *',
                   Consumer<ShiftViewModel>(
@@ -396,46 +402,51 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                         ),
                   ),
                 ),
-                _buildFormFieldAddress(
-                  'កម្រិតសញ្ញាបត្រ *',
-                  Consumer<DegreeViewModel>(
-                    builder: (context, viewModel, _) =>
-                        _buildDropdownMenu(
-                          hint: _selectedDegree?.isNotEmpty == true
-                              ? _selectedDegree!
-                              : 'ជ្រើសរើសកម្រិតសញ្ញាបត្រ',
-                          options: viewModel.degreeNames,
-                          selectedValue: _selectedDegree,
-                          onSelected: (value) async {
-                            setState(() {
-                              _selectedDegree = value;
-                            });
-
-                            final prefs = await SharedPreferences.getInstance();
-                            await prefs.setString('Degree', value ?? '');
-                          },
-                        ),
-                  ),
-                ),
-                _buildDropdownField(
-                  label: 'ទទួលបាននិទ្ទេសរួម (បើមាន) *',
-                  value: _selectedGrade,
-                  items: gradeOptions,
-                  isFormSubmitted: _isFormSubmitted,
-                  hintText: _selectedGrade?.isNotEmpty == true
-                      ? _selectedGrade!
-                      : 'ជ្រើសរើសនិទ្ទេស',
-                  onSelected: (String? newValue) async {
-                    setState(() {
-                      _selectedGrade = newValue;
-                    });
-
-                    // Save to SharedPreferences
-                    final prefs = await SharedPreferences.getInstance();
-                    await prefs.setString('grade', newValue ?? '');
-                    print("Saved Grade: $newValue");
-                  },
-                ),
+                // _buildFormFieldAddress(
+                //   'កម្រិតសញ្ញាបត្រ *',
+                //   Consumer<DegreeViewModel>(
+                //     builder: (context, viewModel, _) =>
+                //         _buildDropdownMenu(
+                //           hint: _selectedDegree?.isNotEmpty == true
+                //               ? _selectedDegree!
+                //               : 'ជ្រើសរើសកម្រិតសញ្ញាបត្រ',
+                //           options: viewModel.degreeNames,
+                //           selectedValue: _selectedDegree,
+                //           onSelected: (value) async {
+                //             setState(() {
+                //               _selectedDegree = value;
+                //             });
+                //
+                //             final prefs = await SharedPreferences.getInstance();
+                //             await prefs.setString('Degree', value ?? '');
+                //           },
+                //         ),
+                //   ),
+                // ),
+                // _buildDropdownField(
+                //   label: 'ទទួលបាននិទ្ទេសរួម (បើមាន) *',
+                //   value: _selectedGrade,
+                //   items: gradeOptions,
+                //   isFormSubmitted: _isFormSubmitted,
+                //   hintText: _selectedGrade?.isNotEmpty == true
+                //       ? _selectedGrade!
+                //       : 'ជ្រើសរើសនិទ្ទេស',
+                //   onSelected: (String? newValue) async {
+                //     setState(() {
+                //       _selectedGrade = newValue;
+                //     });
+                //
+                //     // Save to SharedPreferences
+                //     final prefs = await SharedPreferences.getInstance();
+                //     await prefs.setString('grade', newValue ?? '');
+                //     print("Saved Grade: $newValue");
+                //   },
+                // ),
+                // _buildTextField(
+                //   label: 'ឈ្មោះសាលារៀនរបស់ប្អូន *',
+                //   controller: highSchoolController,
+                //   hintText: 'Angkor high school',
+                // ),
                 const SizedBox(height: 5),
                 Align(
                   alignment: Alignment.centerRight,
@@ -453,12 +464,12 @@ class _StudentAdmissionFormState extends State<RegisterStep1> {
                           // Create a detailed error message
                           String missingFields = '';
                           if (_selectedGender == null) missingFields += '\n- ភេទ';
-                          if (_selectedDegree == null) missingFields += '\n- កម្រិតសញ្ញាបត្រ';
+                          // if (_selectedDegree == null) missingFields += '\n- កម្រិតសញ្ញាបត្រ';
                           if (_selectedShift == null) missingFields += '\n- វេនសិក្សា';
                           if (_selectedPlaceOfBirth == null) missingFields += '\n- ទីកន្លែងកំណើត';
                           if (_selectedBirthDate == null) missingFields += '\n- ថ្ងៃខែឆ្នាំកំណើត';
-                          if (_selectedGrade == null) missingFields += '\n- និទ្ទេស';
-                          if (_studyProgramAlias == null) missingFields += '\n- កម្មវិធីសិក្សា';
+                          // if (_selectedGrade == null) missingFields += '\n- និទ្ទេស';
+                          // if (_studyProgramAlias == null) missingFields += '\n- កម្មវិធីសិក្សា';
                           if (nameKhController.text.trim().isEmpty) missingFields += '\n- ឈ្មោះជាភាសាខ្មែរ';
                           if (nameEnController.text.trim().isEmpty) missingFields += '\n- ឈ្មោះជាភាសាអង់គ្លេស';
                           if (contactNumberController.text.trim().isEmpty) missingFields += '\n- លេខទូរស័ព្ទ';

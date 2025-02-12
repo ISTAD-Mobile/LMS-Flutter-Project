@@ -34,22 +34,23 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       getToKnowIstadController.text = prefs.getString('knownIstad') ?? '';
-      guardianRelationShipController.text =
-          prefs.getString('guardianRelationShip') ?? '';
+      guardianRelationShipController.text = prefs.getString('guardianRelationShip') ?? '';
     });
   }
 
   Future<Map<String, dynamic>?> _saveStep3DataAdmission() async {
     final prefs = await SharedPreferences.getInstance();
+    String certificate = (imageFile != null && imageFile.isNotEmpty) ? imageFile : "94cad2f2-0519-468d-840c-248393478b00.jpg";
+
 
     var admissionRequest = AdmissionRequest(
       knownIstad: getToKnowIstadController.text,
       guardianRelationShip: guardianRelationShipController.text,
-      vocationTrainingIiiCertificate: imageFile,
+      // vocationTrainingIiiCertificate: certificate,
       // diplomaSession: diplomaSessionController.text,
       gender: prefs.getString('gender') ?? 'Unknown',
       shiftAlias: prefs.getString('shiftAlias') ?? 'Unknown',
-      degreeAlias: prefs.getString('degreeAlias') ?? 'Unknown',
+      // degreeAlias: prefs.getString('degreeAlias') ?? 'Unknown',
       email: prefs.getString('email') ?? 'Unknown',
       nameEn: prefs.getString('nameEn') ?? 'Unknown',
       nameKh: prefs.getString('nameKh') ?? 'Unknown',
@@ -57,7 +58,7 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
           ? DateTime.tryParse(prefs.getString('dob')!)
           : null,
       birthPlace: prefs.getString('birthPlace') ?? 'Unknown',
-      studyProgramAlias: prefs.getString('studyProgramAlias') ?? 'Unknown',
+      // studyProgramAlias: prefs.getString('studyProgramAlias') ?? 'Unknown',
       motherName: prefs.getString('motherName') ?? 'Unknown',
       motherPhoneNumber: prefs.getString('motherPhoneNumber') ?? 'Unknown',
       fatherName: prefs.getString('fatherName') ?? 'Unknown',
@@ -95,38 +96,18 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
     }
   }
 
-  bool _validateForm() {
-    if (!_formKey.currentState!.validate()) {
-      print('Form validation failed');
-      return false;
-    }
-
-    // Print the state of each required field for debugging
-    print('Known ISTAD: ${getToKnowIstadController.text.trim()}');
-    print(
-        'Guardian Relationship: ${guardianRelationShipController.text.trim()}');
-    print('Image File: $imageFile');
-
-    return getToKnowIstadController.text
-        .trim()
-        .isNotEmpty &&
-        guardianRelationShipController.text
-            .trim()
-            .isNotEmpty;
-  }
-
-
   bool _isFormSubmitted = false;
 
   Future<void> _pickImage() async {
     final ImagePicker _picker = ImagePicker();
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
 
-    if (image != null) {
-      setState(() {
-        isLoading = true;
-      });
+    setState(() {
+      isLoading = true;
+    });
 
+    if (image != null) {
+      // Image was selected, proceed with upload
       Uint8List bytes = await image.readAsBytes();
 
       setState(() {
@@ -134,13 +115,14 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
         isLoading = false;
       });
 
+      // Upload image
       UploadApiImage().uploadImage(bytes, image.name).then((value) {
         if (value != null && value.containsKey('name')) {
           String uploadedImageUri = value['name'];
           print("Image uploaded successfully: $uploadedImageUri");
 
           setState(() {
-            imageFile = uploadedImageUri;
+            imageFile = uploadedImageUri; // Save the uploaded image URI
           });
         } else {
           print('Image upload failed: No URI found');
@@ -150,6 +132,13 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
           isLoading = false;
         });
         print('Error: ${error.toString()}');
+      });
+    } else {
+      // No image selected, set to placeholder image
+      print('No image selected, using placeholder');
+
+      setState(() {
+        imageFile = "94cad2f2-0519-468d-840c-248393478b00.jpg";
       });
     }
   }
@@ -343,75 +332,53 @@ class _StudentAdmissionScreenState extends State<RegisterStep3> {
                       onPressed: () async {
                         setState(() => _isFormSubmitted = true);
 
-                        if (_formKey.currentState!.validate() && _validateForm()) {
+                        // Skip validation and proceed with the form submission directly
+                        setState(() {
+                          _isSubmitting = true;
+                        });
+
+                        try {
+                          // Print all form data for debugging
+                          print('Form Data:');
+                          print('Known ISTAD: ${getToKnowIstadController.text.trim()}');
+                          print('Guardian Relationship: ${guardianRelationShipController.text.trim()}');
+                          print('Image File: $imageFile');
+
+                          final response = await _saveStep3DataAdmission();
                           setState(() {
-                            _isSubmitting = true;
+                            _isSubmitting = false;
                           });
 
-                          try {
-                            // Print all form data for debugging
-                            print('Form Data:');
-                            print('Known ISTAD: ${getToKnowIstadController.text.trim()}');
-                            print('Guardian Relationship: ${guardianRelationShipController.text.trim()}');
-                            print('Image File: $imageFile');
+                          if (response != null) {
+                            final telegramLink = response['telegramLink'] ?? 'Default Telegram Link';
+                            final studentName = response['studentName'] ?? 'Unknown Student';
 
-                            final response = await _saveStep3DataAdmission();
-                            setState(() {
-                              _isSubmitting = false;
-                            });
-
-                            if (response != null) {
-                              final telegramLink = response['telegramLink'] ?? 'Default Telegram Link';
-                              final studentName = response['studentName'] ?? 'Unknown Student';
-
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SuccessfullyAdmissionPage(
-                                    telegramLink: telegramLink,
-                                    studentName: studentName,
-                                  ),
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SuccessfullyAdmissionPage(
+                                  telegramLink: telegramLink,
+                                  studentName: studentName,
                                 ),
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Submission failed. Please try again.'),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                            }
-                          } catch (e) {
-                            setState(() {
-                              _isSubmitting = false;
-                            });
-
+                              ),
+                            );
+                          } else {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('An error occurred: $e'),
+                              const SnackBar(
+                                content: Text('Submission failed. Please try again.'),
                                 backgroundColor: Colors.red,
                               ),
                             );
                           }
-                        } else {
-                          // Create a detailed error message for missing fields
-                          String missingFields = '';
-                          if (getToKnowIstadController.text.trim().isEmpty) {
-                            missingFields += '\n- ស្គាល់ ISTAD តាមរយៈ';
-                          }
-                          if (guardianRelationShipController.text.trim().isEmpty) {
-                            missingFields += '\n- អ្នកណែនាំឲ្យចុះឈ្មោះរៀន';
-                          }
-                          if (imageFile == null) {
-                            missingFields += '\n- រូបថត';
-                          }
+                        } catch (e) {
+                          setState(() {
+                            _isSubmitting = false;
+                          });
 
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('សូមបំពេញព័ត៌មានដែលនៅខ្វះខាត:$missingFields'),
+                              content: Text('An error occurred: $e'),
                               backgroundColor: Colors.red,
-                              duration: const Duration(seconds: 5),
-                              behavior: SnackBarBehavior.floating,
                             ),
                           );
                         }

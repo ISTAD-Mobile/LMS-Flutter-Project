@@ -26,7 +26,6 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
   final fatherNumberController = TextEditingController();
   final motherController = TextEditingController();
   final motherNumberController = TextEditingController();
-  final nameOfHighSchoolController = TextEditingController();
 
   bool _validateForm() {
     // Print the state of each required field
@@ -37,7 +36,6 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
     print('Father Phone: ${fatherNumberController.text.trim()}');
     print('Mother Name: ${motherController.text.trim()}');
     print('Mother Phone: ${motherNumberController.text.trim()}');
-    print('High School: ${nameOfHighSchoolController.text.trim()}');
 
     if (!_formKey.currentState!.validate()) {
       print('Form validation failed');
@@ -50,8 +48,7 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
         fatherController.text.trim().isNotEmpty &&
         fatherNumberController.text.trim().isNotEmpty &&
         motherController.text.trim().isNotEmpty &&
-        motherNumberController.text.trim().isNotEmpty &&
-        nameOfHighSchoolController.text.trim().isNotEmpty;
+        motherNumberController.text.trim().isNotEmpty;
   }
 
   @override
@@ -72,7 +69,6 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
       fatherNumberController.text = prefs.getString('fatherPhoneNumber') ?? '';
       motherController.text = prefs.getString('motherName') ?? '';
       motherNumberController.text = prefs.getString('motherPhoneNumber') ?? '';
-      nameOfHighSchoolController.text = prefs.getString('highSchool') ?? '';
 
       _selectedPlaceOfBirth = prefs.getString('placeOfBirth') ?? ''; // Provide a default value
       _selectedCurrentAddress = prefs.getString('address') ?? ''; // Provide a default value
@@ -93,7 +89,6 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
     prefs.setString('fatherPhoneNumber', fatherNumberController.text);
     prefs.setString('motherName', motherController.text);
     prefs.setString('motherPhoneNumber', motherNumberController.text);
-    prefs.setString('highSchool', nameOfHighSchoolController.text);
   }
 
 
@@ -256,11 +251,7 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                     hintText: '0963762849',
                   keyboardType: TextInputType.phone,
                 ),
-                _buildTextField(
-                    label: 'ឈ្មោះសាលារៀនរបស់ប្អូន ',
-                    controller: nameOfHighSchoolController,
-                    hintText: 'វិទ្យាល័យបាក់ទូក'
-                ),
+
                 _buildFormField(
                   'មកពីខេត្ត/ក្រុង ',
                   Consumer<PlaceOfBirthViewModel>(
@@ -328,33 +319,11 @@ class _StudentAdmissionFormState extends State<RegisterStep2> {
                       ElevatedButton(
                         onPressed: () async {
                           setState(() => _isFormSubmitted = true);
-                          if (_formKey.currentState!.validate() && _validateForm()) {
-                            await _saveStep2DataAdmission();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => RegisterStep3()),
-                            );
-                          } else {
-                            // Create a detailed error message
-                            String missingFields = '';
-                            if (_selectedPlaceOfBirth == null) missingFields += '\n- មកពីខេត្ត/ក្រុង';
-                            if (_selectedCurrentAddress == null) missingFields += '\n- អាសយដ្ឋានបច្ចុប្បន្ន';
-                            if (_selectedStudyProgramAlas == null) missingFields += '\n- កម្មវិធីសិក្សា';
-                            if (fatherController.text.trim().isEmpty) missingFields += '\n- ឪពុកឈ្មោះ';
-                            if (fatherNumberController.text.trim().isEmpty) missingFields += '\n- លេខទូរស័ព្ទឪពុក';
-                            if (motherController.text.trim().isEmpty) missingFields += '\n- ម្តាយឈ្មោះ';
-                            if (motherNumberController.text.trim().isEmpty) missingFields += '\n- លេខទូរស័ព្ទម្ដាយ';
-                            if (nameOfHighSchoolController.text.trim().isEmpty) missingFields += '\n- ឈ្មោះសាលារៀន';
-
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                backgroundColor: Colors.red,
-                                content: Text('សូមបំពេញព័ត៌មានដែលនៅខ្វះខាត:$missingFields'),
-                                duration: const Duration(seconds: 5),
-                                behavior: SnackBarBehavior.floating,
-                              ),
-                            );
-                          }
+                          await _saveStep2DataAdmission();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => RegisterStep3()),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primaryColor,
