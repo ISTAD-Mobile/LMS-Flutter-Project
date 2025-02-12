@@ -79,7 +79,7 @@ class StaticProfileViewScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 20),
-        _buildInfoField(label: 'NameKn', value: userData.nameEn),
+        _buildInfoField(label: 'NameEn', value: userData.nameEn),
         _buildInfoField(label: 'Gender', value: userData.gender),
         _buildInfoField(label: 'Place Of Birth', value: userData.birthPlace),
         _buildInfoField(label: 'Current Address', value: userData.currentAddress),
