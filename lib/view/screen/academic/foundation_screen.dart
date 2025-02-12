@@ -131,7 +131,7 @@ class _ITExpertPageState extends State<FoundationPage> {
                     ),
                   ),
                   Text(
-                    "1:00 pm - 5:00 am",
+                    "1:00 pm - 5:00 pm",
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,

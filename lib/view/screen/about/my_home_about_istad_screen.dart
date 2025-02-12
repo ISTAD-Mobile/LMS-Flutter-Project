@@ -373,8 +373,7 @@ class _HomePageState extends State<HomeIstadScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-              '• Provide the latest methodology with high-quality training and mentoring'),
+          Text('• Provide the latest methodology with high-quality training and mentoring'),
           Text('• Build up the capacity and career of IT experts in Cambodia'),
           Text('• Consult and connect ISTAD trainees to top IT careers'),
         ],
@@ -385,7 +384,6 @@ class _HomePageState extends State<HomeIstadScreen> {
   Widget _buildContactSection() {
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
-      // Add top margin to the entire contact section
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -399,27 +397,33 @@ class _HomePageState extends State<HomeIstadScreen> {
           _buildContactItem(
             Icon(Icons.location_on, size: 28, color: AppColors.primaryColor99),
             'No. 12, St. 323, Sangkat Boeung Kak II, Khan Toul Kork, Phnom Penh, Cambodia',
+            'https://www.google.com/maps/place/Science+and+Technology+Advanced+Development+Co.,+Ltd.,+St+562,+Phnom+Penh+12151/@11.5782546,104.9017868,15z/data=!4m6!3m5!1s0x310951e96d257a6f:0x6b66703c5fc0c7cc!8m2!3d11.5782546!4d104.9017868!16s%2Fg%2F11t3kbs2y2?hl=en'
           ),
           _buildContactItem(
             Icon(Icons.facebook, size: 28, color: AppColors.primaryColor99),
             'Facebook',
+            'https://www.facebook.com/istad.co',
           ),
           _buildContactItem(
             Icon(Icons.telegram, size: 28, color: AppColors.primaryColor99),
             'Telegram',
+            'https://t.me/istadckh'
           ),
           _buildContactItem(
             Icon(Icons.email, size: 28, color: AppColors.primaryColor99),
             'info.istad@gmail.com',
+            'info.istad@gmail.com'
           ),
           _buildContactItem(
             Icon(Icons.video_collection, size: 28,
                 color: AppColors.primaryColor99),
             'YouTube',
+            'https://youtube.com/@istad7665?si=QC8lL-RkMti3wW0C'
           ),
           _buildContactItem(
             Icon(Icons.phone, size: 28, color: AppColors.primaryColor99),
             '(+855) 95 990 910 | (+855) 93 990 910',
+            'tel:+85595990910',
           ),
           _buildContactItem(
             Image.network(
@@ -429,6 +433,7 @@ class _HomePageState extends State<HomeIstadScreen> {
                 color: AppColors.primaryColor99
             ),
             ' www.istad.edu.kh',
+            'https://www.cstad.edu.kh/'
           ),
         ],
       ),
@@ -436,7 +441,7 @@ class _HomePageState extends State<HomeIstadScreen> {
   }
 
 
-  Widget _buildContactItem(Widget icon, String text) {
+  Widget _buildContactItem(Widget icon, String text, String link) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -444,11 +449,21 @@ class _HomePageState extends State<HomeIstadScreen> {
           icon,
           const SizedBox(width: 8),
           Expanded(
-            child: Text(
-              text,
-              style: const TextStyle(
-                color: AppColors.primaryColor99,
-                fontWeight: FontWeight.w500,
+            child: GestureDetector(
+              onTap: () async {
+                final Uri url = Uri.parse(link);
+                if (await canLaunchUrl(url)) {
+                  await launchUrl(url, mode: LaunchMode.externalApplication);
+                } else {
+                  throw 'Could not launch $link';
+                }
+              },
+              child: Text(
+                text,
+                style: const TextStyle(
+                  color: AppColors.primaryColor99,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ),
@@ -456,6 +471,7 @@ class _HomePageState extends State<HomeIstadScreen> {
       ),
     );
   }
+
 }
 
 

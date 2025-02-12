@@ -47,7 +47,7 @@ class AdmissionRequest {
     this.biography = "",
     this.birthPlace,
     this.classStudent = "defaultClassStudent",
-    this.degreeAlias,
+    this.degreeAlias = "bachelor",
     this.diplomaSession = "2024",
     this.dob,
     this.email,
@@ -70,9 +70,9 @@ class AdmissionRequest {
     this.associate = "",
     this.shiftAlias,
     this.studentName = "",
-    this.studyProgramAlias,
+    this.studyProgramAlias = "software-engineering",
     this.telegramLink,
-    this.vocationTrainingIiiCertificate,
+    this.vocationTrainingIiiCertificate = "94cad2f2-0519-468d-840c-248393478b00.jpg",
   });
 
   factory AdmissionRequest.fromJson(Map<String, dynamic> json) => AdmissionRequest(
@@ -83,7 +83,7 @@ class AdmissionRequest {
     biography: json["biography"] ?? "",
     birthPlace: json["birthPlace"],
     classStudent: json["classStudent"] ?? "defaultClassStudent",
-    degreeAlias: json["degreeAlias"],
+    degreeAlias: json["degreeAlias"] ?? "bachelor",
     diplomaSession: json["diplomaSession"] ?? "2024",
     dob: json["dob"] == null ? null : DateTime.parse(json["dob"]),
     email: json["email"],
@@ -106,9 +106,9 @@ class AdmissionRequest {
     associate: json["associate"] ?? "",
     shiftAlias: json["shiftAlias"],
     studentName: json["studentName"] ?? "",
-    studyProgramAlias: json["studyProgramAlias"],
+    studyProgramAlias: json["studyProgramAlias"] ?? "software-engineering",
     telegramLink: json["telegramLink"],
-    vocationTrainingIiiCertificate: json["vocationTrainingIiiCertificate"],
+    vocationTrainingIiiCertificate: json["vocationTrainingIiiCertificate"] ?? "94cad2f2-0519-468d-840c-248393478b00.jpg",
   );
 
   Map<String, dynamic> toJson() => {
